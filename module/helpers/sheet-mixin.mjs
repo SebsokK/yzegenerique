@@ -1,0 +1,187 @@
+/**
+ * YZESheetMixin — mixin partagé pour toutes les feuilles YZE.
+ * Foundry VTT V14
+ */
+
+// ── Helpers focus — fonctions locales à la closure, pas des méthodes statiques ──
+// (Les méthodes statiques sur la classe anonyme retournée ne sont pas accessibles
+//  via le nom de la factory — on les déclare ici comme fonctions ordinaires.)
+
+function _focusKey(el) {
+  if (el.name) return `actor:${el.name}`;
+  if (el.dataset?.itemId && el.dataset?.field)
+    return `item:${el.dataset.itemId}:${el.dataset.field}`;
+  return null;
+}
+
+function _findByFocusKey(root, key) {
+  if (!root || !key) return null;
+  const [type, ...rest] = key.split(":");
+  if (type === "actor") {
+    return root.querySelector(`[name="${rest.join(":")}"]`);
+  }
+  if (type === "item") {
+    const [itemId, field] = [rest[0], rest.slice(1).join(":")];
+    return root.querySelector(`[data-item-id="${itemId}"][data-field="${field}"]`);
+  }
+  return null;
+}
+
+export function YZESheetMixin(Base) {
+  return class extends Base {
+
+    static DEBOUNCE_MS = 400;
+
+    _debounceTimers = {};
+    _itemHookFn     = null;
+    _savedScrollTop  = 0;
+    _savedFocusKey   = null;
+    _savedFocusValue = null;
+
+    // ── Cycle de vie ──────────────────────────────────────────────
+
+    async _preRender(context, options) {
+      if (super._preRender) await super._preRender(context, options);
+
+      const scrollable = this.element?.querySelector(".yze-sheet");
+      if (scrollable) this._savedScrollTop = scrollable.scrollTop;
+
+      const focused = this.element?.querySelector(":focus");
+      if (focused) {
+        const key = _focusKey(focused);
+        if (key) {
+          this._savedFocusKey   = key;
+          this._savedFocusValue = focused.value;
+        }
+      }
+    }
+
+    _onRender(context, options) {
+      super._onRender(context, options);
+
+      const scrollable = this.element?.querySelector(".yze-sheet");
+      if (scrollable && this._savedScrollTop > 0) {
+        scrollable.scrollTop = this._savedScrollTop;
+      }
+
+      if (this._savedFocusKey) {
+        const el = _findByFocusKey(this.element, this._savedFocusKey);
+        if (el) {
+          el.focus();
+          if (el.type === "text" || el.type === "number") el.select();
+        }
+        this._savedFocusKey   = null;
+        this._savedFocusValue = null;
+      }
+
+      this._setupFormListeners();
+      this._setupImgListeners();
+
+      // Activer les éditeurs ProseMirror natifs Foundry V14
+      // DocumentSheetV2._activateEditors() initialise les data-edit sur le DOM
+      if (typeof this._activateEditors === "function") {
+        this._activateEditors(this.element);
+      }
+
+      this._unbindItemHooks();
+      this._bindItemHooks();
+    }
+
+    _onClose(options) {
+      if (super._onClose) super._onClose(options);
+      this._unbindItemHooks();
+      for (const t of Object.values(this._debounceTimers)) clearTimeout(t);
+      this._debounceTimers = {};
+    }
+
+    _bindItemHooks() {
+      if (!this.document?.id) return;
+      const actorId = this.document.id;
+      this._itemHookFn = (item) => {
+        if (item?.parent?.id === actorId) this.render();
+      };
+      Hooks.on("updateItem", this._itemHookFn);
+      Hooks.on("createItem", this._itemHookFn);
+      Hooks.on("deleteItem", this._itemHookFn);
+    }
+
+    _unbindItemHooks() {
+      if (!this._itemHookFn) return;
+      Hooks.off("updateItem", this._itemHookFn);
+      Hooks.off("createItem", this._itemHookFn);
+      Hooks.off("deleteItem", this._itemHookFn);
+      this._itemHookFn = null;
+    }
+
+    // ── Image picker ──────────────────────────────────────────────
+
+    /**
+     * Branche un FilePicker sur chaque image [data-edit="img"].
+     * Compatible ApplicationV2 / V14 — remplace le mécanisme legacy data-edit.
+     */
+    _setupImgListeners() {
+      this.element?.querySelectorAll("[data-edit='img']").forEach(img => {
+        img.style.cursor = "pointer";
+        img.addEventListener("click", async () => {
+          const current = this.document.img ?? "";
+          const fp = new FilePicker({
+            type:     "image",
+            current,
+            callback: async (path) => {
+              await this.document.update({ img: path });
+            },
+          });
+          fp.browse(current);
+        });
+      });
+    }
+
+    // ── Form listeners ────────────────────────────────────────────
+
+    _setupFormListeners() {
+      const form = this.element?.querySelector("form");
+      if (!form) return;
+
+      form.addEventListener("change", (event) => {
+        const input = event.target;
+        if (!input.name || input.dataset.itemId) return;
+        this._debouncedActorUpdate(input.name, this._readInputValue(input));
+      });
+
+      form.querySelectorAll("[data-item-id][data-field]").forEach(el => {
+        el.addEventListener("change", (event) => {
+          const inp = event.currentTarget;
+          this._debouncedItemUpdate(inp.dataset.itemId, inp.dataset.field, this._readInputValue(inp));
+        });
+      });
+    }
+
+    // ── Debounce ──────────────────────────────────────────────────
+
+    _debouncedActorUpdate(field, value) {
+      const key = `actor:${field}`;
+      clearTimeout(this._debounceTimers[key]);
+      this._debounceTimers[key] = setTimeout(() => {
+        this.document.update({ [field]: value });
+        delete this._debounceTimers[key];
+      }, this.constructor.DEBOUNCE_MS);
+    }
+
+    _debouncedItemUpdate(itemId, field, value) {
+      const key = `item:${itemId}:${field}`;
+      clearTimeout(this._debounceTimers[key]);
+      this._debounceTimers[key] = setTimeout(() => {
+        const item = this.document.items?.get(itemId)
+          ?? (this.item?.id === itemId ? this.item : null);
+        if (item) item.update({ [field]: value });
+        delete this._debounceTimers[key];
+      }, this.constructor.DEBOUNCE_MS);
+    }
+
+    _readInputValue(input) {
+      return input.type === "checkbox" ? input.checked
+        : input.type === "number"      ? Number(input.value)
+        : input.value;
+    }
+  };
+}

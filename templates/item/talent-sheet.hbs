@@ -1,0 +1,28 @@
+{{!-- templates/item/talent-sheet.hbs --}}
+{{log enriched.description}}
+<form class="yze-sheet item-sheet talent-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <h1><input type="text" name="name" value="{{item.name}}" /></h1>
+    </div>
+  </header>
+
+  <div class="item-form">
+
+    <div class="form-group">
+      <label>Summary <span class="form-hint">(shown on character sheet)</span></label>
+      <input type="text" name="system.excerpt"
+        value="{{system.excerpt}}"
+        placeholder="e.g. +2 Mobility for acrobatic tricks" />
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      {{editor enriched.description target="system.description" editable=editable}}
+    </div>
+
+  </div>
+
+</form>

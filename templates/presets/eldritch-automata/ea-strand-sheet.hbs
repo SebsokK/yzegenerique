@@ -1,0 +1,47 @@
+{{!-- ea-strand-sheet.hbs — Feuille Strand EA --}}
+<form class="yze-sheet ea-sheet item-sheet strand-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <h1><input type="text" name="name" value="{{item.name}}" /></h1>
+  </header>
+
+  <div class="item-sections">
+
+    <section class="item-section">
+      <label>{{localize "YZE.EA.StrandTarget"}}</label>
+      <input type="text" name="system.targetName"
+        value="{{system.targetName}}"
+        placeholder="Character or NPC name" />
+    </section>
+
+    <section class="item-section item-flags">
+      <label class="checkbox-label">
+        <input type="checkbox" name="system.exhausted"
+          {{#if system.exhausted}}checked{{/if}} />
+        {{localize "YZE.EA.StrandExhausted"}}
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" name="system.broken"
+          {{#if system.broken}}checked{{/if}} />
+        {{localize "YZE.EA.StrandBroken"}}
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" name="system.isPostMortem"
+          {{#if system.isPostMortem}}checked{{/if}} />
+        {{localize "YZE.EA.StrandPostMortem"}}
+      </label>
+    </section>
+
+    <section class="item-section">
+      <label>{{localize "YZE.EA.StrandMemory"}}</label>
+      {{editor enriched.memory target="system.memory" editable=editable}}
+    </section>
+
+    <section class="item-section">
+      <label>{{localize "YZE.EA.StrandNotes"}}</label>
+      {{editor enriched.notes target="system.notes" editable=editable}}
+    </section>
+
+  </div>
+</form>

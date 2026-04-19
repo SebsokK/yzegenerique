@@ -1,0 +1,38 @@
+{{!-- templates/settings/preset-menu.hbs — Sélection de preset YZE --}}
+<div class="preset-menu-content">
+
+  <p class="preset-menu-intro">
+    Select a game preset to configure rules, skills, damage system, and visual theme.
+    <strong>A page reload will be required after applying a preset.</strong>
+  </p>
+
+  <div class="preset-list">
+    {{#each presets as |preset|}}
+    <div class="preset-item {{#if preset.active}}preset-item--active{{/if}}">
+      <div class="preset-info">
+        <div class="preset-name">
+          {{preset.name}}
+          {{#if preset.active}}
+          <span class="preset-badge preset-badge--active">Active</span>
+          {{/if}}
+          <span class="preset-version">v{{preset.version}}</span>
+        </div>
+        <div class="preset-description">{{preset.description}}</div>
+      </div>
+      <div class="preset-action">
+        {{#unless preset.active}}
+        <button type="button"
+          data-action="applyPreset"
+          data-preset-id="{{preset.id}}"
+          class="preset-apply-btn">
+          Apply
+        </button>
+        {{else}}
+        <span class="preset-active-label">✓ Active</span>
+        {{/unless}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+
+</div>

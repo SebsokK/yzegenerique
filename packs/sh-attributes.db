@@ -1,0 +1,4 @@
+{"_id":"AGU5DaoLFMVYifAM","name":"Strength","type":"attribute","img":"icons/svg/regen.svg","system":{"value":2,"current":2,"stepRating":"C","category":"physical","slug":"strength","description":""},"flags":{}}
+{"_id":"Fw8dIQ0JwR2eu5yR","name":"Wits","type":"attribute","img":"icons/svg/regen.svg","system":{"value":2,"current":2,"stepRating":"C","category":"mental","slug":"wits","description":""},"flags":{}}
+{"_id":"Pf7P1Fu64RxKPVqR","name":"Agility","type":"attribute","img":"icons/svg/regen.svg","system":{"value":2,"current":2,"stepRating":"C","category":"physical","slug":"agility","description":""},"flags":{}}
+{"_id":"hWjHlefPI3w5HBX2","name":"Empathy","type":"attribute","img":"icons/svg/regen.svg","system":{"value":2,"current":2,"stepRating":"C","category":"mental","slug":"empathy","description":""},"flags":{}}

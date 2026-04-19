@@ -1,0 +1,1415 @@
+/* ============================================================
+   yzegenerique.css — Base YZE Générique
+   Variables custom properties pour thèmes interchangeables.
+   Les presets overrident ces variables dans leurs propres CSS.
+   ============================================================ */
+
+/* ── Variables de base (thème sombre générique) ─────────────── */
+:root {
+  --yze-color-bg:          #1a1a1a;
+  --yze-color-surface:     #252525;
+  --yze-color-border:      #444;
+  --yze-color-accent:      #c0a050;
+  --yze-color-accent-alt:  #8b3030;
+  --yze-color-text:        #ddd;
+  --yze-color-text-muted:  #888;
+  --yze-color-success:     #5a9e5a;
+  --yze-color-danger:      #9e3030;
+  --yze-color-stress:      #8b4513;
+  --yze-color-warning:     #c08030;
+
+  --yze-font-title: "Cinzel", serif;
+  --yze-font-body:  "Roboto Condensed", sans-serif;
+  --yze-font-size:  13px;
+
+  --yze-radius:   4px;
+  --yze-gap:      8px;
+  --yze-gap-sm:   4px;
+  --yze-gap-lg:   12px;
+}
+
+/* ── Reset minimal pour les feuilles ──────────────────────────── */
+.yze-sheet *,
+.yze-sheet *::before,
+.yze-sheet *::after {
+  box-sizing: border-box;
+}
+
+.yze-sheet {
+  background:  var(--yze-color-bg);
+  color:       var(--yze-color-text);
+  font-family: var(--yze-font-body);
+  font-size:   var(--yze-font-size);
+  padding:     var(--yze-gap);
+  height:      100%;
+  overflow-y:  auto;
+}
+
+/* ── En-tête générique ────────────────────────────────────────── */
+.yze-sheet .sheet-header,
+.yze-sheet .item-header {
+  display:        flex;
+  gap:            var(--yze-gap);
+  align-items:    center;
+  border-bottom:  2px solid var(--yze-color-accent);
+  padding-bottom: var(--yze-gap);
+  margin-bottom:  var(--yze-gap);
+}
+
+.yze-sheet .actor-portrait,
+.yze-sheet .item-img {
+  width:         64px;
+  height:        64px;
+  object-fit:    cover;
+  border:        2px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  cursor:        pointer;
+  flex-shrink:   0;
+  transition:    border-color 0.15s, opacity 0.15s;
+}
+
+.yze-sheet .actor-portrait {
+  width:  140px;
+  height: 140px;
+}
+
+.yze-sheet .actor-portrait:hover,
+.yze-sheet .item-img:hover {
+  border-color: var(--yze-color-accent);
+  opacity:      0.85;
+}
+
+.yze-sheet .header-fields,
+.yze-sheet .item-header-fields {
+  flex: 1;
+  min-width: 0;
+}
+
+.yze-sheet h1 {
+  margin: 0 0 4px;
+}
+
+.yze-sheet h1 input,
+.yze-sheet h1 input[type="text"] {
+  font-family: var(--yze-font-title);
+  font-size:   1.3em;
+  color:       var(--yze-color-accent);
+  background:  transparent;
+  border:      none;
+  border-bottom: 1px solid var(--yze-color-border);
+  width:       100%;
+  padding:     2px 0;
+}
+
+/* ── Ressources ────────────────────────────────────────────────── */
+.yze-sheet .resources {
+  display:       flex;
+  gap:           var(--yze-gap);
+  flex-wrap:     wrap;
+  margin-bottom: var(--yze-gap);
+}
+
+.yze-sheet .resource-block {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       4px 8px;
+}
+
+.yze-sheet .resource-block label {
+  font-size:      0.8em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width:      50px;
+}
+
+.yze-sheet .resource-block input[type="number"] {
+  width:      38px;
+  text-align: center;
+  background: transparent;
+  border:     none;
+  color:      var(--yze-color-text);
+  font-size:  1.1em;
+}
+
+.yze-sheet .resource-block .sep,
+.yze-sheet .resource-block .resource-max {
+  color:     var(--yze-color-text-muted);
+  font-size: 0.9em;
+}
+
+/* ── Sections ──────────────────────────────────────────────────── */
+.yze-sheet section {
+  margin-bottom: var(--yze-gap-lg);
+}
+
+.yze-sheet h2 {
+  font-family:    var(--yze-font-title);
+  color:          var(--yze-color-accent);
+  font-size:      0.85em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom:  1px solid var(--yze-color-border);
+  margin:         0 0 var(--yze-gap-sm);
+  padding-bottom: 2px;
+}
+
+/* ── Lignes attribut / skill ───────────────────────────────────── */
+.yze-sheet .attribute-row,
+.yze-sheet .skill-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  padding:       2px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.yze-sheet .attr-name,
+.yze-sheet .skill-name {
+  flex:      1;
+  font-size: 0.9em;
+}
+
+.yze-sheet .skill-attr {
+  color:     var(--yze-color-text-muted);
+  font-size: 0.8em;
+  min-width: 64px;
+}
+
+.yze-sheet .attr-value,
+.yze-sheet .skill-value {
+  width:         32px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     0.95em;
+}
+
+/* ── Boutons ────────────────────────────────────────────────────── */
+.yze-sheet button {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  cursor:        pointer;
+  padding:       2px 6px;
+  font-size:     0.85em;
+  font-family:   var(--yze-font-body);
+  transition:    border-color 0.12s, color 0.12s;
+}
+
+.yze-sheet button:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+.yze-sheet .roll-btn,
+.yze-sheet .ea-roll-btn {
+  background:  transparent;
+  border:      none;
+  color:       var(--yze-color-accent);
+  font-size:   1.1em;
+  padding:     0 4px;
+  cursor:      pointer;
+}
+
+.yze-sheet .icon-btn,
+.yze-sheet .ea-icon-btn {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  padding:       1px 5px;
+  font-size:     0.8em;
+}
+
+.yze-sheet .icon-btn:hover,
+.yze-sheet .ea-icon-btn:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+.yze-sheet .delete-btn:hover,
+.yze-sheet .ea-delete-btn:hover {
+  border-color: var(--yze-color-danger);
+  color:        var(--yze-color-danger);
+}
+
+.yze-sheet .empty-hint,
+.yze-sheet .ea-empty {
+  color:      var(--yze-color-text-muted);
+  font-style: italic;
+  font-size:  0.85em;
+  padding:    4px 0;
+}
+
+/* ── Formulaires Item ───────────────────────────────────────────── */
+.yze-sheet .item-form,
+.yze-sheet .item-sections {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--yze-gap);
+}
+
+.yze-sheet .form-group,
+.yze-sheet .item-section {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+}
+
+.yze-sheet .form-group label,
+.yze-sheet .item-section > label {
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.yze-sheet .form-group input[type="text"],
+.yze-sheet .form-group input[type="number"],
+.yze-sheet .form-group select,
+.yze-sheet .form-group textarea,
+.yze-sheet .item-section input[type="text"],
+.yze-sheet .item-section textarea,
+.yze-sheet .item-section select {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  padding:       3px 6px;
+  font-family:   var(--yze-font-body);
+  font-size:     var(--yze-font-size);
+}
+
+.yze-sheet .form-hint {
+  color:       var(--yze-color-text-muted);
+  font-size:   0.85em;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.yze-sheet .item-type-badge {
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  background:  var(--yze-color-surface);
+  border:      1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:     1px 6px;
+}
+
+/* ── Checkboxes ─────────────────────────────────────────────────── */
+.yze-sheet .item-flags {
+  display:    flex;
+  flex-wrap:  wrap;
+  gap:        var(--yze-gap);
+}
+
+.yze-sheet .flag-row {
+  display: flex;
+  gap:     var(--yze-gap);
+  flex-wrap: wrap;
+}
+
+.yze-sheet .checkbox-label {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  font-size:   0.85em;
+  color:       var(--yze-color-text-muted);
+  cursor:      pointer;
+}
+
+.yze-sheet .form-group--inline {
+  flex-direction: row;
+  align-items:    center;
+  gap:            var(--yze-gap);
+}
+
+.yze-sheet .form-group--inline label {
+  white-space: nowrap;
+}
+
+/* ── EA — Layout dual bloc Pilot / Automata ─────────────────────── */
+.ea-sheet .ea-header {
+  display:        flex;
+  gap:            var(--yze-gap-lg);
+  align-items:    center;
+  border-bottom:  2px solid var(--yze-color-accent);
+  padding-bottom: var(--yze-gap);
+  margin-bottom:  var(--yze-gap);
+}
+
+.ea-sheet .ea-header-fields {
+  flex: 1;
+  min-width: 0;
+}
+
+.ea-sheet .ea-header-meta input {
+  background:  transparent;
+  border:      none;
+  border-bottom: 1px dashed var(--yze-color-border);
+  color:       var(--yze-color-text-muted);
+  font-size:   0.9em;
+  width:       100%;
+}
+
+.ea-sheet .ea-xp {
+  display:     flex;
+  align-items: center;
+  gap:         var(--yze-gap-sm);
+  font-size:   0.85em;
+  color:       var(--yze-color-text-muted);
+  margin-top:  4px;
+}
+
+.ea-sheet .ea-xp input {
+  width:      38px;
+  text-align: center;
+  background: transparent;
+  border:     none;
+  border-bottom: 1px solid var(--yze-color-border);
+  color:      var(--yze-color-text);
+}
+
+.ea-sheet .ea-sep, .yze-sheet .ea-sep {
+  color:  var(--yze-color-text-muted);
+  margin: 0 2px;
+}
+
+.ea-sheet .ea-dual-block {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   var(--yze-gap);
+  margin-bottom:         var(--yze-gap-lg);
+}
+
+.ea-sheet .ea-block {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       var(--yze-gap);
+}
+
+.ea-sheet .ea-block-title {
+  font-family:    var(--yze-font-title);
+  color:          var(--yze-color-accent);
+  font-size:      0.8em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom:  1px solid var(--yze-color-border);
+  margin:         0 0 var(--yze-gap-sm);
+  padding-bottom: 2px;
+}
+
+.ea-sheet .ea-automata-block .ea-block-title {
+  color: var(--yze-color-accent-alt);
+}
+
+/* ── EA Ressources ──────────────────────────────────────────────── */
+.ea-sheet .ea-resources {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+}
+
+.ea-sheet .ea-resource {
+  display:     flex;
+  align-items: center;
+  gap:         var(--yze-gap-sm);
+  padding:     2px 0;
+}
+
+.ea-sheet .ea-resource label {
+  flex:           1;
+  font-size:      0.78em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ea-sheet .ea-resource input[type="number"] {
+  width:         36px;
+  text-align:    center;
+  background:    var(--yze-color-bg);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     1em;
+}
+
+.ea-sheet .ea-max, .yze-sheet .ea-max {
+  color:     var(--yze-color-text-muted);
+  font-size: 0.85em;
+  min-width: 16px;
+  text-align: right;
+}
+
+.ea-sheet .ea-resource--critical input { border-color: var(--yze-color-danger); }
+.ea-sheet .ea-resource--warning  input { border-color: var(--yze-color-warning); }
+.ea-sheet .ea-stress-resource label    { color:        var(--yze-color-stress);  }
+
+/* ── EA Statuts ─────────────────────────────────────────────────── */
+.ea-sheet .ea-status {
+  margin-top:    var(--yze-gap-sm);
+  padding:       3px 8px;
+  border-radius: var(--yze-radius);
+  font-size:     0.75em;
+  font-weight:   bold;
+  text-align:    center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ea-sheet .ea-status--breakdown {
+  background: rgba(158, 48, 48, 0.15);
+  color:      var(--yze-color-danger);
+  border:     1px solid var(--yze-color-danger);
+}
+
+.ea-sheet .ea-status--berserk {
+  background: rgba(192, 64, 80, 0.15);
+  color:      var(--yze-color-accent-alt);
+  border:     1px solid var(--yze-color-accent-alt);
+}
+
+.ea-sheet .ea-archetype-state-text {
+  font-size:   0.85em;
+  color:       var(--yze-color-text-muted);
+  margin-top:  var(--yze-gap-sm);
+  padding:     4px;
+  border-left: 2px solid var(--yze-color-border);
+}
+
+/* ── EA Attributs (grille 4 colonnes) ────────────────────────────── */
+.ea-sheet .ea-section, .yze-sheet .ea-section { margin-bottom: var(--yze-gap-lg); }
+
+.ea-sheet .ea-section, .yze-sheet .ea-section h2 {
+  font-family:    var(--yze-font-title);
+  color:          var(--yze-color-accent);
+  font-size:      0.8em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom:  1px solid var(--yze-color-border);
+  margin:         0 0 var(--yze-gap-sm);
+  padding-bottom: 2px;
+}
+
+.ea-sheet .ea-attributes-grid,
+.yze-sheet .ea-attributes-grid {
+  display:               grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:                   var(--yze-gap-sm);
+  margin-bottom:         var(--yze-gap-sm);
+}
+
+.ea-sheet .ea-attribute-cell,
+.yze-sheet .ea-attribute-cell {
+  background:     var(--yze-color-surface);
+  border:         1px solid var(--yze-color-border);
+  border-radius:  var(--yze-radius);
+  padding:        6px 4px;
+  text-align:     center;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            3px;
+}
+
+.ea-sheet .ea-attr-name,
+.yze-sheet .ea-attr-name {
+  font-size:      0.72em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ea-sheet .ea-attr-input,
+.yze-sheet .ea-attr-input {
+  width:       38px;
+  text-align:  center;
+  background:  transparent;
+  border:      none;
+  font-size:   1.4em;
+  color:       var(--yze-color-text);
+  font-weight: bold;
+}
+
+/* ── EA Skills ──────────────────────────────────────────────────── */
+.ea-sheet .ea-skills-list, .yze-sheet .ea-skills-list { display: flex; flex-direction: column; gap: 1px; }
+
+.ea-sheet .ea-skill-row, .yze-sheet .ea-skill-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  padding:       3px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.ea-sheet .ea-skill-name, .yze-sheet .ea-skill-name { flex: 1; font-size: 0.9em; }
+
+.ea-sheet .ea-skill-attr, .yze-sheet .ea-skill-attr {
+  color:     var(--yze-color-text-muted);
+  font-size: 0.78em;
+  min-width: 64px;
+}
+
+.ea-sheet .ea-skill-val, .yze-sheet .ea-skill-val {
+  width:         30px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     0.9em;
+}
+
+/* ── EA Archétypes ──────────────────────────────────────────────── */
+.ea-sheet .ea-archetype-row {
+  display:     flex;
+  align-items: center;
+  gap:         var(--yze-gap);
+  padding:     4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ea-sheet .ea-label {
+  font-size:      0.8em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  min-width:      120px;
+}
+
+.ea-sheet .ea-archetype-name {
+  flex:      1;
+  font-size: 0.95em;
+}
+
+.ea-sheet .ea-text-btn {
+  background:    transparent;
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  padding:       2px 8px;
+  font-size:     0.82em;
+}
+
+.ea-sheet .ea-text-btn:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+/* ── EA Talents ─────────────────────────────────────────────────── */
+.ea-sheet .ea-talent-group { margin-bottom: var(--yze-gap); }
+
+.ea-sheet h3.ea-talent-group-title {
+  font-size:      0.78em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin:         4px 0 3px;
+}
+
+.ea-sheet .ea-talent-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  padding:       2px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.ea-sheet .ea-talent-name { flex: 1; font-size: 0.9em; }
+
+.ea-sheet .ea-talent-badge {
+  font-size:     0.72em;
+  padding:       1px 5px;
+  border-radius: 2px;
+  font-weight:   bold;
+  text-transform: uppercase;
+}
+
+.ea-sheet .ea-badge--hope   { background: rgba(192, 160, 80, 0.2); color: var(--yze-color-accent); }
+.ea-sheet .ea-badge--strand { background: rgba(90, 158, 90, 0.2);  color: var(--yze-color-success); }
+.ea-sheet .ea-badge--locked { background: rgba(100, 100, 100, 0.2); color: var(--yze-color-text-muted); }
+
+.ea-sheet .ea-create-btns {
+  display: flex;
+  gap:     var(--yze-gap-sm);
+  margin-top: var(--yze-gap-sm);
+}
+
+/* ── EA Strands ─────────────────────────────────────────────────── */
+.ea-sheet .ea-strands-list { display: flex; flex-direction: column; gap: 2px; }
+
+.ea-sheet .ea-strand-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  padding:       3px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.ea-sheet .ea-strand-name    { flex: 1; font-size: 0.9em; }
+.ea-sheet .ea-strand-target  { color: var(--yze-color-text-muted); font-size: 0.82em; }
+.ea-sheet .ea-strand-status  { font-size: 0.78em; color: var(--yze-color-text-muted); min-width: 60px; text-align: center; }
+.ea-sheet .ea-strand-badge   { font-size: 0.72em; padding: 1px 5px; border-radius: 2px; background: rgba(139, 48, 48, 0.2); color: var(--yze-color-accent-alt); }
+
+.ea-sheet .ea-strand--broken .ea-strand-name {
+  text-decoration: line-through;
+  color:           var(--yze-color-text-muted);
+  opacity:         0.7;
+}
+
+.ea-sheet .ea-strand--exhausted .ea-strand-status {
+  color: var(--yze-color-warning);
+}
+
+/* ── Preset Menu ────────────────────────────────────────────────── */
+.preset-menu-content {
+  padding: 12px;
+  font-family: var(--yze-font-body);
+}
+
+.preset-menu-intro {
+  font-size: 0.85em;
+  color: var(--yze-color-text-muted);
+  margin-bottom: 12px;
+  border-left: 3px solid var(--yze-color-accent);
+  padding-left: 8px;
+}
+
+.preset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preset-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--yze-color-surface);
+  border: 1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+}
+
+.preset-item--active {
+  border-color: var(--yze-color-accent);
+}
+
+.preset-info { flex: 1; }
+
+.preset-name {
+  font-weight: bold;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.preset-description {
+  font-size: 0.8em;
+  color: var(--yze-color-text-muted);
+}
+
+.preset-version {
+  font-size: 0.75em;
+  color: var(--yze-color-text-muted);
+}
+
+.preset-badge--active {
+  font-size: 0.7em;
+  background: rgba(192, 160, 80, 0.2);
+  color: var(--yze-color-accent);
+  border: 1px solid var(--yze-color-accent);
+  border-radius: 3px;
+  padding: 0 5px;
+}
+
+.preset-apply-btn {
+  background: var(--yze-color-accent);
+  border: none;
+  border-radius: var(--yze-radius);
+  color: var(--yze-color-bg);
+  cursor: pointer;
+  padding: 4px 12px;
+  font-weight: bold;
+  font-size: 0.85em;
+}
+
+.preset-apply-btn:hover {
+  opacity: 0.85;
+}
+
+.preset-active-label {
+  color: var(--yze-color-accent);
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
+/* ── Roll result chat ───────────────────────────────────────────── */
+.yze-roll-result {
+  font-family: var(--yze-font-body, sans-serif);
+  font-size: 13px;
+  padding: 4px 0;
+}
+
+.yze-roll-label {
+  font-size: 0.85em;
+  color: #888;
+  margin-bottom: 3px;
+}
+
+.yze-roll-outcome {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.yze-roll-outcome.success { color: #5a9e5a; }
+.yze-roll-outcome.failure { color: #9e3030; }
+
+.yze-roll-segments {
+  font-size: 0.8em;
+  color: #888;
+  margin-bottom: 3px;
+}
+
+.yze-roll-banes  { font-size: 0.85em; color: #c08030; }
+.yze-roll-panic  { font-size: 0.85em; color: #c83f6a; font-weight: bold; }
+
+.yze-roll-push-row {
+  margin-top: 6px;
+}
+
+.yze-push-btn {
+  background: transparent;
+  border: 1px solid #555;
+  border-radius: 3px;
+  color: #aaa;
+  cursor: pointer;
+  padding: 2px 10px;
+  font-size: 0.82em;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.yze-push-btn:hover {
+  border-color: #c0a050;
+  color: #c0a050;
+}
+
+.yze-roll-pushed-label {
+  font-size: 0.78em;
+  color: #666;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* ── EA Gear section ────────────────────────────────────────────── */
+.ea-sheet .ea-gear-list, .yze-sheet .ea-gear-list { display: flex; flex-direction: column; gap: 1px; }
+
+.ea-sheet .ea-gear-row, .yze-sheet .ea-gear-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.ea-sheet .ea-gear-name, .yze-sheet .ea-gear-name  { flex: 1; font-size: 0.9em; }
+.ea-sheet .ea-gear-bonus, .yze-sheet .ea-gear-bonus { font-size: 0.85em; color: var(--yze-color-accent); min-width: 28px; }
+.ea-sheet .ea-gear-rel   { font-size: 0.8em; color: var(--yze-color-text-muted); min-width: 36px; }
+
+/* ── Roll result — ajouts stabilisation ────────────────────────── */
+.yze-roll-pushed-badge {
+  display: inline-block;
+  font-size: 0.75em;
+  padding: 1px 6px;
+  background: rgba(192, 160, 80, 0.15);
+  color: var(--yze-color-accent, #c0a050);
+  border: 1px solid var(--yze-color-accent, #c0a050);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.yze-roll-kept {
+  font-size: 0.82em;
+  color: #9e3030;
+  margin-top: 2px;
+}
+
+.yze-push-hint {
+  font-size: 0.75em;
+  color: #666;
+  margin-left: 6px;
+  font-style: italic;
+}
+
+.yze-segment { margin-right: 6px; }
+.yze-bane    { color: #c08030; }
+
+/* ── Resource item sheet ────────────────────────────────────────── */
+.resource-sheet .resource-formula-block {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       8px;
+  margin-bottom: 6px;
+}
+
+.resource-sheet .resource-modifier-row {
+  flex-direction: row;
+  align-items:    center;
+  gap:            8px;
+  flex-wrap:      wrap;
+}
+
+.resource-sheet .resource-max-preview {
+  font-size: 0.85em;
+  color:     var(--yze-color-text-muted);
+}
+
+.resource-sheet .resource-values-block {
+  display: flex;
+  gap:     12px;
+  flex-wrap: wrap;
+}
+
+/* ── Add resource button in EA blocks ───────────────────────────── */
+.ea-sheet .ea-add-resource-btn {
+  background:    transparent;
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  padding:       2px 8px;
+  font-size:     0.8em;
+  margin-top:    4px;
+  width:         100%;
+}
+
+.ea-sheet .ea-add-resource-btn:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+/* ── Attribute pips (current value tracker) ────────────────────── */
+.ea-sheet .ea-attr-pips,
+.yze-sheet .ea-attr-pips {
+  display:         flex;
+  gap:             3px;
+  justify-content: center;
+  margin:          3px 0 2px;
+}
+
+.ea-sheet .ea-pip,
+.yze-sheet .ea-pip {
+  width:         10px;
+  height:        10px;
+  border-radius: 50%;
+  border:        1px solid var(--yze-color-border);
+  background:    transparent;
+  cursor:        pointer;
+  padding:       0;
+  transition:    background 0.1s, border-color 0.1s;
+  flex-shrink:   0;
+}
+
+.ea-sheet .ea-pip--filled,
+.yze-sheet .ea-pip--filled {
+  background:   var(--yze-color-accent);
+  border-color: var(--yze-color-accent);
+}
+
+.ea-sheet .ea-pip--over,
+.yze-sheet .ea-pip--over {
+  opacity:        0.2;
+  pointer-events: none;
+}
+
+.ea-sheet .ea-pip:not(.ea-pip--over):hover,
+.yze-sheet .ea-pip:not(.ea-pip--over):hover {
+  border-color: var(--yze-color-accent);
+  background:   rgba(192, 160, 80, 0.3);
+}
+
+.ea-sheet .ea-attr-actions,
+.yze-sheet .ea-attr-actions {
+  display:         flex;
+  gap:             2px;
+  justify-content: center;
+  margin-top:      2px;
+}
+
+/* Agrandir légèrement les attribute cells pour accueillir les pips */
+.ea-sheet .ea-attribute-cell,
+.yze-sheet .ea-attribute-cell {
+  padding: 8px 4px;
+}
+
+/* ── Weapon & Armor sheets ──────────────────────────────────────── */
+.weapon-sheet .weapon-stats-grid,
+.armor-sheet  .armor-stats {
+  display:        grid;
+  grid-template-columns: 1fr 1fr;
+  gap:            var(--yze-gap);
+  margin-bottom:  var(--yze-gap);
+}
+
+.weapon-sheet .weapon-link-block {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       8px;
+  margin-bottom: var(--yze-gap);
+  display:       grid;
+  grid-template-columns: 1fr 1fr;
+  gap:           var(--yze-gap);
+}
+
+.weapon-roll-btn,
+.armor-roll-btn {
+  background:    var(--yze-color-accent);
+  border:        none;
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-bg);
+  cursor:        pointer;
+  padding:       4px 12px;
+  font-weight:   bold;
+  font-size:     0.85em;
+  white-space:   nowrap;
+}
+.weapon-roll-btn:hover,
+.armor-roll-btn:hover  { opacity: 0.85; }
+
+.weapon-badge  { background: rgba(192, 80, 80, 0.15); color: #c05050; border-color: #c05050; }
+.armor-badge   { background: rgba(80, 120, 192, 0.15); color: #5080c0; border-color: #5080c0; }
+.armor-badge--destroyed { color: var(--yze-color-danger); border-color: var(--yze-color-danger); }
+
+.armor-ar-row {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+}
+.armor-ar-row input { width: 44px; text-align: center; }
+.armor-sep           { color: var(--yze-color-text-muted); }
+
+.armor-degraded-note {
+  font-size:  0.82em;
+  color:      var(--yze-color-warning);
+  margin-top: 3px;
+}
+
+.armor-rules-note {
+  grid-column: 1 / -1;
+  font-size:   0.82em;
+  color:       var(--yze-color-text-muted);
+  border-left: 2px solid var(--yze-color-border);
+  padding:     4px 8px;
+}
+
+/* ── Weapon/Armor rows in Actor sheet ───────────────────────────── */
+.ea-sheet .ea-weapon-row .ea-gear-stat,
+.yze-sheet .ea-weapon-row .ea-gear-stat,
+.yze-sheet .ea-weapon-main .ea-gear-stat {
+  font-size:  0.8em;
+  color:      var(--yze-color-text-muted);
+  min-width:  36px;
+}
+
+.ea-sheet .ea-gear-ar, .yze-sheet .ea-gear-ar {
+  font-size:  0.85em;
+  color:      var(--yze-color-text-muted);
+  min-width:  56px;
+}
+
+.ea-sheet .ea-armor--destroyed, .yze-sheet .ea-armor--destroyed .ea-gear-name {
+  text-decoration: line-through;
+  color:           var(--yze-color-danger);
+  opacity:         0.7;
+}
+
+.ea-sheet .ea-range, .yze-sheet .ea-range {
+  font-size:   0.75em;
+  padding:     1px 4px;
+  background:  var(--yze-color-surface);
+  border:      1px solid var(--yze-color-border);
+  border-radius: 2px;
+  color:       var(--yze-color-text-muted);
+}
+
+/* ── Roll result chat — weapon/armor specific ───────────────────── */
+.yze-weapon-roll .yze-roll-label-sub,
+.yze-armor-roll  .yze-roll-label-sub {
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  margin-left: 6px;
+  font-weight: normal;
+}
+
+.yze-roll-dice {
+  font-size:   1.05em;
+  letter-spacing: 4px;
+  margin:      4px 0;
+}
+
+.yze-success { color: var(--yze-color-success); font-weight: bold; }
+.yze-bane    { color: var(--yze-color-danger);  font-weight: bold; }
+.yze-neutral { color: var(--yze-color-text-muted); }
+
+.yze-armor-degrade { font-size: 0.85em; color: var(--yze-color-warning); margin-top: 2px; }
+.yze-armor-safe    { font-size: 0.85em; color: var(--yze-color-success);  margin-top: 2px; }
+.yze-armor-note    { font-size: 0.78em; color: var(--yze-color-text-muted); margin-top: 4px; font-style: italic; }
+
+/* ── Tags ───────────────────────────────────────────────────────── */
+.yze-tag-badge {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           3px;
+  font-size:     0.72em;
+  padding:       1px 7px;
+  border-radius: 10px;
+  border:        1px solid var(--yze-color-border);
+  background:    var(--yze-color-surface);
+  color:         var(--yze-color-text-muted);
+  white-space:   nowrap;
+}
+
+.yze-tag-remove {
+  background:  none;
+  border:      none;
+  color:       var(--yze-color-text-muted);
+  cursor:      pointer;
+  padding:     0;
+  font-size:   0.9em;
+  line-height: 1;
+  margin-left: 2px;
+}
+
+.yze-tag-remove:hover { color: var(--yze-color-danger); }
+
+.item-tags-section {
+  margin-bottom: var(--yze-gap);
+}
+
+.item-tags-label {
+  font-size:      0.8em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom:  4px;
+}
+
+.item-tags-list {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         4px;
+  min-height:  24px;
+  padding:     4px;
+  border:      1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+}
+
+.item-tags-empty {
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  font-style:  italic;
+}
+
+.tag-preview {
+  padding: 8px 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Weapon card in Actor sheet ─────────────────────────────────── */
+.ea-sheet .ea-weapon-card, .yze-sheet .ea-weapon-card,
+.ea-sheet .ea-armor-card, .yze-sheet .ea-armor-card {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding:       4px 0 6px;
+  margin-bottom: 2px;
+}
+
+.ea-sheet .ea-weapon-main, .yze-sheet .ea-weapon-main,
+.ea-sheet .ea-armor-main, .yze-sheet .ea-armor-main {
+  display:     flex;
+  align-items: center;
+  gap:         var(--yze-gap-sm);
+}
+
+.ea-sheet .ea-weapon-reloads, .yze-sheet .ea-weapon-reloads {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  margin-top:  3px;
+  padding-left: 12px;
+  font-size:   0.82em;
+}
+
+.ea-sheet .ea-reloads-label { color: var(--yze-color-text-muted); }
+
+.ea-sheet .ea-weapon-reloads, .yze-sheet .ea-weapon-reloads input[type="number"] {
+  width:         30px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     0.9em;
+}
+
+.ea-sheet .ea-out-of-ammo, .yze-sheet .ea-out-of-ammo { color: var(--yze-color-danger); }
+.ea-sheet .ea-ammo-warning, .yze-sheet .ea-ammo-warning { font-size: 0.78em; color: var(--yze-color-danger); }
+
+.ea-sheet .ea-item-tags, .yze-sheet .ea-item-tags {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         3px;
+  padding-left: 12px;
+  margin-top:  3px;
+}
+
+/* ── Toggle ranged + reloads dans weapon-sheet ──────────────────── */
+.weapon-sheet .weapon-ranged-block {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       8px;
+  margin-bottom: var(--yze-gap);
+}
+
+.weapon-sheet .weapon-reloads-row {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  margin-top:  6px;
+  flex-wrap:   wrap;
+}
+
+.weapon-sheet .weapon-reloads-row input { width: 44px; text-align: center; }
+.weapon-sheet .weapon-reloads-label     { font-size: 0.85em; color: var(--yze-color-text-muted); }
+.weapon-sheet .weapon-out-of-ammo       { color: var(--yze-color-danger); }
+.weapon-sheet .weapon-ammo-empty        { font-size: 0.82em; color: var(--yze-color-danger); }
+
+/* ── Tag interactive buttons ────────────────────────────────────── */
+.yze-tag-name-btn {
+  background:  none;
+  border:      none;
+  color:       inherit;
+  cursor:      pointer;
+  padding:     0;
+  font-size:   inherit;
+  font-family: inherit;
+}
+
+.yze-tag-name-btn:hover {
+  text-decoration: underline;
+  color: var(--yze-color-accent);
+}
+
+/* ── Tag add row ────────────────────────────────────────────────── */
+.tag-add-row {
+  display:     flex;
+  gap:         6px;
+  align-items: center;
+  margin-top:  4px;
+}
+
+.tag-add-row select {
+  flex:          1;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  padding:       2px 6px;
+  font-size:     0.85em;
+}
+
+.tag-add-row button {
+  background:    var(--yze-color-accent);
+  border:        none;
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-bg);
+  cursor:        pointer;
+  padding:       2px 10px;
+  font-size:     0.85em;
+  font-weight:   bold;
+  white-space:   nowrap;
+}
+
+.tag-add-row button:hover { opacity: 0.85; }
+
+/* ── Tags CRUD (weapon/armor sheet) ────────────────────────────── */
+.item-tags-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  margin-bottom:   4px;
+}
+
+.item-tags-add {
+  background:    transparent;
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  padding:       1px 8px;
+  font-size:     0.8em;
+}
+.item-tags-add:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+.item-tag-row {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  padding:     2px 0;
+}
+
+.item-tags-empty-zone {
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       4px 8px;
+  min-height:    28px;
+}
+
+.item-tags-hint {
+  font-size:  0.8em;
+  color:      var(--yze-color-text-muted);
+  font-style: italic;
+}
+
+/* ── Panic Roll chat message ────────────────────────────────────── */
+.yze-panic-roll {
+  background:    var(--yze-color-surface);
+  border:        2px solid var(--yze-color-danger);
+  border-radius: var(--yze-radius);
+  padding:       10px 12px;
+  margin:        2px 0;
+}
+
+.yze-panic-header {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  font-size:     1.1em;
+  font-weight:   bold;
+  color:         var(--yze-color-danger);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.yze-panic-table-name {
+  font-size:   0.75em;
+  font-weight: normal;
+  color:       var(--yze-color-text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.yze-panic-dice {
+  font-size:     0.9em;
+  color:         var(--yze-color-text-muted);
+  margin-bottom: 6px;
+}
+
+.yze-panic-total {
+  font-size: 1.2em;
+  color:     var(--yze-color-danger);
+}
+
+.yze-panic-result {
+  font-size:   0.9em;
+  color:       var(--yze-color-text);
+  line-height: 1.4;
+  border-top:  1px solid var(--yze-color-border);
+  padding-top: 6px;
+  margin-top:  4px;
+}
+
+.yze-panic-no-table {
+  color:      var(--yze-color-text-muted);
+  font-style: italic;
+}
+
+.yze-roll-panic {
+  color:       var(--yze-color-danger);
+  font-size:   0.85em;
+  margin-top:  4px;
+  font-weight: bold;
+}
+
+/* ── Roll Panic button in chat ──────────────────────────────────── */
+.yze-roll-panic {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  flex-wrap:   wrap;
+  margin-top:  4px;
+}
+
+.yze-panic-btn {
+  background:    var(--yze-color-danger);
+  border:        none;
+  border-radius: var(--yze-radius);
+  color:         #fff;
+  cursor:        pointer;
+  padding:       3px 10px;
+  font-size:     0.82em;
+  font-weight:   bold;
+  white-space:   nowrap;
+}
+
+.yze-panic-btn:hover { opacity: 0.85; }
+
+/* ── Talent excerpt on character sheet ──────────────────────────── */
+.talent-excerpt {
+  flex:        1;
+  font-size:   0.78em;
+  color:       var(--yze-color-text-muted);
+  font-style:  italic;
+  text-align:  right;
+  padding-right: 4px;
+}
+
+/* ── Textarea natif stylisé ─────────────────────────────────────── */
+.yze-sheet .yze-textarea {
+  width:         100%;
+  min-height:    80px;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-family:   var(--yze-font-body);
+  font-size:     var(--yze-font-size);
+  line-height:   1.5;
+  padding:       6px 8px;
+  resize:        vertical;
+  box-sizing:    border-box;
+}
+
+.yze-sheet .yze-textarea:focus {
+  outline:      none;
+  border-color: var(--yze-color-accent);
+}
+
+/* Biography textarea plus haute */
+.yze-sheet .biography-section .yze-textarea,
+.yze-sheet .ea-bio-section .yze-textarea {
+  min-height: 120px;
+}

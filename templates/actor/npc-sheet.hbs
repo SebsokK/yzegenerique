@@ -1,0 +1,36 @@
+{{!-- templates/actor/npc-sheet.hbs — Feuille PNJ YZE --}}
+<form class="yze-sheet npc-sheet" autocomplete="off">
+
+  <header class="sheet-header">
+    <img class="actor-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" />
+    <div class="header-fields">
+      <h1><input type="text" name="name" value="{{actor.name}}" /></h1>
+    </div>
+  </header>
+
+  {{#if system.health}}
+  <section class="resources">
+    <div class="resource-block">
+      <label>{{localize "YZE.Health"}}</label>
+      <input type="number" name="system.health.value"
+        value="{{system.health.value}}" min="0" max="{{system.health.max}}" />
+      <span class="sep">/</span>
+      <span class="resource-max">{{system.health.max}}</span>
+    </div>
+    {{#if system.egoField}}
+    <div class="resource-block">
+      <label>{{localize "YZE.EA.EgoField"}}</label>
+      <input type="number" name="system.egoField.value"
+        value="{{system.egoField.value}}" min="0" max="{{system.egoField.max}}" />
+      <span class="sep">/</span>
+      <span class="resource-max">{{system.egoField.max}}</span>
+    </div>
+    {{/if}}
+  </section>
+  {{/if}}
+
+  <section class="npc-description">
+    {{editor enriched.description target="system.description" editable=editable}}
+  </section>
+
+</form>

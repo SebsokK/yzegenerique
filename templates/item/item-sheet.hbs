@@ -1,0 +1,31 @@
+{{!-- templates/item/item-sheet.hbs — Feuille Item générique (gear, specialty) --}}
+<form class="yze-sheet item-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <h1><input type="text" name="name" value="{{item.name}}" /></h1>
+    </div>
+  </header>
+
+  {{#if system.bonus}}
+  <div class="item-form">
+    <div class="form-group">
+      <label>Gear Bonus</label>
+      <input type="number" name="system.bonus" value="{{system.bonus}}" min="0" />
+    </div>
+    <div class="form-group">
+      <label>Reliability</label>
+      <input type="number" name="system.reliability" value="{{system.reliability}}" min="0" />
+      <span class="sep">/</span>
+      <input type="number" name="system.reliabilityMax" value="{{system.reliabilityMax}}" min="0" />
+    </div>
+  </div>
+  {{/if}}
+
+  <section class="item-description">
+    <label>{{localize "YZE.Description"}}</label>
+    {{editor enriched.description target="system.description" editable=editable}}
+  </section>
+
+</form>

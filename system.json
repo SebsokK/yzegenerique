@@ -1,0 +1,84 @@
+{
+  "id": "yzegenerique",
+  "title": "YZE Générique",
+  "description": "Generic system based on the Year Zero Engine (SRD v1.0). Modular, preset-driven.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "authors": [{ "name": "Your name" }],
+  "esmodules": ["module/yzegenerique.mjs"],
+  "styles": ["styles/yzegenerique.css"],
+  "languages": [
+    { "lang": "en", "name": "English", "path": "lang/en.json" }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {}
+    },
+    "Item": {
+      "attribute":          {},
+      "skill":              {},
+      "gear":               {},
+      "weapon":             {},
+      "armor":              {},
+      "tag":                {},
+      "specialty":          {},
+      "resource":           {},
+      "strand":             {},
+      "talent":             {},
+      "pilot-archetype":    {},
+      "automata-archetype": {}
+    }
+  },
+  "socket": false,
+  "packs": [
+    {
+      "name":   "panic-tables",
+      "label":  "YZE — Panic Tables",
+      "path":   "packs/panic-tables.db",
+      "type":   "RollTable",
+      "system": "yzegenerique"
+    },
+    {
+      "name":   "sh-attributes",
+      "label":  "Sleepy Hollow — Attributes",
+      "path":   "packs/sh-attributes.db",
+      "type":   "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name":   "sh-skills",
+      "label":  "Sleepy Hollow — Skills",
+      "path":   "packs/sh-skills.db",
+      "type":   "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name":   "sh-talents",
+      "label":  "Sleepy Hollow — Talents",
+      "path":   "packs/sh-talents.db",
+      "type":   "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name":   "sh-weapons",
+      "label":  "Sleepy Hollow — Weapons",
+      "path":   "packs/sh-weapons.db",
+      "type":   "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name":   "sh-armors",
+      "label":  "Sleepy Hollow — Armors",
+      "path":   "packs/sh-armors.db",
+      "type":   "Item",
+      "system": "yzegenerique"
+    }
+  ],
+  "url": "",
+  "manifest": "",
+  "download": ""
+}

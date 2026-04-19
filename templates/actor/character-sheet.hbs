@@ -1,0 +1,277 @@
+{{!-- templates/actor/character-sheet.hbs — Feuille générique YZE --}}
+<form class="yze-sheet character-sheet" autocomplete="off">
+
+  {{!-- EN-TÊTE --}}
+  <header class="sheet-header">
+    <img class="actor-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" />
+    <div class="header-fields">
+      <h1><input type="text" name="name" value="{{actor.name}}" /></h1>
+      <div class="header-archetype">
+        <input type="text" name="system.archetype" value="{{system.archetype}}"
+          placeholder="{{localize 'YZE.Archetype'}}" />
+      </div>
+    </div>
+  </header>
+
+  {{!-- RESSOURCES FIXES (Health / Resolve) --}}
+  <section class="resources">
+    {{#if system.health}}
+    <div class="resource-block">
+      <label>{{localize "YZE.Health"}}</label>
+      <input type="number" name="system.health.value"
+        value="{{system.health.value}}" min="0" max="{{system.health.max}}" />
+      <span class="sep">/</span>
+      <input type="number" name="system.health.max"
+        value="{{system.health.max}}" min="0" />
+    </div>
+    {{/if}}
+    {{#if system.resolve}}
+    <div class="resource-block">
+      <label>{{localize "YZE.Resolve"}}</label>
+      <input type="number" name="system.resolve.value"
+        value="{{system.resolve.value}}" min="0" max="{{system.resolve.max}}" />
+      <span class="sep">/</span>
+      <input type="number" name="system.resolve.max"
+        value="{{system.resolve.max}}" min="0" />
+    </div>
+    {{/if}}
+  </section>
+
+  {{!-- STRESS LEVEL (conditionnel — setting enableStress) --}}
+  {{#if enableStress}}
+  <section class="stress-section">
+    <div class="resource-block stress-block">
+      <label>{{localize "YZE.Stress"}}</label>
+      <input type="number" name="system.stress.value"
+        value="{{system.stress.value}}" min="0" />
+    </div>
+  </section>
+  {{/if}}
+
+  {{!-- RESSOURCES CONFIGURABLES --}}
+  {{#if resources.length}}
+  <section class="resources-section">
+    <h2>{{localize "YZE.Resources"}}</h2>
+    <div class="resources-list">
+      {{#each resources as |res|}}
+      <div class="resource-row" data-item-id="{{res.id}}">
+        <span class="resource-name">{{res.name}}</span>
+        <input type="number"
+          data-item-id="{{res.id}}"
+          data-field="system.value"
+          value="{{res.system.value}}"
+          min="{{res.system.min}}"
+          max="{{res.system.max}}" />
+        <span class="sep">/</span>
+        <span class="resource-max">{{res.system.max}}</span>
+        <button type="button" class="ea-icon-btn" data-action="itemEdit" data-item-id="{{res.id}}">✎</button>
+        <button type="button" class="ea-icon-btn ea-delete-btn" data-action="itemDelete" data-item-id="{{res.id}}">✕</button>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+  <button type="button" data-action="itemCreate" data-type="resource">
+    + {{localize "YZE.AddResource"}}
+  </button>
+
+  {{!-- ATTRIBUTS --}}
+  <section class="attributes-section">
+    <h2>{{localize "YZE.Attributes"}}</h2>
+    <div class="ea-attributes-grid">
+      {{#each attributes as |attr|}}
+      <div class="ea-attribute-cell" data-item-id="{{attr.id}}">
+        <div class="ea-attr-name">{{attr.name}}</div>
+        <input class="ea-attr-input" type="number"
+          data-item-id="{{attr.id}}"
+          data-field="system.value"
+          value="{{attr.system.value}}" min="1" max="5" />
+        <div class="ea-attr-pips">
+          {{#each attr.pips as |pip|}}
+          <button class="ea-pip {{#if pip.filled}}ea-pip--filled{{/if}} {{#if pip.over}}ea-pip--over{{/if}}"
+            type="button"
+            data-action="pipClick"
+            data-pip-index="{{pip.index}}"
+            title="Current: {{pip.index}}"></button>
+          {{/each}}
+        </div>
+        <div class="ea-attr-actions">
+          <button class="ea-roll-btn" type="button"
+            data-action="rollAttribute" data-attr-id="{{attr.id}}">⚀</button>
+          <button class="ea-icon-btn" type="button"
+            data-action="itemEdit" data-item-id="{{attr.id}}">✎</button>
+          <button class="ea-icon-btn ea-delete-btn" type="button"
+            data-action="itemDelete" data-item-id="{{attr.id}}">✕</button>
+        </div>
+      </div>
+      {{else}}
+      <p class="empty-hint">{{localize "YZE.NoAttributes"}}</p>
+      {{/each}}
+    </div>
+    <button type="button" data-action="itemCreate" data-type="attribute">
+      + {{localize "YZE.AddAttribute"}}
+    </button>
+  </section>
+
+  {{!-- COMPÉTENCES --}}
+  <section class="skills-section">
+    <h2>{{localize "YZE.Skills"}}</h2>
+    <div class="ea-skills-list">
+      {{#each skills as |skill|}}
+      <div class="ea-skill-row" data-item-id="{{skill.id}}">
+        <span class="ea-skill-name">{{skill.name}}</span>
+        <span class="ea-skill-attr">{{skill.system.linkedAttribute}}</span>
+        <input class="ea-skill-val" type="number"
+          data-item-id="{{skill.id}}"
+          data-field="system.value"
+          value="{{skill.system.value}}" min="0" max="6" />
+        <button class="ea-roll-btn" type="button"
+          data-action="rollSkill" data-item-id="{{skill.id}}">⚀</button>
+        <button class="ea-icon-btn" type="button"
+          data-action="itemEdit" data-item-id="{{skill.id}}">✎</button>
+        <button class="ea-icon-btn ea-delete-btn" type="button"
+          data-action="itemDelete" data-item-id="{{skill.id}}">✕</button>
+      </div>
+      {{else}}
+      <p class="empty-hint">{{localize "YZE.NoSkills"}}</p>
+      {{/each}}
+    </div>
+    <button type="button" data-action="itemCreate" data-type="skill">
+      + {{localize "YZE.AddSkill"}}
+    </button>
+  </section>
+
+  {{!-- ARMES --}}
+  <section class="ea-section ea-weapons-section">
+    <h2>⚔ {{localize "YZE.Weapons"}}</h2>
+    {{#if weapons.length}}
+    <div class="ea-gear-list">
+      {{#each weapons as |item|}}
+      <div class="ea-weapon-card" data-item-id="{{item.id}}">
+        <div class="ea-gear-row ea-weapon-main">
+          <span class="ea-gear-name">{{item.name}}</span>
+          <span class="ea-gear-stat">{{item.system.grip}}</span>
+          <span class="ea-gear-stat">DMG {{item.system.damage}}</span>
+          <span class="ea-range ea-gear-stat">{{item.system.range}}</span>
+          {{#if item.system.bonusDice}}
+          <span class="ea-gear-bonus">+{{item.system.bonusDice}}d</span>
+          {{/if}}
+          <button class="ea-roll-btn" type="button"
+            data-action="rollWeapon" data-item-id="{{item.id}}"
+            {{#if item.system.isOutOfAmmo}}disabled title="Out of ammo"{{/if}}>⚀</button>
+          <button class="ea-icon-btn" type="button"
+            data-action="itemEdit" data-item-id="{{item.id}}">✎</button>
+          <button class="ea-icon-btn ea-delete-btn" type="button"
+            data-action="itemDelete" data-item-id="{{item.id}}">✕</button>
+        </div>
+        {{#if item.system.isRanged}}
+        <div class="ea-weapon-reloads {{#if item.system.isOutOfAmmo}}ea-out-of-ammo{{/if}}"
+             data-item-id="{{item.id}}">
+          <span class="ea-reloads-label">🔄</span>
+          <input type="number" data-item-id="{{item.id}}" data-field="system.currentReloads"
+            value="{{item.system.currentReloads}}" min="0" max="{{item.system.maxReloads}}" />
+          <span class="ea-sep">/</span>
+          <span class="ea-max">{{item.system.maxReloads}}</span>
+          <button class="ea-icon-btn" type="button"
+            data-action="useReload" data-item-id="{{item.id}}"
+            {{#if item.system.isOutOfAmmo}}disabled{{/if}}>-1</button>
+          <button class="ea-icon-btn" type="button"
+            data-action="resetReloads" data-item-id="{{item.id}}">↺</button>
+        </div>
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <p class="empty-hint">{{localize "YZE.NoWeapons"}}</p>
+    {{/if}}
+    <button type="button" data-action="itemCreate" data-type="weapon">
+      + {{localize "YZE.AddWeapon"}}
+    </button>
+  </section>
+
+  {{!-- ARMURES --}}
+  <section class="ea-section ea-armors-section">
+    <h2>🛡 {{localize "YZE.Armors"}}</h2>
+    {{#if armors.length}}
+    <div class="ea-gear-list">
+      {{#each armors as |item|}}
+      <div class="ea-armor-card" data-item-id="{{item.id}}">
+        <div class="ea-gear-row ea-armor-main {{#if item.system.isDestroyed}}ea-armor--destroyed{{/if}}">
+          <span class="ea-gear-name">{{item.name}}</span>
+          <span class="ea-gear-ar">AR {{item.system.armorRating}}/{{item.system.armorRatingMax}}</span>
+          <button class="ea-roll-btn" type="button"
+            data-action="rollArmor" data-item-id="{{item.id}}"
+            {{#if item.system.isDestroyed}}disabled{{/if}}>🛡</button>
+          <button class="ea-icon-btn" type="button"
+            data-action="itemEdit" data-item-id="{{item.id}}">✎</button>
+          <button class="ea-icon-btn ea-delete-btn" type="button"
+            data-action="itemDelete" data-item-id="{{item.id}}">✕</button>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <p class="empty-hint">{{localize "YZE.NoArmors"}}</p>
+    {{/if}}
+    <button type="button" data-action="itemCreate" data-type="armor">
+      + {{localize "YZE.AddArmor"}}
+    </button>
+  </section>
+
+  {{!-- ÉQUIPEMENT DIVERS --}}
+  <section class="ea-section ea-gear-section">
+    <h2>{{localize "YZE.Gear"}}</h2>
+    {{#if gear.length}}
+    <div class="ea-gear-list">
+      {{#each gear as |item|}}
+      <div class="ea-gear-row" data-item-id="{{item.id}}">
+        <span class="ea-gear-name">{{item.name}}</span>
+        <button class="ea-icon-btn" type="button"
+          data-action="itemEdit" data-item-id="{{item.id}}">✎</button>
+        <button class="ea-icon-btn ea-delete-btn" type="button"
+          data-action="itemDelete" data-item-id="{{item.id}}">✕</button>
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <p class="empty-hint">{{localize "YZE.NoGear"}}</p>
+    {{/if}}
+    <button type="button" data-action="itemCreate" data-type="gear">
+      + {{localize "YZE.AddGear"}}
+    </button>
+  </section>
+
+  {{!-- TALENTS --}}
+  <section class="ea-section">
+    <h2>{{localize "YZE.Talents"}}</h2>
+    {{#if talents.length}}
+    <div class="ea-gear-list">
+      {{#each talents as |talent|}}
+      <div class="ea-gear-row" data-item-id="{{talent.id}}">
+        <span class="ea-gear-name">{{talent.name}}</span>
+        {{#if talent.system.excerpt}}
+        <span class="ea-skill-attr talent-excerpt">{{talent.system.excerpt}}</span>
+        {{/if}}
+        <button class="ea-icon-btn" type="button"
+          data-action="itemEdit" data-item-id="{{talent.id}}">✎</button>
+        <button class="ea-icon-btn ea-delete-btn" type="button"
+          data-action="itemDelete" data-item-id="{{talent.id}}">✕</button>
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <p class="empty-hint">{{localize "YZE.NoTalents"}}</p>
+    {{/if}}
+    <button type="button" data-action="itemCreate" data-type="talent">
+      + {{localize "YZE.AddTalent"}}
+    </button>
+  </section>
+
+  {{!-- BIOGRAPHIE --}}
+  <section class="biography-section">
+    <h2>{{localize "YZE.Biography"}}</h2>
+    {{editor enriched.biography target="system.biography" editable=editable}}
+  </section>
+
+</form>

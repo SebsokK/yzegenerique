@@ -1,0 +1,59 @@
+{{!-- ea-archetype-sheet.hbs — Feuille archétype EA (pilot + automata) --}}
+<form class="yze-sheet ea-sheet item-sheet archetype-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <h1><input type="text" name="name" value="{{item.name}}" /></h1>
+      <span class="item-type-badge">
+        {{#if isPilot}}{{localize "YZE.EA.PilotArchetype"}}
+        {{else}}{{localize "YZE.EA.AutomataArchetype"}}{{/if}}
+      </span>
+    </div>
+  </header>
+
+  <div class="item-sections">
+
+    <section class="item-section">
+      <label>{{localize "YZE.Description"}}</label>
+      {{editor enriched.description target="system.description" editable=editable}}
+    </section>
+
+    {{#if isPilot}}
+    <section class="item-section">
+      <label>{{localize "YZE.EA.BreakdownText"}}</label>
+      {{editor enriched.breakdownText target="system.breakdownText" editable=editable}}
+    </section>
+
+    <section class="item-section">
+      <label>{{localize "YZE.EA.StrandTalentDescription"}}</label>
+      {{editor enriched.strandTalentDescription target="system.strandTalentDescription" editable=editable}}
+    </section>
+
+    <section class="item-section">
+      <label>{{localize "YZE.EA.HopeTalentDescription"}}</label>
+      {{editor enriched.hopeTalentDescription target="system.hopeTalentDescription" editable=editable}}
+    </section>
+    {{/if}}
+
+    {{#if isAuto}}
+    <section class="item-section">
+      <label>{{localize "YZE.EA.BerserkText"}}</label>
+      {{editor enriched.berserkText target="system.berserkText" editable=editable}}
+    </section>
+
+    <section class="item-section">
+      <label>{{localize "YZE.EA.StatArrayA"}}</label>
+      <input type="text" name="system.statArrayA" value="{{system.statArrayA}}"
+        placeholder="Strength 3 | Agility 1 | Wits 3 | Empathy 1" />
+    </section>
+
+    <section class="item-section">
+      <label>{{localize "YZE.EA.StatArrayB"}}</label>
+      <input type="text" name="system.statArrayB" value="{{system.statArrayB}}"
+        placeholder="Strength 1 | Agility 3 | Wits 3 | Empathy 1" />
+    </section>
+    {{/if}}
+
+  </div>
+</form>

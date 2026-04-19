@@ -1,0 +1,64 @@
+{{!-- templates/item/resource-sheet.hbs --}}
+<form class="yze-sheet item-sheet resource-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <h1><input type="text" name="name" value="{{item.name}}" /></h1>
+      <span class="item-type-badge">Resource</span>
+    </div>
+  </header>
+
+  <div class="item-form">
+
+    <div class="form-group form-group--inline">
+      <label>Slug <span class="form-hint">(stable key for formulas)</span></label>
+      <input type="text" name="system.slug" value="{{system.slug}}"
+        placeholder="e.g. health, stability" />
+    </div>
+
+    <div class="form-group form-group--inline">
+      <label>Category <span class="form-hint">(for display grouping)</span></label>
+      <select name="system.category">
+        <option value="general"  {{#if (eq system.category "general")}}selected{{/if}}>General</option>
+        <option value="pilot"    {{#if (eq system.category "pilot")}}selected{{/if}}>Pilot</option>
+        <option value="automata" {{#if (eq system.category "automata")}}selected{{/if}}>Automata</option>
+      </select>
+    </div>
+
+    <div class="resource-formula-block">
+      <div class="form-group">
+        <label>Formula <span class="form-hint">(attribute slugs + constants, e.g. "strength + agility + 5")</span></label>
+        <input type="text" name="system.formula" value="{{system.formula}}"
+          placeholder="e.g. strength + agility — leave empty for manual max" />
+      </div>
+
+      <div class="form-group form-group--inline resource-modifier-row">
+        <label>Modifier <span class="form-hint">(added to computed max, e.g. talent Tough: +1)</span></label>
+        <input type="number" name="system.modifier" value="{{system.modifier}}" />
+        <span class="form-hint resource-max-preview">
+          → max will be: <strong>{{computedMax}}</strong>
+        </span>
+      </div>
+    </div>
+
+    <div class="resource-values-block">
+      <div class="form-group form-group--inline">
+        <label>Current Value</label>
+        <input type="number" name="system.value" value="{{system.value}}"
+          min="{{system.min}}" max="{{system.max}}" />
+        <span class="form-hint">/ {{system.max}}</span>
+      </div>
+      <div class="form-group form-group--inline">
+        <label>Minimum</label>
+        <input type="number" name="system.min" value="{{system.min}}" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" name="system.description" value="{{system.description}}" />
+    </div>
+
+  </div>
+</form>

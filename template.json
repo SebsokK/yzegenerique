@@ -1,0 +1,19 @@
+{
+  "Actor": {
+    "types": ["character", "npc"],
+    "htmlFields": [],
+    "character": {},
+    "npc": {}
+  },
+  "Item": {
+    "types": [
+      "attribute", "skill", "gear", "weapon", "armor", "tag",
+      "specialty", "resource", "strand", "talent",
+      "pilot-archetype", "automata-archetype"
+    ],
+    "htmlFields": ["description"],
+    "attribute": {}, "skill": {}, "gear": {}, "weapon": {}, "armor": {}, "tag": {},
+    "specialty": {}, "resource": {}, "strand": {}, "talent": {},
+    "pilot-archetype": {}, "automata-archetype": {}
+  }
+}

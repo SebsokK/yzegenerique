@@ -1,0 +1,22 @@
+/* ============================================================
+   sh-theme.css — Thème Sleepy Hollow
+   Override des custom properties de yzegenerique.css.
+   Palette : ocre/sépia, encre sombre, ambiance gothique 18e s.
+   ============================================================ */
+
+:root {
+  --yze-color-bg:         #0d0b08;
+  --yze-color-surface:    #161209;
+  --yze-color-border:     #3a2e1c;
+  --yze-color-accent:     #c8921a;
+  --yze-color-accent-alt: #8b2020;
+  --yze-color-text:       #d4c49a;
+  --yze-color-text-muted: #6b5a3a;
+  --yze-color-success:    #7a9e3a;
+  --yze-color-danger:     #9e2020;
+  --yze-color-stress:     #c05a14;
+  --yze-color-warning:    #c8921a;
+
+  --yze-font-title: "Cinzel Decorative", "Cinzel", "Palatino Linotype", serif;
+  --yze-font-body:  "EB Garamond", "Garamond", "Palatino Linotype", serif;
+}
