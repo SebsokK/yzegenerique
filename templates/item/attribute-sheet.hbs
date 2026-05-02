@@ -1,0 +1,42 @@
+{{!-- templates/item/attribute-sheet.hbs --}}
+<form class="yze-sheet item-sheet attribute-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <input class="item-name-input" type="text" name="name" value="{{item.name}}" />
+    </div>
+  </header>
+
+  <div class="item-form">
+    <div class="form-group">
+      <label>Base Value</label>
+      <input type="number" name="system.value" value="{{system.value}}" min="1" max="10" />
+    </div>
+    <div class="form-group">
+      <label>Current Value</label>
+      <input type="number" name="system.current" value="{{system.current}}" min="0" max="10" />
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select name="system.category">
+        <option value="physical" {{#if (eq system.category "physical")}}selected{{/if}}>Physical</option>
+        <option value="mental"   {{#if (eq system.category "mental")}}selected{{/if}}>Mental</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Slug <span class="form-hint">(used in formulas and skill links)</span></label>
+      <input type="text" name="system.slug" value="{{system.slug}}" placeholder="e.g. strength" />
+    </div>
+    <div class="form-group">
+      <label>Step Rating</label>
+      <select name="system.stepRating">
+        <option value="A" {{#if (eq system.stepRating "A")}}selected{{/if}}>A (D12)</option>
+        <option value="B" {{#if (eq system.stepRating "B")}}selected{{/if}}>B (D10)</option>
+        <option value="C" {{#if (eq system.stepRating "C")}}selected{{/if}}>C (D8)</option>
+        <option value="D" {{#if (eq system.stepRating "D")}}selected{{/if}}>D (D6)</option>
+      </select>
+    </div>
+  </div>
+
+</form>

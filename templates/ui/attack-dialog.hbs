@@ -1,0 +1,72 @@
+{{!-- templates/ui/attack-dialog.hbs --}}
+<div class="attack-dialog-body yze-preset-{{presetId}}">
+
+  <div class="attack-dialog-weapon-name">⚔ {{weaponName}}</div>
+
+  {{!-- Boutons rapides (free mode uniquement) --}}
+  {{#if freeMode}}
+  {{#if quickAttacks.length}}
+  <div class="attack-dialog-quick-row">
+    {{#each quickAttacks as |qa|}}
+    <button type="button" class="attack-dialog-quick-btn" data-pool="{{qa.pool}}">
+      {{qa.label}} ({{qa.pool}}d)
+    </button>
+    {{/each}}
+  </div>
+  {{/if}}
+  {{/if}}
+
+  {{!-- Toggle mode pour Free Attack --}}
+  {{#if freeMode}}
+  <div class="attack-dialog-mode-row">
+    <select class="attack-dialog-mode-toggle">
+      <option value="dice" {{#unless fixedMode}}selected{{/unless}}>Roll dice</option>
+      <option value="fixed" {{#if fixedMode}}selected{{/if}}>Fixed damage</option>
+    </select>
+  </div>
+  {{/if}}
+
+  {{!-- Contrôle principal --}}
+  <div class="attack-dialog-mod-row">
+    <button type="button" class="attack-dialog-mod-btn" data-action="modDown">−</button>
+    <div class="attack-dialog-mod-display">
+      {{#if fixedMode}}
+        <span class="attack-dialog-mod-value mod-positive">{{fixedDmg}}</span>
+        <span class="attack-dialog-pool-hint">fixed damage</span>
+      {{else if freeMode}}
+        <span class="attack-dialog-mod-value">{{modifier}}d</span>
+        <span class="attack-dialog-pool-hint">dice pool</span>
+      {{else}}
+        <span class="attack-dialog-mod-value {{#if modifier}}{{#if (gt modifier 0)}}mod-positive{{else}}mod-negative{{/if}}{{/if}}">
+          {{#if (gt modifier 0)}}+{{/if}}{{modifier}}
+        </span>
+        <span class="attack-dialog-pool-hint">→ {{finalPool}}d</span>
+      {{/if}}
+    </div>
+    <button type="button" class="attack-dialog-mod-btn" data-action="modUp">+</button>
+  </div>
+
+  {{#if isRanged}}
+  <label class="attack-dialog-ammo-label">
+    <input type="checkbox" class="attack-dialog-ammo-check" />
+    Use Ammunition
+  </label>
+  {{/if}}
+
+  {{#if freeMode}}
+  {{#unless fixedMode}}
+  <div class="attack-dialog-base-dmg-row">
+    <label>Base Damage</label>
+    <input type="number" class="attack-dialog-base-dmg" value="{{baseDamage}}" min="0" max="50" />
+  </div>
+  {{/unless}}
+  {{/if}}
+
+  <div class="attack-dialog-actions">
+    <button type="button" class="attack-dialog-cancel" data-action="cancel">Cancel</button>
+    <button type="button" class="attack-dialog-confirm" data-action="confirm">
+      {{#if fixedMode}}💥 Apply{{else}}🎲 Roll{{/if}}
+    </button>
+  </div>
+
+</div>

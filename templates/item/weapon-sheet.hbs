@@ -1,0 +1,137 @@
+{{!-- templates/item/weapon-sheet.hbs --}}
+<form class="yze-sheet item-sheet weapon-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <input class="item-name-input" type="text" name="name" value="{{item.name}}" />
+      <span class="item-type-badge weapon-badge">⚔ Weapon</span>
+    </div>
+    {{#if item.actor}}
+    <button type="button" class="weapon-roll-btn" data-action="rollAttack"
+      {{#if isOutOfAmmo}}disabled title="Out of ammo — reload first"{{/if}}>
+      ⚀ Roll Attack
+    </button>
+    {{/if}}
+  </header>
+
+  {{!-- STATS --}}
+  <div class="item-form weapon-stats-grid">
+    <div class="form-group">
+      <label>Bonus Dice</label>
+      <input type="number" name="system.bonusDice" value="{{system.bonusDice}}" min="0" />
+    </div>
+    <div class="form-group">
+      <label>Grip</label>
+      <select name="system.grip">
+        <option value="1H" {{#if (eq system.grip "1H")}}selected{{/if}}>One-Handed</option>
+        <option value="2H" {{#if (eq system.grip "2H")}}selected{{/if}}>Two-Handed</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Damage (DR)</label>
+      <input type="number" name="system.damage" value="{{system.damage}}" min="0" />
+    </div>
+    <div class="form-group">
+      <label>Range</label>
+      <select name="system.range">
+        <option value="engaged" {{#if (eq system.range "engaged")}}selected{{/if}}>Engaged</option>
+        <option value="short"   {{#if (eq system.range "short")}}selected{{/if}}>Short</option>
+        <option value="medium"  {{#if (eq system.range "medium")}}selected{{/if}}>Medium</option>
+        <option value="long"    {{#if (eq system.range "long")}}selected{{/if}}>Long</option>
+        <option value="extreme" {{#if (eq system.range "extreme")}}selected{{/if}}>Extreme</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Weight</label>
+      <input type="number" name="system.weight" value="{{system.weight}}" min="0" />
+    </div>
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number" name="system.price" value="{{system.price}}" min="0" />
+    </div>
+  </div>
+
+  {{!-- TOGGLE RANGED + MUNITIONS --}}
+  <div class="weapon-ranged-block">
+    <label class="checkbox-label">
+      <input type="checkbox" name="system.isRanged" {{#if system.isRanged}}checked{{/if}} />
+      Ranged Weapon (enables reload tracking)
+    </label>
+
+    {{#if system.isRanged}}
+    <div class="weapon-reloads-row {{#if isOutOfAmmo}}weapon-out-of-ammo{{/if}}">
+      <span class="weapon-reloads-label">🔄 Reloads</span>
+      <input type="number" name="system.currentReloads"
+        value="{{system.currentReloads}}" min="0" max="{{system.maxReloads}}" />
+      <span class="armor-sep">/</span>
+      <input type="number" name="system.maxReloads"
+        value="{{system.maxReloads}}" min="0" />
+      <button type="button" data-action="useReload" title="Use one reload (-1)"
+        {{#if isOutOfAmmo}}disabled{{/if}}>-1</button>
+      <button type="button" data-action="resetReloads" title="Full reload">↺ Full</button>
+      {{#if isOutOfAmmo}}
+      <span class="weapon-ammo-empty">⚠ Out of ammo</span>
+      {{/if}}
+    </div>
+    {{/if}}
+  </div>
+
+  {{!-- LIAISONS ATTRIBUT/SKILL --}}
+  <div class="weapon-link-block">
+    <div class="form-group">
+      <label>Default Attribute</label>
+      {{#if actorAttributes.length}}
+      <select name="system.linkedAttribute">
+        <option value="">— choose —</option>
+        {{#each actorAttributes as |attr|}}
+        <option value="{{attr.slug}}" {{#if (eq ../system.linkedAttribute attr.slug)}}selected{{/if}}>{{attr.label}}</option>
+        {{/each}}
+      </select>
+      {{else}}
+      <input type="text" name="system.linkedAttribute" value="{{system.linkedAttribute}}" placeholder="e.g. strength" />
+      {{/if}}
+    </div>
+    <div class="form-group">
+      <label>Default Skill</label>
+      {{#if actorSkills.length}}
+      <select name="system.linkedSkill">
+        <option value="">— choose —</option>
+        {{#each actorSkills as |skill|}}
+        <option value="{{skill.slug}}" {{#if (eq ../system.linkedSkill skill.slug)}}selected{{/if}}>{{skill.label}}</option>
+        {{/each}}
+      </select>
+      {{else}}
+      <input type="text" name="system.linkedSkill" value="{{system.linkedSkill}}" placeholder="e.g. close-combat" />
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- TAGS --}}
+  <div class="item-tags-section">
+    <div class="item-tags-header">
+      <span class="item-tags-label">Tags</span>
+      <button type="button" class="item-tags-add" data-action="createTag"
+        title="Create a new tag and attach it">+ New Tag</button>
+    </div>
+    <div class="item-tags-list {{#unless tags.length}}item-tags-empty-zone{{/unless}}">
+      {{#each tags as |tag|}}
+      <div class="item-tag-row" data-tag-id="{{tag.id}}">
+        <span class="yze-tag-badge" title="{{tag.description}}">{{tag.name}}</span>
+        <button type="button" class="ea-icon-btn" data-action="editTag"
+          data-tag-id="{{tag.id}}" title="Edit tag">✎</button>
+        <button type="button" class="ea-icon-btn ea-delete-btn" data-action="removeTag"
+          data-tag-id="{{tag.id}}" title="Remove from weapon">✕</button>
+      </div>
+      {{else}}
+      <span class="item-tags-hint">No tags — create one or drag a Tag item here</span>
+      {{/each}}
+    </div>
+  </div>
+
+  <section class="item-description">
+    <label>{{localize "YZE.Description"}}</label>
+    {{editor enriched.description target="system.description" button=true engine="prosemirror" collaborate=false editable=editable}}
+  </section>
+
+</form>

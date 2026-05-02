@@ -1,0 +1,22 @@
+/* ============================================================
+   ea-theme.css — Thème Eldritch Automata
+   Override des custom properties de yzegenerique.css uniquement.
+   Aucune règle structurelle ici.
+   ============================================================ */
+
+:root {
+  --yze-color-bg:         #0b0b12;
+  --yze-color-surface:    #13131e;
+  --yze-color-border:     #252540;
+  --yze-color-accent:     #6a3fc8;
+  --yze-color-accent-alt: #c83f6a;
+  --yze-color-text:       #c8c8e0;
+  --yze-color-text-muted: #5a5a90;
+  --yze-color-success:    #3fc87a;
+  --yze-color-danger:     #c83f3f;
+  --yze-color-stress:     #3fc8c8;
+  --yze-color-warning:    #c8a03f;
+
+  --yze-font-title: "Rajdhani", "Orbitron", "Cinzel", sans-serif;
+  --yze-font-body:  "Share Tech Mono", "Roboto Condensed", monospace;
+}

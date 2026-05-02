@@ -1,0 +1,5 @@
+2026/05/02-11:01:29.138 4fc8 Delete type=3 #1
+2026/05/02-11:07:59.180 92bc Level-0 table #5: started
+2026/05/02-11:07:59.185 92bc Level-0 table #5: 44508 bytes OK
+2026/05/02-11:07:59.189 92bc Delete type=0 #3
+2026/05/02-11:07:59.202 92bc Manual compaction at level-0 from '!actors!BanditGen001yze' @ 72057594037927935 : 1 .. '!actors.items!z9K3t7ygKx6LczgC' @ 0 : 0; will stop at (end)

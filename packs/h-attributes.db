@@ -1,0 +1,4 @@
+{"_id":"HAgi001horror","name":"Agility","type":"attribute","img":"icons/svg/d20-grey.svg","system":{"slug":"agility","value":2,"current":2,"category":"physical","description":"Body control, speed, and motor skills.","tagIds":[]},"flags":{}}
+{"_id":"HEmp001horror","name":"Empathy","type":"attribute","img":"icons/svg/d20-grey.svg","system":{"slug":"empathy","value":2,"current":2,"category":"mental","description":"Personal charisma and ability to manipulate others.","tagIds":[]},"flags":{}}
+{"_id":"HStr001horror","name":"Strength","type":"attribute","img":"icons/svg/d20-grey.svg","system":{"slug":"strength","value":2,"current":2,"category":"physical","description":"Raw muscle power and brawn.","tagIds":[]},"flags":{}}
+{"_id":"HWit001horror","name":"Wits","type":"attribute","img":"icons/svg/d20-grey.svg","system":{"slug":"wits","value":2,"current":2,"category":"mental","description":"Sensory perception, intelligence, and sanity.","tagIds":[]},"flags":{}}

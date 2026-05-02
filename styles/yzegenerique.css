@@ -1,0 +1,3483 @@
+/* ============================================================
+   yzegenerique.css — Base YZE Générique
+   Variables custom properties pour thèmes interchangeables.
+   Les presets overrident ces variables dans leurs propres CSS.
+   ============================================================ */
+
+/* ── Variables de base (thème sombre générique) ─────────────── */
+:root {
+  --yze-color-bg:          #1a1a1a;
+  --yze-color-surface:     #252525;
+  --yze-color-border:      #444;
+  --yze-color-accent:      #c0a050;
+  --yze-color-accent-alt:  #8b3030;
+  --yze-color-text:        #ddd;
+  --yze-color-text-muted:  #888;
+  --yze-color-success:     #5a9e5a;
+  --yze-color-danger:      #9e3030;
+  --yze-color-stress:      #8b4513;
+  --yze-color-warning:     #c08030;
+
+  --yze-font-title: "Cinzel", serif;
+  --yze-font-body:  "Roboto Condensed", sans-serif;
+  --yze-font-size:  15px;
+
+  --yze-radius:   4px;
+  --yze-gap:      8px;
+  --yze-gap-sm:   4px;
+  --yze-gap-lg:   12px;
+}
+
+/* ── Reset minimal pour les feuilles ──────────────────────────── */
+.yze-sheet *,
+.yze-sheet *::before,
+.yze-sheet *::after {
+  box-sizing: border-box;
+}
+
+.yze-sheet {
+  background:  var(--yze-color-bg);
+  color:       var(--yze-color-text);
+  font-family: var(--yze-font-body);
+  font-size:   var(--yze-font-size);
+  padding:     var(--yze-gap);
+  height:      100%;
+  overflow-y:  auto;
+}
+
+/* ── En-tête générique ────────────────────────────────────────── */
+.yze-sheet .sheet-header,
+.yze-sheet .item-header {
+  display:        flex;
+  gap:            var(--yze-gap);
+  align-items:    center;
+  border-bottom:  2px solid var(--yze-color-accent);
+  padding-bottom: var(--yze-gap);
+  margin-bottom:  var(--yze-gap);
+}
+
+.yze-sheet .actor-portrait,
+.yze-sheet .item-img {
+  width:         64px;
+  height:        64px;
+  object-fit:    cover;
+  object-position: center top;
+  background:    var(--yze-color-surface);
+  border:        2px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  cursor:        pointer;
+  flex-shrink:   0;
+  transition:    border-color 0.15s, opacity 0.15s;
+  image-rendering: high-quality;
+}
+
+.yze-sheet .actor-portrait {
+  width:  140px;
+  height: 140px;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.yze-sheet .actor-portrait:hover,
+.yze-sheet .item-img:hover {
+  border-color: var(--yze-color-accent);
+  opacity:      0.85;
+}
+
+.yze-sheet .header-fields,
+.yze-sheet .item-header-fields {
+  flex: 1;
+  min-width: 0;
+}
+
+.yze-sheet h1 {
+  margin: 0 0 4px;
+}
+
+.yze-sheet h1 input,
+.yze-sheet h1 input[type="text"] {
+  font-family: var(--yze-font-title);
+  font-size:   1.3em;
+  color:       var(--yze-color-accent);
+  background:  transparent;
+  border:      none;
+  border-bottom: 1px solid var(--yze-color-border);
+  width:       100%;
+  padding:     2px 0;
+}
+
+/* ── Ressources ────────────────────────────────────────────────── */
+.yze-sheet .resources {
+  display:       flex;
+  gap:           var(--yze-gap);
+  flex-wrap:     wrap;
+  margin-bottom: var(--yze-gap);
+}
+
+.yze-sheet .resource-block {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       4px 8px;
+}
+
+.yze-sheet .resource-block label {
+  font-size:      0.8em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width:      50px;
+}
+
+.yze-sheet .resource-block input[type="number"] {
+  width:      38px;
+  text-align: center;
+  background: transparent;
+  border:     none;
+  color:      var(--yze-color-text);
+  font-size:  1.1em;
+}
+
+.yze-sheet .resource-block .sep,
+.yze-sheet .resource-block .resource-max {
+  color:     var(--yze-color-text-muted);
+  font-size: 0.9em;
+}
+
+/* ── Sections ──────────────────────────────────────────────────── */
+.yze-sheet section {
+  margin-bottom: var(--yze-gap-lg);
+}
+
+.yze-sheet h2 {
+  font-family:    var(--yze-font-title);
+  color:          var(--yze-color-accent);
+  font-size:      0.85em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom:  1px solid var(--yze-color-border);
+  margin:         0 0 var(--yze-gap-sm);
+  padding-bottom: 2px;
+}
+
+/* ── Lignes attribut / skill ───────────────────────────────────── */
+.yze-sheet .attribute-row,
+.yze-sheet .skill-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  padding:       2px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.yze-sheet .attr-name,
+.yze-sheet .skill-name {
+  flex:      1;
+  font-size: 0.9em;
+}
+
+.yze-sheet .skill-attr {
+  color:     var(--yze-color-text-muted);
+  font-size: 0.8em;
+  min-width: 64px;
+}
+
+.yze-sheet .attr-value,
+.yze-sheet .skill-value {
+  width:         32px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     0.95em;
+}
+
+/* ── Boutons ────────────────────────────────────────────────────── */
+.yze-sheet button {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  cursor:        pointer;
+  padding:       2px 6px;
+  font-size:     0.85em;
+  font-family:   var(--yze-font-body);
+  transition:    border-color 0.12s, color 0.12s;
+}
+
+.yze-sheet button:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+.yze-sheet .roll-btn,
+.yze-sheet .ea-roll-btn {
+  background:  transparent;
+  border:      none;
+  color:       var(--yze-color-accent);
+  font-size:   1.1em;
+  padding:     0 4px;
+  cursor:      pointer;
+}
+
+.yze-sheet .icon-btn,
+.yze-sheet .ea-icon-btn {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  padding:       1px 5px;
+  font-size:     0.8em;
+}
+
+.yze-sheet .icon-btn:hover,
+.yze-sheet .ea-icon-btn:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+.yze-sheet .delete-btn:hover,
+.yze-sheet .ea-delete-btn:hover {
+  border-color: var(--yze-color-danger);
+  color:        var(--yze-color-danger);
+}
+
+.yze-sheet .empty-hint,
+.yze-sheet .ea-empty {
+  color:      var(--yze-color-text-muted);
+  font-style: italic;
+  font-size:  0.85em;
+  padding:    4px 0;
+}
+
+/* ── Formulaires Item ───────────────────────────────────────────── */
+.yze-sheet .item-form,
+.yze-sheet .item-sections {
+  display:        flex;
+  flex-direction: column;
+  gap:            var(--yze-gap);
+}
+
+.yze-sheet .form-group,
+.yze-sheet .item-section {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+}
+
+.yze-sheet .form-group label,
+.yze-sheet .item-section > label {
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.yze-sheet .form-group input[type="text"],
+.yze-sheet .form-group input[type="number"],
+.yze-sheet .form-group select,
+.yze-sheet .form-group textarea,
+.yze-sheet .item-section input[type="text"],
+.yze-sheet .item-section textarea,
+.yze-sheet .item-section select {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  padding:       3px 6px;
+  font-family:   var(--yze-font-body);
+  font-size:     var(--yze-font-size);
+}
+
+.yze-sheet .form-hint {
+  color:       var(--yze-color-text-muted);
+  font-size:   0.85em;
+  font-weight: normal;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.yze-sheet .item-type-badge {
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  background:  var(--yze-color-surface);
+  border:      1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:     1px 6px;
+}
+
+/* ── Checkboxes ─────────────────────────────────────────────────── */
+.yze-sheet .item-flags {
+  display:    flex;
+  flex-wrap:  wrap;
+  gap:        var(--yze-gap);
+}
+
+.yze-sheet .flag-row {
+  display: flex;
+  gap:     var(--yze-gap);
+  flex-wrap: wrap;
+}
+
+.yze-sheet .checkbox-label {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  font-size:   0.85em;
+  color:       var(--yze-color-text-muted);
+  cursor:      pointer;
+}
+
+.yze-sheet .form-group--inline {
+  flex-direction: row;
+  align-items:    center;
+  gap:            var(--yze-gap);
+}
+
+.yze-sheet .form-group--inline label {
+  white-space: nowrap;
+}
+
+/* ── EA — Layout dual bloc Pilot / Automata ─────────────────────── */
+.ea-sheet .ea-header {
+  display:        flex;
+  gap:            var(--yze-gap-lg);
+  align-items:    center;
+  border-bottom:  2px solid var(--yze-color-accent);
+  padding-bottom: var(--yze-gap);
+  margin-bottom:  var(--yze-gap);
+}
+
+.ea-sheet .ea-header-fields {
+  flex: 1;
+  min-width: 0;
+}
+
+.ea-sheet .ea-header-meta input {
+  background:  transparent;
+  border:      none;
+  border-bottom: 1px dashed var(--yze-color-border);
+  color:       var(--yze-color-text-muted);
+  font-size:   0.9em;
+  width:       100%;
+}
+
+.ea-sheet .ea-xp {
+  display:     flex;
+  align-items: center;
+  gap:         var(--yze-gap-sm);
+  font-size:   0.85em;
+  color:       var(--yze-color-text-muted);
+  margin-top:  4px;
+}
+
+.ea-sheet .ea-xp input {
+  width:      38px;
+  text-align: center;
+  background: transparent;
+  border:     none;
+  border-bottom: 1px solid var(--yze-color-border);
+  color:      var(--yze-color-text);
+}
+
+.ea-sheet .ea-sep, .yze-sheet .ea-sep {
+  color:  var(--yze-color-text-muted);
+  margin: 0 2px;
+}
+
+.ea-sheet .ea-dual-block {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   var(--yze-gap);
+  margin-bottom:         var(--yze-gap-lg);
+}
+
+.ea-sheet .ea-block {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       var(--yze-gap);
+}
+
+.ea-sheet .ea-block-title {
+  font-family:    var(--yze-font-title);
+  color:          var(--yze-color-accent);
+  font-size:      0.8em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom:  1px solid var(--yze-color-border);
+  margin:         0 0 var(--yze-gap-sm);
+  padding-bottom: 2px;
+}
+
+.ea-sheet .ea-automata-block .ea-block-title {
+  color: var(--yze-color-accent-alt);
+}
+
+/* ── EA Ressources ──────────────────────────────────────────────── */
+.ea-sheet .ea-resources {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+}
+
+.ea-sheet .ea-resource {
+  display:     flex;
+  align-items: center;
+  gap:         var(--yze-gap-sm);
+  padding:     2px 0;
+}
+
+.ea-sheet .ea-resource label {
+  flex:           1;
+  font-size:      0.78em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ea-sheet .ea-resource input[type="number"] {
+  width:         36px;
+  text-align:    center;
+  background:    var(--yze-color-bg);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     1em;
+}
+
+.ea-sheet .ea-max, .yze-sheet .ea-max {
+  color:     var(--yze-color-text-muted);
+  font-size: 0.85em;
+  min-width: 16px;
+  text-align: right;
+}
+
+.ea-sheet .ea-resource--critical input { border-color: var(--yze-color-danger); }
+.ea-sheet .ea-resource--warning  input { border-color: var(--yze-color-warning); }
+.ea-sheet .ea-stress-resource label    { color:        var(--yze-color-stress);  }
+
+/* ── EA Statuts ─────────────────────────────────────────────────── */
+.ea-sheet .ea-status {
+  margin-top:    var(--yze-gap-sm);
+  padding:       3px 8px;
+  border-radius: var(--yze-radius);
+  font-size:     0.75em;
+  font-weight:   bold;
+  text-align:    center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ea-sheet .ea-status--breakdown {
+  background: rgba(158, 48, 48, 0.15);
+  color:      var(--yze-color-danger);
+  border:     1px solid var(--yze-color-danger);
+}
+
+.ea-sheet .ea-status--berserk {
+  background: rgba(192, 64, 80, 0.15);
+  color:      var(--yze-color-accent-alt);
+  border:     1px solid var(--yze-color-accent-alt);
+}
+
+.ea-sheet .ea-archetype-state-text {
+  font-size:   0.85em;
+  color:       var(--yze-color-text-muted);
+  margin-top:  var(--yze-gap-sm);
+  padding:     4px;
+  border-left: 2px solid var(--yze-color-border);
+}
+
+/* ── EA Attributs (grille 4 colonnes) ────────────────────────────── */
+.ea-sheet .ea-section, .yze-sheet .ea-section { margin-bottom: var(--yze-gap-lg); }
+
+.ea-sheet .ea-section, .yze-sheet .ea-section h2 {
+  font-family:    var(--yze-font-title);
+  color:          var(--yze-color-accent);
+  font-size:      0.8em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom:  1px solid var(--yze-color-border);
+  margin:         0 0 var(--yze-gap-sm);
+  padding-bottom: 2px;
+}
+
+.ea-sheet .ea-attributes-grid,
+.yze-sheet .ea-attributes-grid {
+  display:               grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:                   var(--yze-gap-sm);
+  margin-bottom:         var(--yze-gap-sm);
+}
+
+.ea-sheet .ea-attribute-cell,
+.yze-sheet .ea-attribute-cell {
+  background:     var(--yze-color-surface);
+  border:         1px solid var(--yze-color-border);
+  border-radius:  var(--yze-radius);
+  padding:        6px 4px;
+  text-align:     center;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            3px;
+}
+
+.ea-sheet .ea-attr-name,
+.yze-sheet .ea-attr-name {
+  font-size:      0.72em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ea-sheet .ea-attr-input,
+.yze-sheet .ea-attr-input {
+  width:       38px;
+  text-align:  center;
+  background:  transparent;
+  border:      none;
+  font-size:   1.4em;
+  color:       var(--yze-color-text);
+  font-weight: bold;
+}
+
+/* ── EA Skills ──────────────────────────────────────────────────── */
+.ea-sheet .ea-skills-list, .yze-sheet .ea-skills-list { display: flex; flex-direction: column; gap: 1px; }
+
+.ea-sheet .ea-skill-row, .yze-sheet .ea-skill-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  padding:       3px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.ea-sheet .ea-skill-name, .yze-sheet .ea-skill-name { flex: 1; font-size: 0.9em; }
+
+.ea-sheet .ea-skill-attr, .yze-sheet .ea-skill-attr {
+  color:     var(--yze-color-text-muted);
+  font-size: 0.78em;
+  min-width: 64px;
+}
+
+.ea-sheet .ea-skill-val, .yze-sheet .ea-skill-val {
+  width:         30px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     0.9em;
+}
+
+/* ── EA Archétypes ──────────────────────────────────────────────── */
+.ea-sheet .ea-archetype-row {
+  display:     flex;
+  align-items: center;
+  gap:         var(--yze-gap);
+  padding:     4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ea-sheet .ea-label {
+  font-size:      0.8em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  min-width:      120px;
+}
+
+.ea-sheet .ea-archetype-name {
+  flex:      1;
+  font-size: 0.95em;
+}
+
+.ea-sheet .ea-text-btn {
+  background:    transparent;
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  padding:       2px 8px;
+  font-size:     0.82em;
+}
+
+.ea-sheet .ea-text-btn:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+/* ── EA Talents ─────────────────────────────────────────────────── */
+.ea-sheet .ea-talent-group { margin-bottom: var(--yze-gap); }
+
+.ea-sheet h3.ea-talent-group-title {
+  font-size:      0.78em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin:         4px 0 3px;
+}
+
+.ea-sheet .ea-talent-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  padding:       2px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.ea-sheet .ea-talent-name { flex: 1; font-size: 0.9em; }
+
+.ea-sheet .ea-talent-badge {
+  font-size:     0.72em;
+  padding:       1px 5px;
+  border-radius: 2px;
+  font-weight:   bold;
+  text-transform: uppercase;
+}
+
+.ea-sheet .ea-badge--hope   { background: rgba(192, 160, 80, 0.2); color: var(--yze-color-accent); }
+.ea-sheet .ea-badge--strand { background: rgba(90, 158, 90, 0.2);  color: var(--yze-color-success); }
+.ea-sheet .ea-badge--locked { background: rgba(100, 100, 100, 0.2); color: var(--yze-color-text-muted); }
+
+.ea-sheet .ea-create-btns {
+  display: flex;
+  gap:     var(--yze-gap-sm);
+  margin-top: var(--yze-gap-sm);
+}
+
+/* ── EA Strands ─────────────────────────────────────────────────── */
+.ea-sheet .ea-strands-list { display: flex; flex-direction: column; gap: 2px; }
+
+.ea-sheet .ea-strand-row {
+  display:       flex;
+  align-items:   center;
+  gap:           var(--yze-gap-sm);
+  padding:       3px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.ea-sheet .ea-strand-name    { flex: 1; font-size: 0.9em; }
+.ea-sheet .ea-strand-target  { color: var(--yze-color-text-muted); font-size: 0.82em; }
+.ea-sheet .ea-strand-status  { font-size: 0.78em; color: var(--yze-color-text-muted); min-width: 60px; text-align: center; }
+.ea-sheet .ea-strand-badge   { font-size: 0.72em; padding: 1px 5px; border-radius: 2px; background: rgba(139, 48, 48, 0.2); color: var(--yze-color-accent-alt); }
+
+.ea-sheet .ea-strand--broken .ea-strand-name {
+  text-decoration: line-through;
+  color:           var(--yze-color-text-muted);
+  opacity:         0.7;
+}
+
+.ea-sheet .ea-strand--exhausted .ea-strand-status {
+  color: var(--yze-color-warning);
+}
+
+/* ── Preset Menu ────────────────────────────────────────────────── */
+.preset-menu-content {
+  padding: 12px;
+  font-family: var(--yze-font-body);
+}
+
+.preset-menu-intro {
+  font-size: 0.85em;
+  color: var(--yze-color-text-muted);
+  margin-bottom: 12px;
+  border-left: 3px solid var(--yze-color-accent);
+  padding-left: 8px;
+}
+
+.preset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preset-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--yze-color-surface);
+  border: 1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+}
+
+.preset-item--active {
+  border-color: var(--yze-color-accent);
+}
+
+.preset-info { flex: 1; }
+
+.preset-name {
+  font-weight: bold;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.preset-description {
+  font-size: 0.8em;
+  color: var(--yze-color-text-muted);
+}
+
+.preset-version {
+  font-size: 0.75em;
+  color: var(--yze-color-text-muted);
+}
+
+.preset-badge--active {
+  font-size: 0.7em;
+  background: rgba(192, 160, 80, 0.2);
+  color: var(--yze-color-accent);
+  border: 1px solid var(--yze-color-accent);
+  border-radius: 3px;
+  padding: 0 5px;
+}
+
+.preset-apply-btn {
+  background: var(--yze-color-accent);
+  border: none;
+  border-radius: var(--yze-radius);
+  color: var(--yze-color-bg);
+  cursor: pointer;
+  padding: 4px 12px;
+  font-weight: bold;
+  font-size: 0.85em;
+}
+
+.preset-apply-btn:hover {
+  opacity: 0.85;
+}
+
+.preset-active-label {
+  color: var(--yze-color-accent);
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
+/* ── Roll result chat ───────────────────────────────────────────── */
+.yze-roll-result {
+  font-family: var(--yze-font-body, sans-serif);
+  font-size: 13px;
+  padding: 4px 0;
+}
+
+.yze-roll-label {
+  font-size: 0.85em;
+  color: #888;
+  margin-bottom: 3px;
+}
+
+.yze-roll-outcome {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.yze-roll-outcome.success { color: #5a9e5a; }
+.yze-roll-outcome.failure { color: #9e3030; }
+
+.yze-roll-segments {
+  font-size: 0.8em;
+  color: #888;
+  margin-bottom: 3px;
+}
+
+.yze-roll-banes  { font-size: 0.85em; color: #c08030; }
+.yze-roll-panic  { font-size: 0.85em; color: #c83f6a; font-weight: bold; }
+
+.yze-roll-push-row {
+  margin-top: 6px;
+}
+
+.yze-push-btn {
+  background: transparent;
+  border: 1px solid #555;
+  border-radius: 3px;
+  color: #aaa;
+  cursor: pointer;
+  padding: 2px 10px;
+  font-size: 0.82em;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.yze-push-btn:hover {
+  border-color: #c0a050;
+  color: #c0a050;
+}
+
+.yze-roll-pushed-label {
+  font-size: 0.78em;
+  color: #666;
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* ── EA Gear section ────────────────────────────────────────────── */
+.ea-sheet .ea-gear-list, .yze-sheet .ea-gear-list { display: flex; flex-direction: column; gap: 1px; }
+
+.ea-sheet .ea-gear-row, .yze-sheet .ea-gear-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.ea-sheet .ea-gear-name, .yze-sheet .ea-gear-name  { flex: 1; font-size: 0.9em; }
+.ea-sheet .ea-gear-bonus, .yze-sheet .ea-gear-bonus { font-size: 0.85em; color: var(--yze-color-accent); min-width: 28px; }
+.ea-sheet .ea-gear-rel   { font-size: 0.8em; color: var(--yze-color-text-muted); min-width: 36px; }
+
+/* ── Roll result — ajouts stabilisation ────────────────────────── */
+.yze-roll-pushed-badge {
+  display: inline-block;
+  font-size: 0.75em;
+  padding: 1px 6px;
+  background: rgba(192, 160, 80, 0.15);
+  color: var(--yze-color-accent, #c0a050);
+  border: 1px solid var(--yze-color-accent, #c0a050);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.yze-roll-kept {
+  font-size: 0.82em;
+  color: #9e3030;
+  margin-top: 2px;
+}
+
+.yze-push-hint {
+  font-size: 0.75em;
+  color: #666;
+  margin-left: 6px;
+  font-style: italic;
+}
+
+.yze-segment { margin-right: 6px; }
+.yze-bane    { color: #c08030; }
+
+/* ── Resource item sheet ────────────────────────────────────────── */
+.resource-sheet .resource-formula-block {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       8px;
+  margin-bottom: 6px;
+}
+
+.resource-sheet .resource-modifier-row {
+  flex-direction: row;
+  align-items:    center;
+  gap:            8px;
+  flex-wrap:      wrap;
+}
+
+.resource-sheet .resource-max-preview {
+  font-size: 0.85em;
+  color:     var(--yze-color-text-muted);
+}
+
+.resource-sheet .resource-values-block {
+  display: flex;
+  gap:     12px;
+  flex-wrap: wrap;
+}
+
+/* ── Add resource button in EA blocks ───────────────────────────── */
+.ea-sheet .ea-add-resource-btn {
+  background:    transparent;
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  padding:       2px 8px;
+  font-size:     0.8em;
+  margin-top:    4px;
+  width:         100%;
+}
+
+.ea-sheet .ea-add-resource-btn:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+/* ── Attribute pips (current value tracker) ────────────────────── */
+.ea-sheet .yze-attr-pips,
+.yze-sheet .yze-attr-pips {
+  display:         flex;
+  gap:             3px;
+  justify-content: center;
+  margin:          3px 0 2px;
+}
+
+.ea-sheet .yze-pip,
+.yze-sheet .yze-pip {
+  width:         10px;
+  height:        10px;
+  border-radius: 50%;
+  border:        1px solid var(--yze-color-border);
+  background:    transparent;
+  cursor:        pointer;
+  padding:       0;
+  transition:    background 0.1s, border-color 0.1s;
+  flex-shrink:   0;
+}
+
+.ea-sheet .yze-pip--filled,
+.yze-sheet .yze-pip--filled {
+  background:   var(--yze-color-accent);
+  border-color: var(--yze-color-accent);
+}
+
+.ea-sheet .yze-pip--over,
+.yze-sheet .yze-pip--over {
+  opacity:        0.2;
+  pointer-events: none;
+}
+
+.ea-sheet .yze-pip:not(.yze-pip--over):hover,
+.yze-sheet .yze-pip:not(.yze-pip--over):hover {
+  border-color: var(--yze-color-accent);
+  background:   rgba(192, 160, 80, 0.3);
+}
+
+.ea-sheet .ea-attr-actions,
+.yze-sheet .ea-attr-actions {
+  display:         flex;
+  gap:             2px;
+  justify-content: center;
+  margin-top:      2px;
+}
+
+/* Agrandir légèrement les attribute cells pour accueillir les pips */
+.ea-sheet .ea-attribute-cell,
+.yze-sheet .ea-attribute-cell {
+  padding: 8px 4px;
+}
+
+/* ── Weapon & Armor sheets ──────────────────────────────────────── */
+.weapon-sheet .weapon-stats-grid,
+.armor-sheet  .armor-stats {
+  display:        grid;
+  grid-template-columns: 1fr 1fr;
+  gap:            var(--yze-gap);
+  margin-bottom:  var(--yze-gap);
+}
+
+.weapon-sheet .weapon-link-block {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       8px;
+  margin-bottom: var(--yze-gap);
+  display:       grid;
+  grid-template-columns: 1fr 1fr;
+  gap:           var(--yze-gap);
+}
+
+.weapon-roll-btn,
+.armor-roll-btn {
+  background:    var(--yze-color-accent);
+  border:        none;
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-bg);
+  cursor:        pointer;
+  padding:       4px 12px;
+  font-weight:   bold;
+  font-size:     0.85em;
+  white-space:   nowrap;
+}
+.weapon-roll-btn:hover,
+.armor-roll-btn:hover  { opacity: 0.85; }
+
+.weapon-badge  { background: rgba(192, 80, 80, 0.15); color: #c05050; border-color: #c05050; }
+.armor-badge   { background: rgba(80, 120, 192, 0.15); color: #5080c0; border-color: #5080c0; }
+.armor-badge--destroyed { color: var(--yze-color-danger); border-color: var(--yze-color-danger); }
+
+.armor-ar-row {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+}
+.armor-ar-row input { width: 44px; text-align: center; }
+.armor-sep           { color: var(--yze-color-text-muted); }
+
+.armor-degraded-note {
+  font-size:  0.82em;
+  color:      var(--yze-color-warning);
+  margin-top: 3px;
+}
+
+.armor-rules-note {
+  grid-column: 1 / -1;
+  font-size:   0.82em;
+  color:       var(--yze-color-text-muted);
+  border-left: 2px solid var(--yze-color-border);
+  padding:     4px 8px;
+}
+
+/* ── Weapon/Armor rows in Actor sheet ───────────────────────────── */
+.ea-sheet .ea-weapon-row .ea-gear-stat,
+.yze-sheet .ea-weapon-row .ea-gear-stat,
+.yze-sheet .ea-weapon-main .ea-gear-stat {
+  font-size:  0.8em;
+  color:      var(--yze-color-text-muted);
+  min-width:  36px;
+}
+
+.ea-sheet .ea-gear-ar, .yze-sheet .ea-gear-ar {
+  font-size:  0.85em;
+  color:      var(--yze-color-text-muted);
+  min-width:  56px;
+}
+
+.ea-sheet .ea-armor--destroyed, .yze-sheet .ea-armor--destroyed .ea-gear-name {
+  text-decoration: line-through;
+  color:           var(--yze-color-danger);
+  opacity:         0.7;
+}
+
+.ea-sheet .ea-range, .yze-sheet .ea-range {
+  font-size:   0.75em;
+  padding:     1px 4px;
+  background:  var(--yze-color-surface);
+  border:      1px solid var(--yze-color-border);
+  border-radius: 2px;
+  color:       var(--yze-color-text-muted);
+}
+
+/* ── Roll result chat — weapon/armor specific ───────────────────── */
+.yze-weapon-roll .yze-roll-label-sub,
+.yze-armor-roll  .yze-roll-label-sub {
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  margin-left: 6px;
+  font-weight: normal;
+}
+
+.yze-roll-dice {
+  font-size:   1.05em;
+  letter-spacing: 4px;
+  margin:      4px 0;
+}
+
+.yze-success { color: var(--yze-color-success); font-weight: bold; }
+.yze-bane    { color: var(--yze-color-danger);  font-weight: bold; }
+.yze-neutral { color: var(--yze-color-text-muted); }
+
+.yze-armor-degrade { font-size: 0.85em; color: var(--yze-color-warning); margin-top: 2px; }
+.yze-armor-safe    { font-size: 0.85em; color: var(--yze-color-success);  margin-top: 2px; }
+.yze-armor-note    { font-size: 0.78em; color: var(--yze-color-text-muted); margin-top: 4px; font-style: italic; }
+
+/* ── Tags ───────────────────────────────────────────────────────── */
+.yze-tag-badge {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           3px;
+  font-size:     0.72em;
+  padding:       1px 7px;
+  border-radius: 10px;
+  border:        1px solid var(--yze-color-border);
+  background:    var(--yze-color-surface);
+  color:         var(--yze-color-text-muted);
+  white-space:   nowrap;
+}
+
+.yze-tag-remove {
+  background:  none;
+  border:      none;
+  color:       var(--yze-color-text-muted);
+  cursor:      pointer;
+  padding:     0;
+  font-size:   0.9em;
+  line-height: 1;
+  margin-left: 2px;
+}
+
+.yze-tag-remove:hover { color: var(--yze-color-danger); }
+
+.item-tags-section {
+  margin-bottom: var(--yze-gap);
+}
+
+.item-tags-label {
+  font-size:      0.8em;
+  color:          var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom:  4px;
+}
+
+.item-tags-list {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         4px;
+  min-height:  24px;
+  padding:     4px;
+  border:      1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+}
+
+.item-tags-empty {
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  font-style:  italic;
+}
+
+.tag-preview {
+  padding: 8px 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Weapon card in Actor sheet ─────────────────────────────────── */
+.ea-sheet .ea-weapon-card, .yze-sheet .ea-weapon-card,
+.ea-sheet .ea-armor-card, .yze-sheet .ea-armor-card {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding:       4px 0 6px;
+  margin-bottom: 2px;
+}
+
+.ea-sheet .ea-weapon-main, .yze-sheet .ea-weapon-main,
+.ea-sheet .ea-armor-main, .yze-sheet .ea-armor-main {
+  display:     flex;
+  align-items: center;
+  gap:         var(--yze-gap-sm);
+}
+
+.ea-sheet .ea-weapon-reloads, .yze-sheet .ea-weapon-reloads {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  margin-top:  3px;
+  padding-left: 12px;
+  font-size:   0.82em;
+}
+
+.ea-sheet .ea-reloads-label { color: var(--yze-color-text-muted); }
+
+.ea-sheet .ea-weapon-reloads, .yze-sheet .ea-weapon-reloads input[type="number"] {
+  width:         30px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     0.9em;
+}
+
+.ea-sheet .ea-out-of-ammo, .yze-sheet .ea-out-of-ammo { color: var(--yze-color-danger); }
+.ea-sheet .ea-ammo-warning, .yze-sheet .ea-ammo-warning { font-size: 0.78em; color: var(--yze-color-danger); }
+
+.ea-sheet .ea-item-tags, .yze-sheet .ea-item-tags {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         3px;
+  padding-left: 12px;
+  margin-top:  3px;
+}
+
+/* ── Toggle ranged + reloads dans weapon-sheet ──────────────────── */
+.weapon-sheet .weapon-ranged-block {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       8px;
+  margin-bottom: var(--yze-gap);
+}
+
+.weapon-sheet .weapon-reloads-row {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  margin-top:  6px;
+  flex-wrap:   wrap;
+}
+
+.weapon-sheet .weapon-reloads-row input { width: 44px; text-align: center; }
+.weapon-sheet .weapon-reloads-label     { font-size: 0.85em; color: var(--yze-color-text-muted); }
+.weapon-sheet .weapon-out-of-ammo       { color: var(--yze-color-danger); }
+.weapon-sheet .weapon-ammo-empty        { font-size: 0.82em; color: var(--yze-color-danger); }
+
+/* ── Tag interactive buttons ────────────────────────────────────── */
+.yze-tag-name-btn {
+  background:  none;
+  border:      none;
+  color:       inherit;
+  cursor:      pointer;
+  padding:     0;
+  font-size:   inherit;
+  font-family: inherit;
+}
+
+.yze-tag-name-btn:hover {
+  text-decoration: underline;
+  color: var(--yze-color-accent);
+}
+
+/* ── Tag add row ────────────────────────────────────────────────── */
+.tag-add-row {
+  display:     flex;
+  gap:         6px;
+  align-items: center;
+  margin-top:  4px;
+}
+
+.tag-add-row select {
+  flex:          1;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  padding:       2px 6px;
+  font-size:     0.85em;
+}
+
+.tag-add-row button {
+  background:    var(--yze-color-accent);
+  border:        none;
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-bg);
+  cursor:        pointer;
+  padding:       2px 10px;
+  font-size:     0.85em;
+  font-weight:   bold;
+  white-space:   nowrap;
+}
+
+.tag-add-row button:hover { opacity: 0.85; }
+
+/* ── Tags CRUD (weapon/armor sheet) ────────────────────────────── */
+.item-tags-header {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  margin-bottom:   4px;
+}
+
+.item-tags-add {
+  background:    transparent;
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  padding:       1px 8px;
+  font-size:     0.8em;
+}
+.item-tags-add:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+.item-tag-row {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  padding:     2px 0;
+}
+
+.item-tags-empty-zone {
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       4px 8px;
+  min-height:    28px;
+}
+
+.item-tags-hint {
+  font-size:  0.8em;
+  color:      var(--yze-color-text-muted);
+  font-style: italic;
+}
+
+/* ── Panic Roll chat message ────────────────────────────────────── */
+.yze-panic-roll {
+  background:    var(--yze-color-surface);
+  border:        2px solid var(--yze-color-danger);
+  border-radius: var(--yze-radius);
+  padding:       10px 12px;
+  margin:        2px 0;
+}
+
+.yze-panic-header {
+  display:       flex;
+  align-items:   center;
+  gap:           8px;
+  font-size:     1.1em;
+  font-weight:   bold;
+  color:         var(--yze-color-danger);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.yze-panic-table-name {
+  font-size:   0.75em;
+  font-weight: normal;
+  color:       var(--yze-color-text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.yze-panic-dice {
+  font-size:     0.9em;
+  color:         var(--yze-color-text-muted);
+  margin-bottom: 6px;
+}
+
+.yze-panic-total {
+  font-size: 1.2em;
+  color:     var(--yze-color-danger);
+}
+
+.yze-panic-result {
+  font-size:   0.9em;
+  color:       var(--yze-color-text);
+  line-height: 1.4;
+  border-top:  1px solid var(--yze-color-border);
+  padding-top: 6px;
+  margin-top:  4px;
+}
+
+.yze-panic-no-table {
+  color:      var(--yze-color-text-muted);
+  font-style: italic;
+}
+
+.yze-roll-panic {
+  color:       var(--yze-color-danger);
+  font-size:   0.85em;
+  margin-top:  4px;
+  font-weight: bold;
+}
+
+/* ── Roll Panic button in chat ──────────────────────────────────── */
+.yze-roll-panic {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  flex-wrap:   wrap;
+  margin-top:  4px;
+}
+
+.yze-panic-btn {
+  background:    var(--yze-color-danger);
+  border:        none;
+  border-radius: var(--yze-radius);
+  color:         #fff;
+  cursor:        pointer;
+  padding:       3px 10px;
+  font-size:     0.82em;
+  font-weight:   bold;
+  white-space:   nowrap;
+}
+
+.yze-panic-btn:hover { opacity: 0.85; }
+
+/* ── Talent excerpt on character sheet ──────────────────────────── */
+.talent-excerpt {
+  flex:        1;
+  font-size:   0.78em;
+  color:       var(--yze-color-text-muted);
+  font-style:  italic;
+  text-align:  right;
+  padding-right: 4px;
+}
+
+/* ── Textarea natif stylisé ─────────────────────────────────────── */
+.yze-sheet .yze-textarea {
+  width:         100%;
+  min-height:    80px;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-family:   var(--yze-font-body);
+  font-size:     var(--yze-font-size);
+  line-height:   1.5;
+  padding:       6px 8px;
+  resize:        vertical;
+  box-sizing:    border-box;
+}
+
+.yze-sheet .yze-textarea:focus {
+  outline:      none;
+  border-color: var(--yze-color-accent);
+}
+
+/* Biography textarea plus haute */
+.yze-sheet .biography-section .yze-textarea,
+.yze-sheet .ea-bio-section .yze-textarea {
+  min-height: 120px;
+}
+
+
+/* ── ProseMirror editor — layout complet ───────────────────────── */
+
+/* Conteneur principal */
+.yze-sheet .editor {
+  position:       relative;
+  display:        flex;
+  flex-direction: column;
+  border:         1px solid var(--yze-color-border);
+  border-radius:  var(--yze-radius);
+  background:     var(--yze-color-surface);
+  min-height:     140px;
+  overflow:       visible;
+}
+
+/* Bouton stylo — top-right, visible au hover seulement */
+.yze-sheet .editor a.editor-edit {
+  position:   absolute;
+  top:        4px;
+  right:      6px;
+  z-index:    10;
+  font-size:  0.9em;
+  opacity:    0;
+  transition: opacity 0.15s;
+  cursor:     pointer;
+  color:      var(--yze-color-accent);
+}
+.yze-sheet .editor:hover a.editor-edit {
+  opacity: 1;
+}
+
+/* menu-container — bande horizontale */
+.yze-sheet .editor .menu-container {
+  width:        100%;
+  flex-shrink:  0;
+  position:     relative;
+  border-bottom: 1px solid var(--yze-color-border);
+  overflow:     visible;
+}
+
+/* La <menu> elle-même — items en ligne */
+.yze-sheet .editor .menu-container menu.editor-menu {
+  display:        flex !important;
+  flex-direction: row !important;
+  flex-wrap:      wrap !important;
+  align-items:    center !important;
+  gap:            0 !important;
+  padding:        2px 4px !important;
+  margin:         0 !important;
+  list-style:     none !important;
+  overflow:       visible !important;
+}
+
+/* li.text — chaque item de menu en inline */
+.yze-sheet .editor .menu-container menu.editor-menu > li {
+  display:     inline-flex !important;
+  align-items: center !important;
+  position:    relative;
+  flex-shrink: 0;
+}
+
+/* Les <ul> dropdowns — cachés par défaut, positionnés en absolu */
+.yze-sheet .editor .menu-container menu.editor-menu > li > button > ul,
+.yze-sheet .editor .menu-container menu.editor-menu ul {
+  display:        none !important;
+  flex-direction: column !important;
+  position:       absolute !important;
+  top:            100% !important;
+  left:           0 !important;
+  z-index:        300 !important;
+  background:     var(--yze-color-bg, #1a1a2e) !important;
+  border:         1px solid var(--yze-color-border, #555) !important;
+  border-radius:  4px !important;
+  min-width:      140px !important;
+  padding:        4px 0 !important;
+  margin:         0 !important;
+  list-style:     none !important;
+  white-space:    nowrap !important;
+}
+
+/* Afficher le ul au clic — Foundry ajoute .open ou aria-expanded */
+.yze-sheet .editor .menu-container menu.editor-menu li.open > button > ul,
+.yze-sheet .editor .menu-container menu.editor-menu button[aria-expanded="true"] + ul,
+.yze-sheet .editor .menu-container menu.editor-menu button.open > ul,
+.yze-sheet .editor .menu-container menu.editor-menu li:focus-within > button > ul {
+  display: flex !important;
+}
+
+/* Items dans les dropdowns */
+.yze-sheet .editor .menu-container menu.editor-menu ul > li {
+  display:  flex !important;
+  padding:  4px 12px !important;
+  cursor:   pointer;
+  width:    100%;
+}
+.yze-sheet .editor .menu-container menu.editor-menu ul > li:hover {
+  background: var(--yze-color-accent-muted, rgba(255,255,255,0.1));
+}
+
+/* Zone de texte éditable */
+.yze-sheet .editor .editor-container {
+  flex:       1;
+  overflow-y: auto;
+  padding:    6px 8px;
+  min-height: 80px;
+  max-height: 240px;
+}
+.yze-sheet .editor .editor-container .ProseMirror {
+  outline:    none;
+  min-height: 60px;
+}
+
+/* Biography plus grande */
+.yze-sheet .biography-section .editor .editor-container {
+  max-height: 360px;
+}
+
+/* ── Exclure les boutons ProseMirror du style global .yze-sheet button ── */
+.yze-sheet .editor button,
+.yze-sheet .editor button:hover {
+  background:    unset;
+  border:        unset;
+  border-radius: unset;
+  color:         unset;
+  cursor:        pointer;
+  padding:       unset;
+  font-size:     unset;
+  font-family:   unset;
+  transition:    unset;
+  box-shadow:    unset;
+  line-height:   unset;
+  width:         unset;
+  height:        unset;
+  margin:        0;
+}
+
+/* Style propre pour les boutons de la toolbar ProseMirror */
+.yze-sheet .editor .menu-container button {
+  display:     inline-flex;
+  align-items: center;
+  padding:     2px 5px;
+  cursor:      pointer;
+  color:       var(--yze-color-text);
+  font-size:   0.85em;
+  opacity:     0.8;
+}
+.yze-sheet .editor .menu-container button:hover {
+  opacity: 1;
+  color:   var(--yze-color-accent);
+}
+
+/* ── Bouton Save éditeur ─────────────────────────────────────────── */
+.yze-sheet .editor .yze-editor-save {
+  display:       block;
+  width:         100%;
+  padding:       4px 8px;
+  margin-top:    4px;
+  background:    var(--yze-color-accent);
+  color:         #fff;
+  border:        none;
+  border-radius: var(--yze-radius);
+  cursor:        pointer;
+  font-size:     0.85em;
+  font-weight:   bold;
+  text-align:    center;
+}
+.yze-sheet .editor .yze-editor-save:hover {
+  opacity: 0.85;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CHARACTER SHEET — Layout refondu
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Header ────────────────────────────────────────────────────── */
+.yze-sheet.character-sheet .sheet-header {
+  display:     grid;
+  grid-template-columns: 140px 1fr auto;
+  gap:         10px;
+  align-items: center;
+  padding:     8px;
+  background:  var(--yze-color-surface);
+  border-bottom: 2px solid var(--yze-color-accent);
+  margin-bottom: 6px;
+}
+
+.yze-sheet.character-sheet .actor-portrait {
+  width:         140px;
+  height:        140px;
+  object-fit:    cover;
+  border-radius: var(--yze-radius);
+  border:        2px solid var(--yze-color-border);
+  cursor:        pointer;
+}
+
+.yze-sheet.character-sheet .header-center {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+  min-width:      0;
+}
+
+.yze-sheet.character-sheet .header-name {
+  font-family:  var(--yze-font-title);
+  font-size:    1.6em;
+  color:        var(--yze-color-accent);
+  background:   transparent;
+  border:       none;
+  border-bottom: 1px solid var(--yze-color-border);
+  padding:      2px 4px;
+  width:        100%;
+  min-width:    0;
+}
+
+.yze-sheet.character-sheet .header-archetype {
+  font-size:  0.9em;
+  background: var(--yze-color-bg);
+  border:     1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:    3px 6px;
+  color:      var(--yze-color-text-muted);
+  width:      100%;
+}
+
+/* Ressources dans le header */
+.yze-sheet.character-sheet .header-resources {
+  display:        flex;
+  flex-direction: column;
+  gap:            4px;
+  align-items:    flex-end;
+}
+
+.yze-sheet.character-sheet .hdr-resource {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  font-size:   0.8em;
+}
+
+.yze-sheet.character-sheet .hdr-resource label {
+  color:         var(--yze-color-text-muted);
+  font-size:     0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width:     50px;
+  text-align:    right;
+}
+
+.yze-sheet.character-sheet .hdr-resource-inputs {
+  display:     flex;
+  align-items: center;
+  gap:         2px;
+}
+
+.yze-sheet.character-sheet .hdr-resource input[type="number"] {
+  width:         36px;
+  text-align:    center;
+  padding:       2px 4px;
+  background:    var(--yze-color-bg);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     0.9em;
+}
+
+.yze-sheet.character-sheet .hdr-resource span {
+  color: var(--yze-color-text-muted);
+}
+
+.yze-sheet.character-sheet .hdr-stress input[type="number"] {
+  width:       44px;
+  color:       var(--yze-color-danger);
+  border-color: var(--yze-color-danger);
+}
+
+/* ── Section titles ─────────────────────────────────────────────── */
+.yze-sheet.character-sheet .section-title {
+  font-size:      0.7em;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color:          var(--yze-color-accent);
+  border-bottom:  1px solid var(--yze-color-border);
+  padding-bottom: 2px;
+  margin:         8px 0 4px;
+}
+
+/* ── Attributs — rangée compacte ────────────────────────────────── */
+.yze-sheet.character-sheet .attributes-row {
+  display:   flex;
+  gap:       6px;
+  flex-wrap: wrap;
+}
+
+.yze-sheet.character-sheet .attr-block {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            3px;
+  background:     var(--yze-color-surface);
+  border:         1px solid var(--yze-color-border);
+  border-radius:  var(--yze-radius);
+  padding:        5px 8px;
+  min-width:      80px;
+  flex:           1;
+}
+
+.yze-sheet.character-sheet .attr-name {
+  font-size:      0.65em;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color:          var(--yze-color-text-muted);
+}
+
+.yze-sheet.character-sheet .attr-val {
+  font-size:  1.4em;
+  font-family: var(--yze-font-title);
+  color:      var(--yze-color-accent);
+  background: transparent;
+  border:     none;
+  width:      40px;
+  text-align: center;
+}
+
+.yze-sheet.character-sheet .attr-actions {
+  display: flex;
+  gap:     2px;
+}
+
+/* ── Skills — 2 colonnes ────────────────────────────────────────── */
+.yze-sheet.character-sheet .skills-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   1px 8px;
+}
+
+.yze-sheet.character-sheet .skill-row {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  padding:     3px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.yze-sheet.character-sheet .skill-name {
+  flex:      1;
+  font-size: 0.9em;
+  min-width: 0;
+  overflow:  hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.yze-sheet.character-sheet .skill-attr {
+  font-size:  0.65em;
+  color:      var(--yze-color-text-muted);
+  min-width:  52px;
+  text-align: right;
+  text-transform: capitalize;
+}
+
+.yze-sheet.character-sheet .skill-val {
+  width:      32px;
+  text-align: center;
+  background: var(--yze-color-surface);
+  border:     1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:      var(--yze-color-text);
+  padding:    1px 2px;
+  font-size:  0.85em;
+}
+
+/* ── Bouton Add générique ────────────────────────────────────────── */
+.yze-sheet.character-sheet .sheet-add-btn {
+  font-size:   0.75em;
+  padding:     2px 8px;
+  margin-top:  4px;
+  opacity:     0.7;
+}
+.yze-sheet.character-sheet .sheet-add-btn:hover {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ONGLETS — Sheet Tabs
+   ══════════════════════════════════════════════════════════════════ */
+
+.yze-sheet.character-sheet .sheet-tabs {
+  display:       flex;
+  gap:           2px;
+  padding:       4px 8px 0;
+  background:    var(--yze-color-bg);
+  border-bottom: 2px solid var(--yze-color-accent);
+  flex-shrink:   0;
+}
+
+.yze-sheet.character-sheet .tab-btn {
+  background:    transparent;
+  border:        1px solid transparent;
+  border-bottom: none;
+  border-radius: var(--yze-radius) var(--yze-radius) 0 0;
+  color:         var(--yze-color-text-muted);
+  cursor:        pointer;
+  font-family:   var(--yze-font-title);
+  font-size:     0.8em;
+  letter-spacing: 1px;
+  padding:       5px 16px;
+  text-transform: uppercase;
+  transition:    color 0.15s, background 0.15s;
+}
+
+.yze-sheet.character-sheet .tab-btn:hover {
+  color:       var(--yze-color-text);
+  background:  var(--yze-color-surface);
+}
+
+.yze-sheet.character-sheet .tab-btn.active {
+  background:  var(--yze-color-surface);
+  border-color: var(--yze-color-border);
+  color:        var(--yze-color-accent);
+  font-weight:  bold;
+}
+
+/* Panels */
+.yze-sheet.character-sheet .tab-panel {
+  display:    none;
+  overflow-y: auto;
+  flex:       1;
+  padding:    4px 8px 12px;
+}
+
+.yze-sheet.character-sheet .tab-panel.active {
+  display: block;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   HOVER BUTTONS — boutons visibles uniquement au hover
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Les .row-actions sont cachés par défaut */
+.yze-sheet .row-actions {
+  display:     flex;
+  gap:         2px;
+  align-items: center;
+  opacity:     0;
+  transition:  opacity 0.12s;
+  flex-shrink: 0;
+}
+
+/* Visible au hover de la ligne parente */
+.yze-sheet .hoverable-row:hover .row-actions {
+  opacity: 1;
+}
+
+/* Les boutons Add sont cachés par défaut */
+.yze-sheet .section-add-row {
+  opacity:    0;
+  transition: opacity 0.12s;
+  padding:    2px 0;
+}
+
+/* Visible au hover de la section */
+.yze-sheet .hoverable-section:hover .section-add-row {
+  opacity: 1;
+}
+
+/* Garder visible si focus dans la section (accessibilité) */
+.yze-sheet .hoverable-section:focus-within .section-add-row {
+  opacity: 1;
+}
+
+/* ── Section générique ──────────────────────────────────────────── */
+.yze-sheet.character-sheet .sheet-section {
+  margin-bottom: 8px;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CHARACTER SHEET — Améliorations visuelles
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Portrait 160h x 140w */
+.yze-sheet.character-sheet .sheet-header {
+  grid-template-columns: 140px 1fr auto;
+}
+.yze-sheet.character-sheet .actor-portrait {
+  width:  140px;
+  height: 160px;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* ── Trackers Health / Resolve ───────────────────────────────────── */
+.yze-sheet.character-sheet .hdr-tracker-wrap {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+  width:          120px;
+}
+
+.yze-sheet.character-sheet .hdr-tracker {
+  height:        6px;
+  background:    rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow:      hidden;
+  width:         100%;
+}
+
+.yze-sheet.character-sheet .hdr-tracker-bar {
+  height:          100%;
+  border-radius:   3px;
+  transition:      width 0.3s ease, background 0.3s ease;
+}
+
+.yze-sheet.character-sheet .hdr-resource-inputs {
+  display:     flex;
+  align-items: center;
+  gap:         2px;
+  justify-content: flex-end;
+}
+
+.yze-sheet.character-sheet .hdr-resource label {
+  font-size: 0.8em;
+}
+
+/* ── Rollable — noms cliquables avec glow ────────────────────────── */
+.yze-sheet .rollable {
+  cursor:      pointer;
+  transition:  color 0.15s, text-shadow 0.15s;
+}
+
+.yze-sheet .rollable:hover {
+  color:       var(--yze-color-accent) !important;
+  text-shadow: 0 0 8px var(--yze-color-accent),
+               0 0 16px rgba(212, 196, 154, 0.4);
+}
+
+/* ── Lisibilité : muted text plus visible ────────────────────────── */
+.yze-sheet .skill-attr,
+.yze-sheet .ea-skill-attr,
+.yze-sheet .talent-excerpt,
+.yze-sheet .hdr-resource label {
+  color:     rgba(212, 196, 154, 0.7);
+  font-size: 0.8em;
+}
+
+.yze-sheet .talent-excerpt {
+  font-style: italic;
+  font-size:  0.82em;
+}
+
+/* Stress en rouge quand > 0 */
+.yze-sheet.character-sheet .hdr-stress input {
+  color:        #ff6b6b;
+  border-color: #ff4444;
+  font-weight:  bold;
+}
+
+/* ── Pips compacts dans les attributs ────────────────────────────── */
+.yze-sheet.character-sheet .attr-block .yze-attr-pips {
+  display:  flex;
+  gap:      3px;
+  padding:  2px 0;
+}
+
+.yze-sheet.character-sheet .attr-block .yze-pip {
+  width:         10px;
+  height:        10px;
+  border-radius: 50%;
+  border:        1px solid var(--yze-color-accent);
+  background:    transparent;
+  padding:       0;
+  cursor:        pointer;
+  transition:    background 0.1s;
+}
+
+.yze-sheet.character-sheet .attr-block .yze-pip.yze-pip--filled {
+  background: var(--yze-color-accent);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ROLL CARDS — Layout thématique
+   ══════════════════════════════════════════════════════════════════ */
+
+.yze-roll-result {
+  font-family:   var(--yze-font-body);
+  font-size:     var(--yze-font-size);
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  overflow:      hidden;
+  margin:        2px 0;
+}
+
+/* Header de la rollcard */
+.yze-roll-header {
+  display:        flex;
+  align-items:    center;
+  gap:            6px;
+  flex-wrap:      wrap;
+  padding:        6px 10px;
+  background:     linear-gradient(135deg, var(--yze-color-bg), var(--yze-color-surface));
+  border-bottom:  1px solid var(--yze-color-border);
+}
+
+.yze-roll-actor {
+  font-family: var(--yze-font-title);
+  font-size:   0.8em;
+  color:       var(--yze-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.yze-roll-label {
+  font-family: var(--yze-font-title);
+  font-size:   1em;
+  color:       var(--yze-color-accent);
+  font-weight: bold;
+}
+
+.yze-roll-label-sub {
+  font-size:  0.75em;
+  color:      var(--yze-color-text-muted);
+}
+
+.yze-roll-pushed-badge {
+  font-size:     0.72em;
+  background:    var(--yze-color-accent);
+  color:         var(--yze-color-bg);
+  border-radius: var(--yze-radius);
+  padding:       1px 6px;
+  margin-left:   auto;
+  font-weight:   bold;
+}
+
+/* Zone résultat principal */
+.yze-roll-outcome {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  padding:     10px 12px;
+  flex-wrap:   wrap;
+}
+
+.yze-roll-outcome.success {
+  background: linear-gradient(135deg,
+    rgba(34, 90, 50, 0.3),
+    rgba(34, 90, 50, 0.1));
+  border-left: 3px solid #4caf50;
+}
+
+.yze-roll-outcome.failure {
+  background: linear-gradient(135deg,
+    rgba(120, 40, 40, 0.3),
+    rgba(120, 40, 40, 0.1));
+  border-left: 3px solid #c0392b;
+}
+
+.yze-roll-success-icon,
+.yze-roll-fail-icon {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.yze-roll-success-icon { color: #4caf50; }
+.yze-roll-fail-icon    { color: #c0392b; }
+
+.yze-roll-success-count {
+  font-family: var(--yze-font-title);
+  font-size:   1.8em;
+  color:       #4caf50;
+  line-height: 1;
+}
+
+.yze-roll-success-label,
+.yze-roll-fail-label {
+  font-size: 1em;
+  color:     var(--yze-color-text);
+}
+
+.yze-weapon-dmg {
+  font-size: 0.9em;
+  color:     var(--yze-color-text-muted);
+}
+
+.yze-roll-banes {
+  margin-left: auto;
+  font-size:   0.82em;
+  color:       #e67e22;
+}
+
+/* Pool summary */
+.yze-roll-pool {
+  padding:     3px 12px 6px;
+  font-size:   0.78em;
+  color:       var(--yze-color-text-muted);
+  display:     flex;
+  gap:         6px;
+  flex-wrap:   wrap;
+}
+
+.yze-segment {
+  background:    rgba(255,255,255,0.05);
+  border-radius: var(--yze-radius);
+  padding:       1px 5px;
+}
+
+/* Détails dés — collapsible */
+.yze-roll-details {
+  border-top: 1px solid var(--yze-color-border);
+  font-size:  0.82em;
+}
+
+.yze-roll-details summary {
+  padding:     4px 12px;
+  cursor:      pointer;
+  color:       var(--yze-color-text-muted);
+  font-size:   0.85em;
+  user-select: none;
+}
+
+.yze-roll-details summary:hover {
+  color: var(--yze-color-accent);
+}
+
+.yze-roll-dice-detail {
+  padding: 6px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.yze-dice-segment {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
+.yze-dice-label {
+  min-width:   80px;
+  color:       var(--yze-color-text-muted);
+  font-size:   0.85em;
+  text-transform: capitalize;
+}
+
+.yze-dice-row {
+  display: flex;
+  gap:     3px;
+  flex-wrap: wrap;
+}
+
+/* Dés individuels */
+.yze-die {
+  display:       inline-flex;
+  align-items:   center;
+  justify-content: center;
+  width:         24px;
+  height:        24px;
+  border-radius: 4px;
+  font-size:     0.9em;
+  font-weight:   bold;
+  font-family:   var(--yze-font-title);
+}
+
+.yze-die--success {
+  background: rgba(76, 175, 80, 0.25);
+  border:     1px solid #4caf50;
+  color:      #4caf50;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+}
+
+.yze-die--bane {
+  background: rgba(192, 57, 43, 0.25);
+  border:     1px solid #c0392b;
+  color:      #e74c3c;
+}
+
+.yze-die--neutral {
+  background: rgba(255,255,255,0.05);
+  border:     1px solid var(--yze-color-border);
+  color:      var(--yze-color-text-muted);
+}
+
+/* Preset color accents */
+.yze-preset-sleepy-hollow .yze-roll-label { color: #c9a84c; }
+.yze-preset-eldritch-automata .yze-roll-label { color: #7ec8e3; }
+
+/* Push row */
+.yze-roll-push-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  padding:     6px 10px;
+  border-top:  1px solid var(--yze-color-border);
+  background:  rgba(255,255,255,0.02);
+}
+
+.yze-push-hint {
+  font-size:  0.72em;
+  color:      var(--yze-color-text-muted);
+  font-style: italic;
+}
+
+/* ── Boutons Push Roll et Roll Panic — styles visibles ──────────── */
+.yze-push-btn {
+  background:    var(--yze-color-accent, #c9a84c) !important;
+  border:        none !important;
+  border-radius: var(--yze-radius) !important;
+  color:         var(--yze-color-bg, #1a1a10) !important;
+  cursor:        pointer !important;
+  font-weight:   bold !important;
+  padding:       4px 12px !important;
+  font-size:     0.85em !important;
+  transition:    opacity 0.15s, filter 0.15s !important;
+}
+.yze-push-btn:hover:not(:disabled) { filter: brightness(1.15); }
+
+.yze-panic-btn {
+  background:    #c0392b !important;
+  border:        none !important;
+  border-radius: var(--yze-radius) !important;
+  color:         #fff !important;
+  cursor:        pointer !important;
+  font-weight:   bold !important;
+  padding:       4px 12px !important;
+  font-size:     0.85em !important;
+  transition:    opacity 0.15s, filter 0.15s !important;
+}
+.yze-panic-btn:hover:not(:disabled) { filter: brightness(1.15); }
+
+/* Désactivé — grisé */
+.yze-push-btn:disabled,
+.yze-panic-btn:disabled {
+  background:  #555 !important;
+  color:       #999 !important;
+  cursor:      not-allowed !important;
+  filter:      none !important;
+  opacity:     0.6 !important;
+}
+
+/* Dés gardés (kept after push) — outline pointillé */
+.yze-die--kept {
+  opacity:     0.75;
+  outline:     2px dashed currentColor;
+  outline-offset: 1px;
+}
+
+.yze-dice-sep {
+  color:     var(--yze-color-border);
+  padding:   0 3px;
+  font-size: 0.8em;
+}
+
+/* ── XP Pips dans le header ─────────────────────────────────────── */
+.yze-sheet.character-sheet .header-xp {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  margin-top:  4px;
+}
+
+.yze-sheet.character-sheet .header-xp-label {
+  font-size:      0.7em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color:          var(--yze-color-text-muted);
+  min-width:      24px;
+}
+
+.yze-sheet.character-sheet .header-xp-pips {
+  display:  flex;
+  gap:      4px;
+  flex-wrap: wrap;
+}
+
+.yze-sheet.character-sheet .xp-pip {
+  width:         12px;
+  height:        12px;
+  border-radius: 50%;
+  border:        1px solid var(--yze-color-accent);
+  background:    transparent;
+  padding:       0;
+  cursor:        pointer;
+  transition:    background 0.12s, transform 0.1s;
+  flex-shrink:   0;
+}
+
+.yze-sheet.character-sheet .xp-pip:hover {
+  transform:  scale(1.25);
+  border-color: var(--yze-color-accent);
+  background:   rgba(212, 196, 154, 0.3);
+}
+
+.yze-sheet.character-sheet .xp-pip.xp-pip--filled {
+  background:  var(--yze-color-accent);
+  box-shadow:  0 0 4px rgba(212, 196, 154, 0.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CRITICAL INJURIES
+   ══════════════════════════════════════════════════════════════════ */
+
+.yze-sheet .ci-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+}
+
+.yze-sheet .ci-card {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-left:   3px solid #e67e22;
+  border-radius: var(--yze-radius);
+  padding:       6px 10px;
+}
+
+.yze-sheet .ci-card--lethal {
+  border-left-color: #c0392b;
+}
+
+.yze-sheet .ci-card--healed {
+  border-left-color: #4caf50;
+  opacity: 0.65;
+}
+
+.yze-sheet .ci-card-header {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  flex-wrap:   wrap;
+}
+
+.yze-sheet .ci-name {
+  font-weight: bold;
+  font-size:   0.95em;
+  flex:        1;
+}
+
+.yze-sheet .ci-lethal-tag {
+  font-size:     0.7em;
+  background:    #c0392b;
+  color:         #fff;
+  border-radius: var(--yze-radius);
+  padding:       1px 5px;
+  font-weight:   bold;
+}
+
+.yze-sheet .ci-healed-tag {
+  font-size:     0.7em;
+  background:    #4caf50;
+  color:         #fff;
+  border-radius: var(--yze-radius);
+  padding:       1px 5px;
+}
+
+.yze-sheet .ci-effect {
+  font-size:   0.85em;
+  color:       var(--yze-color-text);
+  margin-top:  3px;
+  font-style:  italic;
+}
+
+.yze-sheet .ci-footer {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  margin-top:  5px;
+  flex-wrap:   wrap;
+}
+
+.yze-sheet .ci-meta {
+  font-size:  0.78em;
+  color:      var(--yze-color-text-muted);
+  display:    flex;
+  align-items: center;
+  gap:         3px;
+}
+
+.yze-sheet .ci-healed-check {
+  font-size:   0.78em;
+  color:       var(--yze-color-text-muted);
+  display:     flex;
+  align-items: center;
+  gap:         3px;
+  cursor:      pointer;
+  margin-left: auto;
+}
+
+/* Item sheet */
+.yze-sheet.critical-injury-sheet .ci-body {
+  padding:        8px;
+  display:        flex;
+  flex-direction: column;
+  gap:            8px;
+}
+
+.yze-sheet.critical-injury-sheet .ci-meta-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   6px;
+}
+
+.yze-sheet.critical-injury-sheet .ci-meta-field {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+}
+
+.yze-sheet.critical-injury-sheet .ci-meta-field label {
+  font-size:      0.75em;
+  text-transform: uppercase;
+  color:          var(--yze-color-text-muted);
+}
+
+.yze-sheet.critical-injury-sheet .ci-healing-row {
+  display:     flex;
+  gap:         4px;
+  align-items: center;
+}
+
+.yze-sheet.critical-injury-sheet .ci-lethal-badge {
+  background:    #c0392b;
+  color:         #fff;
+  border-radius: var(--yze-radius);
+  padding:       2px 8px;
+  font-size:     0.75em;
+  font-weight:   bold;
+  margin-left:   8px;
+}
+
+/* ── Critical Injury Roll Card ──────────────────────────────────── */
+.yze-critical-roll .ci-roll-body {
+  display:        flex;
+  flex-direction: column;
+  gap:            3px;
+  flex:           1;
+  padding-left:   6px;
+}
+
+.yze-critical-roll .ci-roll-name {
+  font-size:   1em;
+  font-weight: bold;
+  color:       var(--yze-color-accent);
+}
+
+.yze-critical-roll .ci-roll-effect {
+  font-size:  0.85em;
+  color:      var(--yze-color-text);
+  font-style: italic;
+}
+
+/* Inline roll link styling */
+.yze-sheet .ci-meta a.inline-roll,
+.chat-message .ci-meta a.inline-roll {
+  color:          var(--yze-color-accent);
+  cursor:         pointer;
+  text-decoration: underline dotted;
+}
+
+/* ── Bouton Roll Critical Injury ────────────────────────────────── */
+.yze-roll-critical-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  padding:     6px 10px;
+  border-top:  1px solid var(--yze-color-border);
+  background:  rgba(192, 57, 43, 0.06);
+}
+
+.yze-critical-btn {
+  background:    #8b1a1a !important;
+  border:        1px solid #c0392b !important;
+  border-radius: var(--yze-radius) !important;
+  color:         #ffcccc !important;
+  cursor:        pointer !important;
+  font-weight:   bold !important;
+  padding:       4px 12px !important;
+  font-size:     0.85em !important;
+  transition:    filter 0.15s !important;
+}
+.yze-critical-btn:hover:not(:disabled) {
+  filter: brightness(1.2);
+}
+.yze-critical-btn:disabled {
+  opacity: 0.5 !important;
+  cursor:  not-allowed !important;
+}
+
+/* Healing time inline roll link */
+.yze-sheet .ci-healing-roll .inline-roll,
+.yze-sheet .ci-meta .inline-roll {
+  cursor:  pointer;
+  color:   var(--yze-color-accent);
+  border-bottom: 1px dotted var(--yze-color-accent);
+}
+
+/* ── Target Block ───────────────────────────────────────────────── */
+.yze-roll-target-block {
+  border-top:  1px solid var(--yze-color-border);
+  padding:     6px 10px;
+  background:  rgba(255,255,255,0.03);
+}
+
+.yze-roll-target-header {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  margin-bottom: 6px;
+  font-size:   0.9em;
+}
+
+.yze-roll-target-actions {
+  display:  flex;
+  gap:      6px;
+  flex-wrap: wrap;
+}
+
+.yze-roll-target-none {
+  padding: 4px 10px;
+}
+
+.yze-armor-roll-btn {
+  background:    rgba(100,150,200,0.2) !important;
+  border:        1px solid #4a90d9 !important;
+  border-radius: var(--yze-radius) !important;
+  color:         #a8d0f0 !important;
+  cursor:        pointer !important;
+  font-size:     0.82em !important;
+  padding:       3px 10px !important;
+  font-weight:   bold !important;
+  transition:    filter 0.15s !important;
+}
+.yze-armor-roll-btn:hover:not(:disabled) { filter: brightness(1.2); }
+
+.yze-apply-dmg-btn {
+  background:    rgba(200,80,80,0.2) !important;
+  border:        1px solid #c0392b !important;
+  border-radius: var(--yze-radius) !important;
+  color:         #ffaaaa !important;
+  cursor:        pointer !important;
+  font-size:     0.82em !important;
+  padding:       3px 10px !important;
+  font-weight:   bold !important;
+  transition:    filter 0.15s !important;
+}
+.yze-apply-dmg-btn:hover:not(:disabled) { filter: brightness(1.2); }
+
+.yze-armor-roll-btn:disabled,
+.yze-apply-dmg-btn:disabled {
+  opacity: 0.5 !important;
+  cursor:  not-allowed !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   NPC SHEET
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Special Traits & Weaknesses */
+.yze-sheet.npc-sheet .npc-trait-list {
+  display:        flex;
+  flex-direction: column;
+  gap:            6px;
+}
+
+.yze-sheet.npc-sheet .npc-trait-row {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       6px 10px;
+}
+
+.yze-sheet.npc-sheet .npc-weakness-row {
+  border-left: 3px solid #e67e22;
+}
+
+.yze-sheet.npc-sheet .npc-trait-header {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+}
+
+.yze-sheet.npc-sheet .npc-trait-name {
+  font-weight: bold;
+  font-size:   0.95em;
+  flex:        1;
+}
+
+.yze-sheet.npc-sheet .npc-trait-desc {
+  font-size:   0.85em;
+  color:       var(--yze-color-text);
+  margin-top:  4px;
+  line-height: 1.4;
+}
+
+/* Special Attacks Table */
+.yze-sheet.npc-sheet .npc-special-header {
+  display:     flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.yze-sheet.npc-sheet .npc-special-attack-table {
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  overflow:      hidden;
+}
+
+.yze-sheet.npc-sheet .npc-sa-header-row {
+  display:     grid;
+  grid-template-columns: 36px 1fr;
+  gap:         8px;
+  padding:     4px 10px;
+  background:  var(--yze-color-surface);
+  font-size:   0.7em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color:       var(--yze-color-text-muted);
+  border-bottom: 1px solid var(--yze-color-border);
+}
+
+.yze-sheet.npc-sheet .npc-sa-row {
+  display:     grid;
+  grid-template-columns: 36px 1fr auto;
+  gap:         8px;
+  align-items: start;
+  padding:     6px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.yze-sheet.npc-sheet .npc-sa-row:last-child { border-bottom: none; }
+
+.yze-sheet.npc-sheet .npc-sa-roll {
+  font-family: var(--yze-font-title);
+  font-size:   1.2em;
+  color:       var(--yze-color-accent);
+  text-align:  center;
+  padding-top: 2px;
+}
+
+.yze-sheet.npc-sheet .npc-sa-body {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+}
+
+.yze-sheet.npc-sheet .npc-sa-name {
+  font-weight: bold;
+  font-size:   0.92em;
+}
+
+.yze-sheet.npc-sheet .npc-sa-desc {
+  font-size:   0.82em;
+  color:       var(--yze-color-text);
+  line-height: 1.4;
+  font-style:  italic;
+}
+
+/* Bouton Special Attack */
+.yze-special-attack-btn {
+  background:    #5a3080 !important;
+  border:        1px solid #9b59b6 !important;
+  border-radius: var(--yze-radius) !important;
+  color:         #d9aaff !important;
+  cursor:        pointer !important;
+  font-weight:   bold !important;
+  font-size:     0.85em !important;
+  padding:       5px 14px !important;
+  transition:    filter 0.15s !important;
+}
+.yze-special-attack-btn:hover:not(:disabled) { filter: brightness(1.2); }
+.yze-special-attack-btn--disabled,
+.yze-special-attack-btn:disabled {
+  background:  rgba(255,255,255,0.05) !important;
+  border-color: var(--yze-color-border) !important;
+  color:       var(--yze-color-text-muted) !important;
+  cursor:      not-allowed !important;
+  opacity:     0.6 !important;
+}
+
+
+/* ── NPC Special Attack Table display ──────────────────────────── */
+.yze-sheet.npc-sheet .npc-sa-header-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  margin-bottom: 6px;
+}
+
+.yze-sheet.npc-sheet .npc-sa-header-actions {
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  margin-left: auto;
+}
+
+.yze-sheet.npc-sheet .npc-sa-table {
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  overflow:      hidden;
+}
+
+.yze-sheet.npc-sheet .npc-sa-table-head {
+  display:               grid;
+  grid-template-columns: 32px 1fr;
+  padding:               4px 8px;
+  background:            rgba(255,255,255,0.05);
+  font-size:             0.7em;
+  text-transform:        uppercase;
+  letter-spacing:        1px;
+  color:                 var(--yze-color-text-muted);
+  border-bottom:         1px solid var(--yze-color-border);
+}
+
+.yze-sheet.npc-sheet .npc-sa-entry {
+  display:               grid;
+  grid-template-columns: 32px 1fr;
+  align-items:           start;
+  padding:               6px 8px;
+  border-bottom:         1px solid rgba(255,255,255,0.04);
+  gap:                   8px;
+}
+
+.yze-sheet.npc-sheet .npc-sa-entry:last-child { border-bottom: none; }
+
+.yze-sheet.npc-sheet .npc-sa-roll {
+  font-family: var(--yze-font-title);
+  font-size:   1.1em;
+  color:       var(--yze-color-accent);
+  text-align:  center;
+}
+
+.yze-sheet.npc-sheet .npc-sa-text {
+  font-size:   0.88em;
+  color:       var(--yze-color-text);
+  line-height: 1.4;
+}
+
+.yze-sheet.npc-sheet .npc-sa-drop-hint {
+  border:        1px dashed var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       6px;
+  margin-top:    8px;
+  opacity:       0;
+  transition:    opacity 0.15s;
+}
+
+.yze-sheet.npc-sheet .npc-sa-drop-hint:hover,
+.yze-sheet.npc-sheet .npc-sa-drop-hint.drag-over {
+  opacity: 1;
+  border-color: var(--yze-color-accent);
+}
+
+/* ── Health lock button ─────────────────────────────────────────── */
+.yze-sheet .hdr-lock-btn {
+  background:  transparent !important;
+  border:      none !important;
+  padding:     0 2px !important;
+  cursor:      pointer !important;
+  font-size:   0.8em !important;
+  opacity:     0.6;
+  transition:  opacity 0.15s !important;
+  line-height: 1 !important;
+}
+.yze-sheet .hdr-lock-btn:hover { opacity: 1; }
+
+.yze-sheet .hdr-resource-inputs input.hdr-manual {
+  border-color: var(--yze-color-accent) !important;
+  color:        var(--yze-color-accent) !important;
+}
+
+.yze-sheet.npc-sheet .npc-sa-entry {
+  grid-template-columns: 32px 1fr !important;
+}
+
+.yze-sheet.npc-sheet .npc-sa-content {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+}
+
+.yze-sheet.npc-sheet .npc-sa-name {
+  font-weight: bold;
+  font-size:   0.9em;
+  color:       var(--yze-color-accent);
+}
+
+.yze-sheet.npc-sheet .npc-sa-text {
+  font-size:   0.85em;
+  line-height: 1.45;
+  color:       var(--yze-color-text);
+}
+
+.yze-sheet.npc-sheet .npc-sa-text p {
+  margin: 0 0 4px 0;
+}
+
+/* ── Section title row avec bouton inline ───────────────────────── */
+.yze-sheet .section-title-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  margin:      8px 0 4px;
+}
+
+.yze-special-attack-btn--small {
+  font-size: 0.75em !important;
+  padding:   2px 8px !important;
+  margin-left: auto !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ATTACK DIALOG
+   ══════════════════════════════════════════════════════════════════ */
+
+.attack-dialog .window-content {
+  padding: 0;
+}
+
+.attack-dialog-body {
+  display:        flex;
+  flex-direction: column;
+  gap:            12px;
+  padding:        16px;
+  background:     var(--yze-color-bg);
+}
+
+.attack-dialog-weapon-name {
+  font-family:   var(--yze-font-title);
+  font-size:     1.1em;
+  color:         var(--yze-color-accent);
+  text-align:    center;
+  border-bottom: 1px solid var(--yze-color-border);
+  padding-bottom: 8px;
+}
+
+.attack-dialog-mod-row {
+  display:     flex;
+  align-items: center;
+  justify-content: center;
+  gap:         12px;
+}
+
+.attack-dialog-mod-btn {
+  width:         36px;
+  height:        36px;
+  border-radius: 50% !important;
+  border:        1px solid var(--yze-color-border) !important;
+  background:    var(--yze-color-surface) !important;
+  color:         var(--yze-color-text) !important;
+  font-size:     1.4em !important;
+  font-weight:   bold !important;
+  cursor:        pointer !important;
+  line-height:   1 !important;
+  padding:       0 !important;
+  display:       flex !important;
+  align-items:   center !important;
+  justify-content: center !important;
+  transition:    background 0.12s, border-color 0.12s !important;
+}
+
+.attack-dialog-mod-btn:hover {
+  background:   var(--yze-color-accent) !important;
+  border-color: var(--yze-color-accent) !important;
+  color:        var(--yze-color-bg) !important;
+}
+
+.attack-dialog-mod-display {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            2px;
+  min-width:      60px;
+}
+
+.attack-dialog-mod-value {
+  font-family: var(--yze-font-title);
+  font-size:   2em;
+  line-height: 1;
+  color:       var(--yze-color-text);
+}
+
+.attack-dialog-mod-value.mod-positive { color: #4caf50; }
+.attack-dialog-mod-value.mod-negative { color: #e74c3c; }
+
+.attack-dialog-pool-hint {
+  font-size: 0.8em;
+  color:     var(--yze-color-text-muted);
+}
+
+.attack-dialog-ammo-label {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  font-size:   0.85em;
+  color:       var(--yze-color-text-muted);
+  cursor:      pointer;
+  justify-content: center;
+}
+
+.attack-dialog-actions {
+  display: flex;
+  gap:     8px;
+}
+
+.attack-dialog-cancel {
+  flex:          1;
+  background:    var(--yze-color-surface) !important;
+  border:        1px solid var(--yze-color-border) !important;
+  border-radius: var(--yze-radius) !important;
+  color:         var(--yze-color-text-muted) !important;
+  cursor:        pointer !important;
+  padding:       6px 0 !important;
+}
+
+.attack-dialog-confirm {
+  flex:          2;
+  background:    var(--yze-color-accent) !important;
+  border:        none !important;
+  border-radius: var(--yze-radius) !important;
+  color:         var(--yze-color-bg) !important;
+  cursor:        pointer !important;
+  font-weight:   bold !important;
+  font-size:     1em !important;
+  padding:       6px 0 !important;
+  transition:    filter 0.15s !important;
+}
+.attack-dialog-confirm:hover { filter: brightness(1.15); }
+
+/* ── Reload button ──────────────────────────────────────────────── */
+.ea-reload-btn {
+  background:    var(--yze-color-surface) !important;
+  border:        1px solid var(--yze-color-border) !important;
+  border-radius: var(--yze-radius) !important;
+  color:         var(--yze-color-text-muted) !important;
+  cursor:        pointer !important;
+  font-size:     0.75em !important;
+  padding:       2px 7px !important;
+  transition:    border-color 0.12s, color 0.12s !important;
+}
+.ea-reload-btn:hover {
+  border-color: var(--yze-color-accent) !important;
+  color:        var(--yze-color-accent) !important;
+}
+
+/* ── Free Attack button ─────────────────────────────────────────── */
+.yze-free-attack-btn {
+  background: rgba(100,80,160,0.3) !important;
+  border-color: #8a6fce !important;
+  color: #c5b3f0 !important;
+}
+.yze-free-attack-btn:hover:not(:disabled) {
+  background: rgba(100,80,160,0.6) !important;
+}
+
+/* ── NPC weapon buttons group ───────────────────────────────────── */
+.yze-sheet .npc-weapon-btns {
+  display:     flex;
+  gap:         4px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── NPC name — wrap sur 2 lignes, contain si trop grand ───────── */
+.yze-sheet.npc-sheet .header-name {
+  white-space:   normal !important;
+  word-break:    break-word;
+  overflow:      hidden;
+  text-overflow: ellipsis;
+  height:        auto !important;
+  max-height:    2.8em;
+  line-height:   1.2;
+}
+
+/* ── Item sheet name input — remplace le h1 tronqué ─────────────── */
+.yze-sheet.item-sheet .item-name-input {
+  font-family:   var(--yze-font-title);
+  font-size:     1.4em;
+  color:         var(--yze-color-accent);
+  background:    transparent;
+  border:        none;
+  border-bottom: 1px solid var(--yze-color-border);
+  padding:       2px 4px;
+  width:         100%;
+  min-width:     0;
+  white-space:   normal;
+  word-break:    break-word;
+  height:        auto;
+}
+
+.yze-sheet.item-sheet .item-header {
+  display:     flex;
+  align-items: center;
+  gap:         10px;
+  padding:     8px;
+  border-bottom: 1px solid var(--yze-color-border);
+}
+
+.yze-sheet.item-sheet .item-header-fields {
+  flex:     1;
+  min-width: 0;
+}
+
+/* ── Attack dialog mode toggle ──────────────────────────────────── */
+.attack-dialog-mode-row {
+  display:         flex;
+  justify-content: center;
+}
+
+.attack-dialog-mode-toggle {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  font-size:     0.82em;
+  padding:       3px 8px;
+  cursor:        pointer;
+}
+
+/* ── Base damage field in free attack dialog ────────────────────── */
+.attack-dialog-base-dmg-row {
+  display:     flex;
+  align-items: center;
+  justify-content: space-between;
+  gap:         8px;
+  font-size:   0.85em;
+  color:       var(--yze-color-text-muted);
+}
+
+.attack-dialog-base-dmg {
+  width:         60px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  padding:       3px 6px;
+  font-size:     0.9em;
+}
+
+/* ── Quick attack buttons ───────────────────────────────────────── */
+.attack-dialog-quick-row {
+  display:  flex;
+  gap:      6px;
+  flex-wrap: wrap;
+}
+
+.attack-dialog-quick-btn {
+  flex:          1;
+  background:    rgba(212, 196, 154, 0.12) !important;
+  border:        1px solid var(--yze-color-accent) !important;
+  border-radius: var(--yze-radius) !important;
+  color:         var(--yze-color-accent) !important;
+  cursor:        pointer !important;
+  font-size:     0.8em !important;
+  padding:       4px 8px !important;
+  font-family:   var(--yze-font-title) !important;
+  transition:    background 0.12s !important;
+}
+.attack-dialog-quick-btn:hover {
+  background: rgba(212, 196, 154, 0.25) !important;
+}
+
+/* ── Out of Ammo Dialog ─────────────────────────────────────────── */
+.attack-dialog-ammo-msg {
+  text-align:  center;
+  color:       var(--yze-color-text-muted);
+  font-size:   0.9em;
+  margin:      8px 0 4px;
+  line-height: 1.5;
+}
+
+/* Styler la Dialog Foundry native quand elle contient attack-dialog-body */
+.app.dialog:has(.attack-dialog-body) {
+  background:  var(--yze-color-bg) !important;
+  border:      1px solid var(--yze-color-border) !important;
+  box-shadow:  0 4px 20px rgba(0,0,0,0.6) !important;
+}
+
+.app.dialog:has(.attack-dialog-body) .window-header {
+  background:    var(--yze-color-surface) !important;
+  border-bottom: 1px solid var(--yze-color-border) !important;
+  color:         var(--yze-color-accent) !important;
+  font-family:   var(--yze-font-title) !important;
+}
+
+.app.dialog:has(.attack-dialog-body) .window-content {
+  background:  var(--yze-color-bg) !important;
+  padding:     0 !important;
+}
+
+.app.dialog:has(.attack-dialog-body) .dialog-buttons {
+  background:  var(--yze-color-surface) !important;
+  border-top:  1px solid var(--yze-color-border) !important;
+  padding:     8px !important;
+  gap:         6px !important;
+  display:     flex !important;
+}
+
+.app.dialog:has(.attack-dialog-body) .dialog-buttons button {
+  flex:          1;
+  border:        1px solid var(--yze-color-border) !important;
+  border-radius: var(--yze-radius) !important;
+  background:    var(--yze-color-surface) !important;
+  color:         var(--yze-color-text) !important;
+  padding:       6px 0 !important;
+  cursor:        pointer !important;
+  font-family:   var(--yze-font-body) !important;
+  font-size:     var(--yze-font-size) !important;
+  transition:    background 0.12s !important;
+}
+
+.app.dialog:has(.attack-dialog-body) .dialog-buttons button:first-child {
+  background:  var(--yze-color-accent) !important;
+  color:       var(--yze-color-bg) !important;
+  font-weight: bold !important;
+  border-color: var(--yze-color-accent) !important;
+}
+
+.app.dialog:has(.attack-dialog-body) .dialog-buttons button:hover {
+  filter: brightness(1.15);
+}
+
+
+
+
+
+/* ── Succès en vert dans le pool summary ────────────────────────── */
+.yze-roll-success-count {
+  color: #4caf50 !important;
+}
+
+/* Banes en orange dans le pool summary */
+.yze-roll-banes {
+  color: #e67e22 !important;
+}
+
+/* Stress segment — léger indicateur discret */
+.yze-segment[data-origin="stress"] {
+  opacity: 0.85;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SLEEPY HOLLOW THEME — Esthétique gothique inspirée du corebook
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Google Fonts — MedievalSharp pour les titres SH */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* ── Variables SH enrichies ─────────────────────────────────────── */
+body.yze-preset-sleepy-hollow, .yze-preset-sleepy-hollow {
+  --yze-font-title:   "Cinzel Decorative", "Cinzel", serif;
+  --yze-font-body:    "Crimson Text", Georgia, serif;
+  --yze-font-gothic:  "MedievalSharp", "Cinzel Decorative", serif;
+}
+
+/* ── Fiche SH — fond texturé ────────────────────────────────────── */
+.yze-sheet.yze-preset-sleepy-hollow,
+.yze-sheet.character-sheet,
+.yze-sheet.npc-sheet {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ── Section titles — style SH avec croix et ligne ──────────────── */
+.yze-sheet .section-title {
+  font-family:    var(--yze-font-gothic, var(--yze-font-title));
+  font-size:      0.72em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color:          var(--yze-color-accent);
+  display:        flex;
+  align-items:    center;
+  gap:            8px;
+  margin:         10px 0 5px;
+  padding-bottom: 0;
+  border-bottom:  none;
+}
+
+.yze-sheet .section-title::before,
+.yze-sheet .section-title::after {
+  content:    "";
+  flex:       1;
+  height:     1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--yze-color-accent) 30%,
+    var(--yze-color-accent) 70%,
+    transparent
+  );
+  opacity: 0.5;
+}
+
+.yze-sheet .section-title::before { flex: 0 0 12px; }
+.yze-sheet .section-title::after  { flex: 1; }
+
+/* ── Header name — police gothique ─────────────────────────────── */
+.yze-sheet.character-sheet .header-name,
+.yze-sheet.npc-sheet .header-name {
+  font-family:  var(--yze-font-gothic, var(--yze-font-title));
+  font-size:    1.5em;
+  letter-spacing: 1px;
+  text-shadow:  0 0 20px rgba(201, 168, 76, 0.3);
+}
+
+/* ── Attributs — cartes avec bordure gothique ───────────────────── */
+.yze-sheet .attr-block {
+  border:           1px solid var(--yze-color-border);
+  border-top:       2px solid var(--yze-color-accent);
+  background:       linear-gradient(180deg, rgba(201,168,76,0.05) 0%, transparent 40%);
+  position:         relative;
+}
+
+/* Petites décorations angulaires aux coins */
+.yze-sheet .attr-block::before {
+  content:    "✦";
+  position:   absolute;
+  top:        -8px;
+  left:       50%;
+  transform:  translateX(-50%);
+  font-size:  10px;
+  color:      var(--yze-color-accent);
+  background: var(--yze-color-surface);
+  padding:    0 3px;
+  line-height: 1;
+}
+
+.yze-sheet .attr-name {
+  font-family:    var(--yze-font-title);
+  font-size:      0.6em;
+  letter-spacing: 1.5px;
+  color:          var(--yze-color-text-muted);
+}
+
+
+
+/* ── Skill rows — séparateurs plus fins et élégants ─────────────── */
+.yze-sheet .skill-row {
+  border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+  transition:    background 0.12s;
+}
+
+.yze-sheet .skill-row:hover {
+  background: rgba(201, 168, 76, 0.04);
+}
+
+.yze-sheet .skill-name {
+  font-family: var(--yze-font-body, Georgia, serif);
+  font-size:   0.95em;
+}
+
+/* ── Tab buttons — style onglets gothiques ─────────────────────── */
+.yze-sheet .sheet-tabs {
+  background: linear-gradient(180deg, var(--yze-color-surface), var(--yze-color-bg));
+}
+
+.yze-sheet .tab-btn {
+  font-family:    var(--yze-font-title);
+  letter-spacing: 1.5px;
+  font-size:      0.72em;
+  position:       relative;
+}
+
+.yze-sheet .tab-btn.active::after {
+  content:    "";
+  position:   absolute;
+  bottom:     0;
+  left:       20%;
+  right:      20%;
+  height:     2px;
+  background: var(--yze-color-accent);
+  box-shadow: 0 0 6px var(--yze-color-accent);
+}
+
+/* ── Rollcard SH — décoration ───────────────────────────────────── */
+.yze-roll-result.yze-preset-sleepy-hollow .yze-roll-label {
+  font-family: var(--yze-font-title);
+  letter-spacing: 0.5px;
+}
+
+.yze-roll-result.yze-preset-sleepy-hollow .yze-roll-header {
+  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  background: linear-gradient(135deg,
+    rgba(201, 168, 76, 0.08),
+    transparent 60%);
+}
+
+/* ── Boutons — arrondi réduit, style plus angulaire ─────────────── */
+.yze-sheet button,
+.yze-sheet .ea-icon-btn,
+.yze-sheet .sheet-add-btn {
+  border-radius: 2px !important;
+}
+
+/* ── Empty hints — citation style ──────────────────────────────── */
+.yze-sheet .empty-hint {
+  font-family: var(--yze-font-body, Georgia, serif);
+  font-style:  italic;
+  color:       var(--yze-color-text-muted);
+  font-size:   0.88em;
+  opacity:     0.7;
+}
+
+/* ── Pips attributs — cercles avec animation subtile ────────────── */
+.yze-sheet .yze-pip {
+  width:         12px;
+  height:        12px;
+  border-radius: 50%;
+  border:        1.5px solid var(--yze-color-accent);
+  background:    transparent;
+  padding:       0;
+  cursor:        pointer;
+  flex-shrink:   0;
+  transition:    background 0.15s, box-shadow 0.15s, transform 0.12s;
+  position:      relative;
+}
+
+.yze-sheet .yze-pip:hover {
+  transform:    scale(1.3);
+  background:   rgba(201, 168, 76, 0.25);
+  box-shadow:   0 0 6px rgba(201, 168, 76, 0.4);
+}
+
+.yze-sheet .yze-pip.yze-pip--filled {
+  background:   var(--yze-color-accent);
+  box-shadow:   0 0 5px rgba(201, 168, 76, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.yze-sheet .yze-pip.yze-pip--filled:hover {
+  background:   var(--yze-color-accent);
+  box-shadow:   0 0 8px rgba(201, 168, 76, 0.7);
+  transform:    scale(1.3);
+}
+
+/* ── XP pips — identiques aux attr pips ─────────────────────────── */
+.yze-sheet .xp-pip {
+  width:         11px;
+  height:        11px;
+  border-radius: 50%;
+  border:        1.5px solid var(--yze-color-accent);
+  background:    transparent;
+  padding:       0;
+  cursor:        pointer;
+  flex-shrink:   0;
+  transition:    background 0.12s, box-shadow 0.12s, transform 0.12s;
+}
+
+.yze-sheet .xp-pip:hover {
+  transform:  scale(1.35);
+  background: rgba(201, 168, 76, 0.25);
+  box-shadow: 0 0 5px rgba(201, 168, 76, 0.4);
+}
+
+.yze-sheet .xp-pip.xp-pip--filled {
+  background:  var(--yze-color-accent);
+  box-shadow:  0 0 4px rgba(201, 168, 76, 0.5);
+}
+
+.yze-sheet .xp-pip.xp-pip--filled:hover {
+  transform:  scale(1.35);
+  box-shadow: 0 0 7px rgba(201, 168, 76, 0.7);
+}
+
+/* ── CI Modifier badges ─────────────────────────────────────────── */
+.ci-mod-badge {
+  font-size:     0.72em;
+  font-weight:   bold;
+  color:         #e74c3c;
+  background:    rgba(231, 76, 60, 0.15);
+  border:        1px solid rgba(231, 76, 60, 0.4);
+  border-radius: 3px;
+  padding:       0 3px;
+  line-height:   1.4;
+  flex-shrink:   0;
+}
+
+.attr-val-wrapper,
+.skill-val-wrapper {
+  display:     flex;
+  align-items: center;
+  gap:         3px;
+}
+
+.ci-penalized .attr-name,
+.ci-penalized .skill-name {
+  color: #e74c3c !important;
+}
+
+.ci-penalized .attr-val,
+.ci-penalized .skill-val {
+  color:        #e74c3c !important;
+  border-color: rgba(231, 76, 60, 0.4) !important;
+}
+
+/* ── CI Modifiers dans la fiche CI ──────────────────────────────── */
+.ci-mod-label {
+  font-weight: bold;
+}
+
+.ci-modifiers-list {
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  padding:       6px;
+  min-height:    40px;
+  transition:    border-color 0.15s, background 0.15s;
+}
+
+.ci-modifiers-list.drag-over {
+  border-color: var(--yze-color-accent);
+  background:   rgba(201, 168, 76, 0.08);
+}
+
+.ci-modifier-row {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  padding:     3px 4px;
+  border-radius: 3px;
+}
+
+.ci-modifier-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.ci-mod-type {
+  font-size:  0.8em;
+  opacity:    0.6;
+  flex-shrink: 0;
+}
+
+.ci-mod-name {
+  flex:      1;
+  font-size: 0.9em;
+}
+
+.ci-mod-value {
+  width:         50px !important;
+  text-align:    center !important;
+  font-weight:   bold !important;
+  color:         #e74c3c !important;
+}
+
+.ci-mod-hint {
+  font-size: 0.8em;
+  opacity:   0.5;
+  text-align: center;
+  padding:   4px 0;
+}
+
+/* ── Instant Death badge ────────────────────────────────────────── */
+.ci-death-tag,
+.ci-death-badge {
+  background:    rgba(139, 0, 0, 0.3);
+  color:         #ff6b6b;
+  border:        1px solid rgba(139, 0, 0, 0.6);
+  border-radius: 3px;
+  font-size:     0.7em;
+  font-weight:   bold;
+  padding:       1px 5px;
+  letter-spacing: 0.5px;
+}

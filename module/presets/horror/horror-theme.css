@@ -1,0 +1,104 @@
+/**
+ * horror-theme.css — Thème "Horror RPG"
+ * Fond cendré #282c2f, accent pêche #f9764e
+ * Chargé quand body.yze-preset-horror est actif.
+ */
+
+body.yze-preset-horror {
+  --yze-color-bg:          #282c2f;
+  --yze-color-surface:     #31363a;
+  --yze-color-border:      rgba(249, 118, 78, 0.25);
+  --yze-color-accent:      #f9764e;
+  --yze-color-text:        #e8ddd6;
+  --yze-color-text-muted:  rgba(232, 221, 214, 0.5);
+  --yze-font-title:        "Metal Mania", "Cinzel Decorative", serif;
+}
+
+/* Section titles — filet pêche */
+body.yze-preset-horror .yze-sheet .section-title::after {
+  background: linear-gradient(to right, var(--yze-color-accent) 30%, transparent);
+  opacity: 0.4;
+}
+
+/* Attr blocks — bordure top pêche */
+body.yze-preset-horror .yze-sheet .attr-block {
+  border-top: 2px solid var(--yze-color-accent);
+  background: linear-gradient(180deg, rgba(249,118,78,0.06) 0%, transparent 40%);
+}
+
+/* Pips — couleur pêche */
+body.yze-preset-horror .yze-sheet .yze-pip {
+  border-color: var(--yze-color-accent);
+}
+body.yze-preset-horror .yze-sheet .yze-pip.yze-pip--filled {
+  background:  var(--yze-color-accent);
+  box-shadow:  0 0 5px rgba(249, 118, 78, 0.5);
+}
+
+/* XP pips */
+body.yze-preset-horror .yze-sheet .xp-pip {
+  border-color: var(--yze-color-accent);
+}
+body.yze-preset-horror .yze-sheet .xp-pip.xp-pip--filled {
+  background: var(--yze-color-accent);
+  box-shadow: 0 0 4px rgba(249, 118, 78, 0.5);
+}
+
+/* Tabs — soulignement pêche */
+body.yze-preset-horror .yze-sheet .tab-btn.active::after {
+  background: var(--yze-color-accent);
+  box-shadow: 0 0 6px var(--yze-color-accent);
+}
+
+/* Rollcard header */
+body.yze-preset-horror .yze-roll-result {
+  background: var(--yze-color-bg);
+  border-left: 3px solid var(--yze-color-accent);
+}
+body.yze-preset-horror .yze-roll-result .yze-roll-header {
+  background: linear-gradient(135deg, rgba(249,118,78,0.1), transparent 60%);
+  border-bottom: 1px solid rgba(249, 118, 78, 0.3);
+}
+
+/* Stress badge */
+body.yze-preset-horror .yze-sheet .hdr-stress-val {
+  background: #f9764e;
+  color: #282c2f;
+}
+
+/* Trackers — couleur pêche */
+body.yze-preset-horror .yze-sheet .tracker-fill {
+  background: linear-gradient(to right, #f9764e, #d45a35);
+}
+
+/* Boutons confirm */
+body.yze-preset-horror .attack-dialog-confirm,
+body.yze-preset-horror .yze-special-attack-btn {
+  background: var(--yze-color-accent) !important;
+  color: #282c2f !important;
+}
+
+/* ── Rollcard buttons — couleur pêche ───────────────────────────── */
+body.yze-preset-horror .yze-push-btn,
+body.yze-preset-horror .yze-push-attack-btn,
+body.yze-preset-horror .yze-critical-btn,
+body.yze-preset-horror .yze-panic-btn,
+body.yze-preset-horror .yze-apply-dmg-btn,
+body.yze-preset-horror .yze-armor-roll-btn,
+body.yze-preset-horror .yze-special-attack-btn,
+body.yze-preset-horror .attack-dialog-confirm {
+  background: #f9764e !important;
+  color: #282c2f !important;
+  border-color: #f9764e !important;
+}
+
+/* Pushed badge */
+body.yze-preset-horror .yze-pushed-badge {
+  background: #f9764e !important;
+  color: #282c2f !important;
+}
+
+/* Succès count */
+body.yze-preset-horror .yze-roll-success-count {
+  color: #f9764e !important;
+}

@@ -1,0 +1,307 @@
+{{!-- templates/actor/npc-sheet.hbs --}}
+<form class="yze-sheet character-sheet npc-sheet" autocomplete="off">
+
+  {{!-- HEADER --}}
+  <header class="sheet-header">
+    <img class="actor-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" />
+    <div class="header-center">
+      <input class="header-name" type="text" name="name" value="{{actor.name}}" />
+      <input class="header-archetype" type="text" name="system.archetype"
+        value="{{system.archetype}}" placeholder="Type / Role" />
+    </div>
+    <div class="header-resources">
+      {{#if system.health}}
+      <div class="hdr-resource">
+        <label>{{localize "YZE.Health"}}</label>
+        <div class="hdr-tracker-wrap">
+          <div class="hdr-tracker" data-value="{{system.health.value}}" data-max="{{system.health.max}}">
+            <div class="hdr-tracker-bar"></div>
+          </div>
+          <div class="hdr-resource-inputs">
+            <input type="number" name="system.health.value" value="{{system.health.value}}" min="0" />
+            <span>/</span>
+            <input type="number" name="system.health.max" value="{{system.health.max}}" min="0"
+              {{#unless system.health.autoCalc}}class="hdr-manual"{{/unless}} />
+            <button type="button" class="hdr-lock-btn"
+              data-action="toggleAutoCalc" data-field="system.health.autoCalc"
+              title="{{#if system.health.autoCalc}}Auto-calculated{{else}}Manual override{{/if}}">
+              {{#if system.health.autoCalc}}🔒{{else}}✏️{{/if}}
+            </button>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+      {{#if system.resolve}}
+      <div class="hdr-resource">
+        <label>{{localize "YZE.Resolve"}}</label>
+        <div class="hdr-tracker-wrap">
+          <div class="hdr-tracker" data-value="{{system.resolve.value}}" data-max="{{system.resolve.max}}">
+            <div class="hdr-tracker-bar"></div>
+          </div>
+          <div class="hdr-resource-inputs">
+            <input type="number" name="system.resolve.value" value="{{system.resolve.value}}" min="0" />
+            <span>/</span>
+            <input type="number" name="system.resolve.max" value="{{system.resolve.max}}" min="0"
+              {{#unless system.resolve.autoCalc}}class="hdr-manual"{{/unless}} />
+            <button type="button" class="hdr-lock-btn"
+              data-action="toggleAutoCalc" data-field="system.resolve.autoCalc"
+              title="{{#if system.resolve.autoCalc}}Auto-calculated{{else}}Manual override{{/if}}">
+              {{#if system.resolve.autoCalc}}🔒{{else}}✏️{{/if}}
+            </button>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+  </header>
+
+  {{!-- ONGLETS --}}
+  <nav class="sheet-tabs">
+    <button type="button" class="tab-btn" data-tab="stats">Stats</button>
+    <button type="button" class="tab-btn" data-tab="combat">Combat</button>
+    <button type="button" class="tab-btn" data-tab="specials">Special Attacks</button>
+  </nav>
+
+  {{!-- ═══ STATS ═══ --}}
+  <div class="tab-panel" data-panel="stats">
+
+    <section class="sheet-section hoverable-section attributes-section">
+      <h2 class="section-title">{{localize "YZE.Attributes"}}</h2>
+      <div class="attributes-row">
+        {{#each attributes as |attr|}}
+        <div class="attr-block hoverable-row" data-item-id="{{attr.id}}">
+          <button type="button" class="attr-name rollable"
+            data-action="rollAttribute" data-attr-id="{{attr.id}}">{{attr.name}}</button>
+          <input class="attr-val" type="number"
+            data-item-id="{{attr.id}}" data-field="system.value"
+            value="{{attr.system.value}}" min="0" max="10" />
+          <div class="yze-attr-pips">
+            {{#each attr.pips as |pip|}}
+            <button class="yze-pip {{#if pip.filled}}yze-pip--filled{{/if}}"
+              type="button"
+              data-item-id="{{pip.attrId}}"
+              data-pip-index="{{pip.index}}"></button>
+            {{/each}}
+          </div>
+          <span class="row-actions">
+            <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{attr.id}}">✎</button>
+            <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{attr.id}}">✕</button>
+          </span>
+        </div>
+        {{else}}<p class="empty-hint">No attributes. Drag from a compendium.</p>
+        {{/each}}
+      </div>
+      <div class="section-add-row">
+        <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="attribute">+ {{localize "YZE.AddAttribute"}}</button>
+      </div>
+    </section>
+
+    <section class="sheet-section hoverable-section skills-section">
+      <h2 class="section-title">{{localize "YZE.Skills"}}</h2>
+      <div class="skills-grid">
+        {{#each skills as |skill|}}
+        <div class="skill-row hoverable-row" data-item-id="{{skill.id}}">
+          <button type="button" class="skill-name rollable" data-action="rollSkill" data-item-id="{{skill.id}}">{{skill.name}}</button>
+          <span class="skill-attr">{{skill.system.linkedAttribute}}</span>
+          <input class="skill-val" type="number"
+            data-item-id="{{skill.id}}" data-field="system.value"
+            value="{{skill.system.value}}" min="0" max="10" />
+          <span class="row-actions">
+            <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{skill.id}}">✎</button>
+            <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{skill.id}}">✕</button>
+          </span>
+        </div>
+        {{else}}<p class="empty-hint">No skills yet.</p>
+        {{/each}}
+      </div>
+      <div class="section-add-row">
+        <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="skill">+ {{localize "YZE.AddSkill"}}</button>
+      </div>
+    </section>
+
+    {{!-- Description --}}
+    <section class="sheet-section biography-section">
+      <h2 class="section-title">Description</h2>
+      {{editor enriched.biography target="system.biography" button=true engine="prosemirror" collaborate=false editable=editable}}
+    </section>
+
+  </div>{{!-- /stats --}}
+
+  {{!-- ═══ COMBAT ═══ --}}
+  <div class="tab-panel" data-panel="combat">
+
+    <section class="sheet-section hoverable-section">
+      <div class="section-title-row">
+        <h2 class="section-title" style="margin:0">⚔ {{localize "YZE.Weapons"}}</h2>
+        <div class="npc-weapon-btns">
+          {{#if specialAttackTable}}
+          <button type="button" class="yze-special-attack-btn yze-special-attack-btn--small"
+            data-action="rollSpecialAttack">🎲 Special Attack</button>
+          {{else}}
+          <button type="button" class="yze-special-attack-btn yze-special-attack-btn--small"
+            disabled title="Link a RollTable in the Special Attacks tab">🎲 Special Attack</button>
+          {{/if}}
+          <button type="button" class="yze-special-attack-btn yze-special-attack-btn--small yze-free-attack-btn"
+            data-action="rollFreeAttack" title="Roll a custom dice pool attack">⚔ Free Attack</button>
+        </div>
+      </div>
+      {{#if weapons.length}}
+      <div class="ea-gear-list">
+        {{#each weapons as |item|}}
+        <div class="ea-weapon-card" data-item-id="{{item.id}}">
+          <div class="ea-gear-row hoverable-row">
+            <button type="button" class="ea-gear-name rollable" data-action="rollWeapon" data-item-id="{{item.id}}">{{item.name}}</button>
+            <span class="ea-gear-stat">{{item.system.grip}}</span>
+            <span class="ea-gear-stat">DMG {{item.system.damage}}</span>
+            <span class="ea-range ea-gear-stat">{{item.system.range}}</span>
+            {{#if item.system.bonusDice}}<span class="ea-gear-bonus">+{{item.system.bonusDice}}d</span>{{/if}}
+            <span class="row-actions">
+              <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{item.id}}">✎</button>
+              <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{item.id}}">✕</button>
+            </span>
+          </div>
+          {{#if item.system.isRanged}}
+          <div class="ea-weapon-reloads {{#if item.system.isOutOfAmmo}}ea-out-of-ammo{{/if}}" data-item-id="{{item.id}}">
+            <input type="number" data-item-id="{{item.id}}" data-field="system.currentReloads"
+              value="{{item.system.currentReloads}}" min="0" max="{{item.system.maxReloads}}" />
+            <span class="ea-sep">/</span>
+            <span class="ea-max">{{item.system.maxReloads}}</span>
+            <button class="ea-reload-btn" type="button"
+              data-action="reloadWeapon" data-item-id="{{item.id}}">Reload</button>
+          </div>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{else}}<p class="empty-hint">{{localize "YZE.NoWeapons"}}</p>{{/if}}
+      <div class="section-add-row">
+        <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="weapon">+ {{localize "YZE.AddWeapon"}}</button>
+      </div>
+    </section>
+
+    <section class="sheet-section hoverable-section">
+      <h2 class="section-title">🛡 {{localize "YZE.Armors"}}</h2>
+      {{#if armors.length}}
+      <div class="ea-gear-list">
+        {{#each armors as |item|}}
+        <div class="ea-gear-row hoverable-row" data-item-id="{{item.id}}">
+          <button type="button" class="ea-gear-name rollable" data-action="rollArmor" data-item-id="{{item.id}}">{{item.name}}</button>
+          <span class="ea-gear-ar">AR {{item.system.armorRating}}/{{item.system.armorRatingMax}}</span>
+          <span class="row-actions">
+            <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{item.id}}">✎</button>
+            <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{item.id}}">✕</button>
+          </span>
+        </div>
+        {{/each}}
+      </div>
+      {{else}}<p class="empty-hint">{{localize "YZE.NoArmors"}}</p>{{/if}}
+      <div class="section-add-row">
+        <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="armor">+ {{localize "YZE.AddArmor"}}</button>
+      </div>
+    </section>
+
+    <section class="sheet-section hoverable-section">
+      <h2 class="section-title">✦ Special Traits</h2>
+      {{#if specialTraits.length}}
+      <div class="npc-trait-list">
+        {{#each specialTraits as |trait|}}
+        <div class="npc-trait-row hoverable-row" data-item-id="{{trait.id}}">
+          <div class="npc-trait-header">
+            <span class="npc-trait-name">{{trait.name}}</span>
+            <span class="row-actions">
+              <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{trait.id}}">✎</button>
+              <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{trait.id}}">✕</button>
+            </span>
+          </div>
+          {{#if trait.system.description}}<div class="npc-trait-desc">{{trait.system.description}}</div>{{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{else}}<p class="empty-hint">No special traits.</p>{{/if}}
+      <div class="section-add-row">
+        <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="special-trait">+ Add Special Trait</button>
+      </div>
+    </section>
+
+    <section class="sheet-section hoverable-section">
+      <h2 class="section-title">⚡ Weaknesses</h2>
+      {{#if weaknesses.length}}
+      <div class="npc-trait-list">
+        {{#each weaknesses as |w|}}
+        <div class="npc-trait-row npc-weakness-row hoverable-row" data-item-id="{{w.id}}">
+          <div class="npc-trait-header">
+            <span class="npc-trait-name">{{w.name}}</span>
+            <span class="row-actions">
+              <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{w.id}}">✎</button>
+              <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{w.id}}">✕</button>
+            </span>
+          </div>
+          {{#if w.system.description}}<div class="npc-trait-desc">{{w.system.description}}</div>{{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{else}}<p class="empty-hint">No weaknesses.</p>{{/if}}
+      <div class="section-add-row">
+        <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="weakness">+ Add Weakness</button>
+      </div>
+    </section>
+
+  </div>{{!-- /combat --}}
+
+  {{!-- ═══ SPECIAL ATTACKS ═══ --}}
+  <div class="tab-panel" data-panel="specials">
+
+    <section class="sheet-section">
+      <div class="npc-sa-header-row">
+        <h2 class="section-title" style="margin:0">🎲 Special Attacks (D6)</h2>
+        {{#if specialAttackTable}}
+        <div class="npc-sa-header-actions">
+          <button type="button" class="yze-special-attack-btn" data-action="rollSpecialAttack">🎲 Roll D6</button>
+          <button type="button" class="ea-icon-btn" data-action="openSpecialAttackTable" title="Edit table">✎</button>
+          <button type="button" class="ea-icon-btn ea-delete-btn" data-action="clearSpecialAttackTable" title="Unlink">✕</button>
+        </div>
+        {{/if}}
+      </div>
+
+      {{#if specialAttackTable}}
+        {{#if specialAttackResults.length}}
+        <div class="npc-sa-table">
+          <div class="npc-sa-table-head">
+            <span>D6</span><span>Attack</span>
+          </div>
+          {{#each specialAttackResults as |entry|}}
+          <div class="npc-sa-entry hoverable-row">
+            <span class="npc-sa-roll">{{entry.range.[0]}}</span>
+            <div class="npc-sa-content">
+              {{#if entry.title}}<span class="npc-sa-name">{{entry.title}}</span>{{/if}}
+              <span class="npc-sa-text">{{{entry.body}}}</span>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        {{else}}
+        <p class="empty-hint">Table is empty. Click ✎ to edit it in Foundry.</p>
+        {{/if}}
+      {{else}}
+      <div class="npc-sa-table-link" id="npc-sa-drop-zone">
+        <div class="npc-sa-table-empty">
+          <p class="empty-hint">🎲 Drag a RollTable here to link special attacks.</p>
+          <button type="button" class="sheet-add-btn" data-action="createSpecialAttackTable">
+            + Create New RollTable (D6)
+          </button>
+        </div>
+      </div>
+      {{/if}}
+    </section>
+
+    {{#if specialAttackTable}}
+    <div class="npc-sa-drop-hint hoverable-section" id="npc-sa-drop-zone">
+      <p class="empty-hint" style="text-align:center;font-size:0.75em">
+        Drop a different RollTable here to replace
+      </p>
+    </div>
+    {{/if}}
+
+  </div>{{!-- /specials --}}
+
+</form>

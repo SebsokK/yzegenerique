@@ -1,0 +1,177 @@
+{
+  "id": "yzegenerique",
+  "title": "YZE Générique",
+  "description": "Generic system based on the Year Zero Engine (SRD v1.0). Modular, preset-driven.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "Your name"
+    }
+  ],
+  "esmodules": [
+    "module/yzegenerique.mjs"
+  ],
+  "styles": [
+    "styles/yzegenerique.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {}
+    },
+    "Item": {
+      "attribute": {},
+      "skill": {},
+      "gear": {},
+      "weapon": {},
+      "armor": {},
+      "tag": {},
+      "specialty": {},
+      "resource": {},
+      "strand": {},
+      "talent": {},
+      "critical-injury": {},
+      "special-trait": {},
+      "weakness": {},
+      "special-attack": {},
+      "pilot-archetype": {},
+      "automata-archetype": {}
+    }
+  },
+  "socket": false,
+  "packs": [
+    {
+      "name": "yze-panic",
+      "label": "YZE — Panic Table",
+      "path": "packs/yze-panic.db",
+      "type": "RollTable",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "yze-critical-tables",
+      "label": "YZE — Critical Tables",
+      "path": "packs/yze-critical-tables.db",
+      "type": "RollTable",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-attributes",
+      "label": "SH — Attributes",
+      "path": "packs/sh-attributes.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-skills",
+      "label": "SH — Skills",
+      "path": "packs/sh-skills.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-talents",
+      "label": "SH — Talents",
+      "path": "packs/sh-talents.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-weapons",
+      "label": "SH — Weapons",
+      "path": "packs/sh-weapons.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-armors",
+      "label": "SH — Armors",
+      "path": "packs/sh-armors.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-critical-injuries",
+      "label": "SH — Critical Injuries",
+      "path": "packs/sh-critical-injuries.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-panic",
+      "label": "SH — Panic Table",
+      "path": "packs/sh-panic.db",
+      "type": "RollTable",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-bestiary",
+      "label": "SH — Bestiary",
+      "path": "packs/sh-bestiary.db",
+      "type": "Actor",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "sh-scenario-bestiary",
+      "label": "SH — Scenario Bestiary",
+      "path": "packs/sh-scenario-bestiary.db",
+      "type": "Actor",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "h-attributes",
+      "label": "H! — Attributes",
+      "path": "packs/h-attributes.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "h-skills",
+      "label": "H! — Skills",
+      "path": "packs/h-skills.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "h-talents",
+      "label": "H! — Specialties",
+      "path": "packs/h-talents.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "h-weapons",
+      "label": "H! — Weapons",
+      "path": "packs/h-weapons.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "h-critical-injuries",
+      "label": "H! — Critical Injuries",
+      "path": "packs/h-critical-injuries.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "h-panic",
+      "label": "H! — Panic Table",
+      "path": "packs/h-panic.db",
+      "type": "RollTable",
+      "system": "yzegenerique"
+    }
+  ],
+  "url": "",
+  "manifest": "",
+  "download": ""
+}

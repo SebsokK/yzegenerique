@@ -1,0 +1,70 @@
+{{!-- templates/item/armor-sheet.hbs --}}
+<form class="yze-sheet item-sheet armor-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <input class="item-name-input" type="text" name="name" value="{{item.name}}" />
+      <span class="item-type-badge armor-badge {{#if isDestroyed}}armor-badge--destroyed{{/if}}">
+        🛡 Armor{{#if isDestroyed}} — DESTROYED{{/if}}
+      </span>
+    </div>
+    {{#if item.actor}}
+    <button type="button" class="armor-roll-btn" data-action="rollDefense"
+      {{#if isDestroyed}}disabled title="Armor destroyed"{{/if}}>
+      ⚀ Roll Defense
+    </button>
+    {{/if}}
+  </header>
+
+  <div class="item-form armor-stats">
+    <div class="form-group armor-ar-group">
+      <label>Armor Rating</label>
+      <div class="armor-ar-row">
+        <input type="number" name="system.armorRating"
+          value="{{system.armorRating}}" min="0" max="{{system.armorRatingMax}}" />
+        <span class="armor-sep">/ max</span>
+        <input type="number" name="system.armorRatingMax" value="{{system.armorRatingMax}}" min="0" />
+      </div>
+      {{#if isDamaged}}
+      <div class="armor-degraded-note">⚑ Degraded ({{system.armorRating}}/{{system.armorRatingMax}})</div>
+      {{/if}}
+    </div>
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number" name="system.price" value="{{system.price}}" min="0" />
+    </div>
+    <div class="armor-rules-note">
+      🛡 Pool = {{system.armorRating}}d6 — each 6 absorbs 1 dmg. Each 1 degrades AR
+      <em>unless all damage is absorbed</em>. Cannot be pushed.
+    </div>
+  </div>
+
+  {{!-- TAGS --}}
+  <div class="item-tags-section">
+    <div class="item-tags-header">
+      <span class="item-tags-label">Tags</span>
+      <button type="button" class="item-tags-add" data-action="createTag"
+        title="Create a new tag and attach it">+ New Tag</button>
+    </div>
+    <div class="item-tags-list {{#unless tags.length}}item-tags-empty-zone{{/unless}}">
+      {{#each tags as |tag|}}
+      <div class="item-tag-row" data-tag-id="{{tag.id}}">
+        <span class="yze-tag-badge" title="{{tag.description}}">{{tag.name}}</span>
+        <button type="button" class="ea-icon-btn" data-action="editTag"
+          data-tag-id="{{tag.id}}" title="Edit tag">✎</button>
+        <button type="button" class="ea-icon-btn ea-delete-btn" data-action="removeTag"
+          data-tag-id="{{tag.id}}" title="Remove from armor">✕</button>
+      </div>
+      {{else}}
+      <span class="item-tags-hint">No tags — create one or drag a Tag item here</span>
+      {{/each}}
+    </div>
+  </div>
+
+  <section class="item-description">
+    <label>{{localize "YZE.Description"}}</label>
+    {{editor enriched.description target="system.description" button=true engine="prosemirror" collaborate=false editable=editable}}
+  </section>
+
+</form>

@@ -1,0 +1,23 @@
+{{!-- templates/item/tag-sheet.hbs --}}
+<form class="yze-sheet item-sheet tag-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <input class="item-name-input" type="text" name="name" value="{{item.name}}" />
+      <span class="item-type-badge">🏷 Tag</span>
+    </div>
+  </header>
+
+  <div class="item-form">
+    <div class="form-group">
+      <label>Description</label>
+      {{editor enriched.description target="system.description" button=true engine="prosemirror" collaborate=false editable=editable}}
+    </div>
+  </div>
+
+  <div class="tag-preview">
+    <span class="yze-tag-badge">{{item.name}}</span>
+  </div>
+
+</form>

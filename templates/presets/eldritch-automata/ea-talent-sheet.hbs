@@ -1,0 +1,63 @@
+{{!-- ea-talent-sheet.hbs — feuille Talent (EA + générique) --}}
+<form class="yze-sheet ea-sheet item-sheet talent-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <h1><input type="text" name="name" value="{{item.name}}" /></h1>
+    </div>
+  </header>
+
+  <div class="item-form" style="display:flex; flex-direction:column; gap:10px; padding:8px;">
+
+    {{!-- Extrait (affiché sur la fiche de perso) --}}
+    <div class="form-group">
+      <label>Summary <span class="form-hint">(shown on character sheet)</span></label>
+      <input type="text" name="system.excerpt"
+        value="{{system.excerpt}}"
+        placeholder="e.g. +2 Mobility for acrobatic tricks" />
+    </div>
+
+    {{!-- Description complète --}}
+    <div class="form-group">
+      <label>Description <span class="form-hint">(full book text)</span></label>
+      {{editor enriched.description target="system.description" button=true engine="prosemirror" collaborate=false editable=editable}}
+    </div>
+
+    {{!-- Section EA uniquement --}}
+    {{#if isEAPreset}}
+    <div class="form-group form-group--inline">
+      <label>Source</label>
+      <select name="system.talentSource">
+        <option value="general"  {{#if (eq system.talentSource "general")}}selected{{/if}}>General</option>
+        <option value="pilot"    {{#if (eq system.talentSource "pilot")}}selected{{/if}}>{{localize "YZE.EA.TalentSourcePilot"}}</option>
+        <option value="automata" {{#if (eq system.talentSource "automata")}}selected{{/if}}>{{localize "YZE.EA.TalentSourceAutomata"}}</option>
+      </select>
+    </div>
+
+    <div class="flag-row">
+      <label class="checkbox-label">
+        <input type="checkbox" name="system.isRequired" {{#if system.isRequired}}checked{{/if}} />
+        {{localize "YZE.EA.TalentIsRequired"}}
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" name="system.isHopeTalent" {{#if system.isHopeTalent}}checked{{/if}} />
+        {{localize "YZE.EA.TalentIsHope"}}
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" name="system.isStrandTalent" {{#if system.isStrandTalent}}checked{{/if}} />
+        {{localize "YZE.EA.TalentIsStrand"}}
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>{{localize "YZE.EA.TalentResourceCost"}}</label>
+      <input type="text" name="system.resourceCost"
+        value="{{system.resourceCost}}"
+        placeholder="{{localize 'YZE.EA.TalentResourceCostPlaceholder'}}" />
+    </div>
+    {{/if}}
+
+  </div>
+
+</form>

@@ -1,0 +1,3 @@
+{"_id":"D0gpeogti92KJ2eY","name":"Cuirass","type":"armor","img":"icons/equipment/shield/buckler-wooden-boss-brown.webp","system":{"armorRating":3,"armorRatingMax":3,"price":30,"tagIds":[],"description":""},"flags":{}}
+{"_id":"J7Xkq8M2yXLiT8kH","name":"Work Smock","type":"armor","img":"icons/equipment/shield/buckler-wooden-boss-brown.webp","system":{"armorRating":1,"armorRatingMax":1,"price":5,"tagIds":[],"description":""},"flags":{}}
+{"_id":"oyemLYiwY53OEF5u","name":"Leather Jerkin","type":"armor","img":"icons/equipment/shield/buckler-wooden-boss-brown.webp","system":{"armorRating":2,"armorRatingMax":2,"price":15,"tagIds":[],"description":""},"flags":{}}

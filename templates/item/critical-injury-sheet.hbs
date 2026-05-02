@@ -1,0 +1,88 @@
+{{!-- templates/item/critical-injury-sheet.hbs --}}
+<form class="yze-sheet item-sheet critical-injury-sheet" autocomplete="off">
+
+  <header class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" />
+    <div class="item-header-fields">
+      <input class="item-name-input" type="text" name="name" value="{{item.name}}" />
+      {{#if system.lethal}}
+      <span class="ci-lethal-badge">⚠ LETHAL</span>
+      {{/if}}
+    </div>
+  </header>
+
+  <div class="ci-body">
+
+    <div class="ci-meta-grid">
+      <div class="ci-meta-field">
+        <label>D66</label>
+        <input type="number" name="system.d66" value="{{system.d66}}" min="11" max="66" />
+      </div>
+      <div class="ci-meta-field ci-lethal-toggle">
+        <label>Lethal</label>
+        <input type="checkbox" name="system.lethal" {{#if system.lethal}}checked{{/if}} />
+      </div>
+      <div class="ci-meta-field">
+        <label>💀 Instant Death</label>
+        <input type="checkbox" name="system.instantDeath" {{#if system.instantDeath}}checked{{/if}} />
+      </div>
+      <div class="ci-meta-field">
+        <label>Time Limit</label>
+        <input type="text" name="system.timeLimit" value="{{system.timeLimit}}"
+          placeholder="e.g. Shift, Day, Round…" />
+      </div>
+      <div class="ci-meta-field">
+        <label>Healing Time</label>
+        <div class="ci-healing-row">
+          <input type="text" name="system.healingTime" value="{{system.healingTime}}"
+            placeholder="e.g. D6, 2D6, Permanent" />
+          {{#if system.isRollableHealingTime}}
+          <span class="ci-healing-roll">{{{healingTimeEnriched}}}</span>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Effect</label>
+      <input type="text" name="system.effect" value="{{system.effect}}"
+        placeholder="Describe the effect…" />
+    </div>
+
+    <div class="form-group ci-healed-row">
+      <label>Healed</label>
+      <input type="checkbox" name="system.healed" {{#if system.healed}}checked{{/if}} />
+    </div>
+
+    {{!-- Modificateurs sur attributs/skills --}}
+    <div class="form-group">
+      <label class="ci-mod-label">⚡ Modifiers</label>
+      <div class="ci-modifiers-list" id="ci-modifiers-drop">
+        {{#if system.modifiers.length}}
+        {{#each system.modifiers as |mod|}}
+        <div class="ci-modifier-row hoverable-row" data-mod-index="{{@index}}">
+          <span class="ci-mod-type">{{#if (eq mod.targetType "attribute")}}⬡{{else}}◆{{/if}}</span>
+          <span class="ci-mod-name">{{mod.targetName}}</span>
+          <input class="ci-mod-value" type="number"
+            data-mod-index="{{@index}}"
+            data-action="updateModifierValue"
+            value="{{mod.value}}" min="-10" max="10" />
+          <button type="button" class="ea-icon-btn ea-delete-btn"
+            data-action="removeModifier" data-mod-index="{{@index}}">✕</button>
+        </div>
+        {{/each}}
+        {{else}}
+        <p class="empty-hint ci-mod-hint">Drop an attribute or skill here to add a modifier.</p>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea name="system.description" class="yze-textarea"
+        rows="3">{{system.description}}</textarea>
+    </div>
+
+  </div>
+
+</form>

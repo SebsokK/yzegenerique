@@ -1,0 +1,16 @@
+{"_id":"07hoPgAGgvQF2ERU","name":"Healing","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"empathy","slug":"healing","description":""},"flags":{}}
+{"_id":"6gV6RG48tRoPgFe9","name":"Mobility","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"agility","slug":"mobility","description":""},"flags":{}}
+{"_id":"FqQLE9nUgpGje25u","name":"Stamina","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"strength","slug":"stamina","description":""},"flags":{}}
+{"_id":"HxS3hClbTnVW6kXv","name":"Persuasion","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"empathy","slug":"persuasion","description":""},"flags":{}}
+{"_id":"KqAJvISC89vIi3iO","name":"Marksmanship","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"agility","slug":"marksmanship","description":""},"flags":{}}
+{"_id":"NDDInHjUyNYancLt","name":"Stealth","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"agility","slug":"stealth","description":""},"flags":{}}
+{"_id":"NsuMAZxHzkvVRjrZ","name":"Performance","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"empathy","slug":"performance","description":""},"flags":{}}
+{"_id":"Q9vHwa9ai1AUeBwZ","name":"Insight","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"empathy","slug":"insight","description":""},"flags":{}}
+{"_id":"QZuQzb8oFuk2khye","name":"Crafting","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"wits","slug":"crafting","description":""},"flags":{}}
+{"_id":"RfBt7nQq29zHRtTw","name":"Melee","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"strength","slug":"melee","description":""},"flags":{}}
+{"_id":"T51s2dn3dpRBv1x4","name":"Animal Handling","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"empathy","slug":"animal-handling","description":""},"flags":{}}
+{"_id":"XGOWbBkWJwF5h2aW","name":"Observation","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"wits","slug":"observation","description":""},"flags":{}}
+{"_id":"XJVnmZS45lpeStdz","name":"Survival","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"wits","slug":"survival","description":""},"flags":{}}
+{"_id":"XL5xb2BCNmuIMBjr","name":"Leadership","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"empathy","slug":"leadership","description":""},"flags":{}}
+{"_id":"mBcKYaFDMHSAivld","name":"Force","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"strength","slug":"force","description":""},"flags":{}}
+{"_id":"nQApejZNIFkcqWLn","name":"Lore / Knowledge","type":"skill","img":"icons/svg/book.svg","system":{"value":0,"linkedAttribute":"wits","slug":"lore-knowledge","description":""},"flags":{}}
