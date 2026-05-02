@@ -171,7 +171,7 @@
       "system": "yzegenerique"
     }
   ],
-  "url": "",
-  "manifest": "",
-  "download": ""
+  "url":      "https://github.com/SebsokK/yzegenerique",
+  "manifest": "https://raw.githubusercontent.com/SebsokK/yzegenerique/main/system.json",
+  "download": "https://github.com/SebsokK/yzegenerique/releases/download/v.0.1.0/yzegenerique-v0.1.0.zip"
 }
