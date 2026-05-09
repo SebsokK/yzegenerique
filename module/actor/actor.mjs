@@ -34,11 +34,13 @@ export class YZEActor extends Actor {
 
   /** Contribution au pool d'un attribut avec malus CI. */
   getAttributePool(attrItem) {
+    if (!attrItem) return 0;
     return Math.max(0, (attrItem.system.dicePoolContribution ?? 0) + this.getCIModifierFor(attrItem.id));
   }
 
   /** Contribution au pool d'un skill avec malus CI. */
   getSkillPool(skillItem) {
+    if (!skillItem) return 0;
     return Math.max(0, (skillItem.system.dicePoolContribution ?? 0) + this.getCIModifierFor(skillItem.id));
   }
 

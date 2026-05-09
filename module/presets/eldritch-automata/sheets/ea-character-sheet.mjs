@@ -12,17 +12,19 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
   static DEFAULT_OPTIONS = {
     classes: ["yzegenerique", "ea-sheet", "actor", "character"],
     position: { width: 740, height: 820 },
+    dragDrop: [{ dragSelector: null, dropSelector: ".yze-sheet" }],
     actions: {
-      rollSkill:     EaCharacterSheet._onRollSkill,
-      rollAttribute: EaCharacterSheet._onRollAttribute,
-      rollWeapon:    EaCharacterSheet._onRollWeapon,
-      rollArmor:     EaCharacterSheet._onRollArmor,
-      useReload:     EaCharacterSheet._onUseReload,
-      resetReloads:  EaCharacterSheet._onResetReloads,
-      itemCreate:    EaCharacterSheet._onItemCreate,
-      itemEdit:      EaCharacterSheet._onItemEdit,
-      itemDelete:    EaCharacterSheet._onItemDelete,
-      pipClick:      EaCharacterSheet._onPipClick,
+      rollSkill:       EaCharacterSheet._onRollSkill,
+      rollAttribute:   EaCharacterSheet._onRollAttribute,
+      rollWeapon:      EaCharacterSheet._onRollWeapon,
+      rollArmor:       EaCharacterSheet._onRollArmor,
+      useReload:       EaCharacterSheet._onUseReload,
+      resetReloads:    EaCharacterSheet._onResetReloads,
+      itemCreate:      EaCharacterSheet._onItemCreate,
+      itemEdit:        EaCharacterSheet._onItemEdit,
+      itemDelete:      EaCharacterSheet._onItemDelete,
+      pipClick:        EaCharacterSheet._onPipClick,
+      initResources:   EaCharacterSheet._onInitResources,
     },
   };
 
@@ -39,7 +41,8 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
     context.system     = this.actor.system;
     context.attributes = this._prepareAttributes();
     context.skills     = this.actor.skills;
-    context.gear       = this.actor.items.filter(i => i.type === "gear");
+    context.gear             = this.actor.items.filter(i => i.type === "gear");
+    context.criticalInjuries = this.actor.items.filter(i => i.type === "critical-injury");
     context.weapons    = await Promise.all(
       this.actor.items.filter(i => i.type === "weapon").map(async w => ({
         id: w.id, name: w.name, system: w.system,
@@ -67,7 +70,8 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
     context.strands         = this.actor.items.filter(i => i.type === "strand");
     context.pilotTalents    = this.actor.items.filter(i => i.type === "talent" && i.system.talentSource === "pilot");
     context.automataTalents = this.actor.items.filter(i => i.type === "talent" && i.system.talentSource === "automata");
-    context.hasTalents      = context.pilotTalents.length > 0 || context.automataTalents.length > 0;
+    context.generalTalents  = this.actor.items.filter(i => i.type === "talent" && (i.system.talentSource === "general" || !i.system.talentSource));
+    context.hasTalents      = context.pilotTalents.length > 0 || context.automataTalents.length > 0 || context.generalTalents.length > 0;
     context.pilotArchetype    = this.actor.items.get(this.actor.system.ea?.pilotArchetypeId)
       ?? this.actor.items.find(i => i.type === "pilot-archetype") ?? null;
     context.automataArchetype = this.actor.items.get(this.actor.system.ea?.automataArchetypeId)
@@ -99,15 +103,15 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
         name:   attr.name,
         img:    attr.img,
         system: attr.system,
-        pips:   EaCharacterSheet._buildPips(val, current),
+        pips:   EaCharacterSheet._buildPips(attr.id, val, current),
       };
     });
   }
 
-  static _buildPips(max, current) {
+  static _buildPips(attrId, max, current) {
     const pips = [];
     for (let i = 1; i <= Math.max(max, 5); i++) {
-      pips.push({ index: i, filled: i <= current, over: i > max });
+      pips.push({ attrId, index: i, filled: i <= current, over: i > max });
     }
     return pips;
   }
@@ -116,7 +120,23 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
 
   _onRender(context, options) {
     super._onRender(context, options);
-    // XP pip listener
+
+    // ── Onglets ────────────────────────────────────────────────────
+    const tabs   = this.element.querySelectorAll(".tab-btn");
+    const panels = this.element.querySelectorAll(".tab-panel");
+    const activeTab = this._activeTab ?? "character";
+    tabs.forEach(t   => t.classList.toggle("active", t.dataset.tab === activeTab));
+    panels.forEach(p => p.classList.toggle("active", p.dataset.panel === activeTab));
+    tabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.tab;
+        this._activeTab = target;
+        tabs.forEach(t   => t.classList.toggle("active", t.dataset.tab === target));
+        panels.forEach(p => p.classList.toggle("active", p.dataset.panel === target));
+      });
+    });
+
+    // ── XP pips ────────────────────────────────────────────────────
     this.element.addEventListener("click", async (event) => {
       const pip = event.target.closest(".xp-pip[data-xp-index]");
       if (!pip) return;
@@ -125,6 +145,85 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
       const newVal  = (idx <= current) ? idx - 1 : idx;
       await this.actor.update({ "system.xp.total": Math.max(0, newVal) });
     });
+  }
+
+  async _onDrop(event) {
+    event.preventDefault();
+    let data;
+    try {
+      data = JSON.parse(event.dataTransfer.getData("text/plain"));
+    } catch { return; }
+
+    if (data.type !== "Item") return;
+
+    // Résoudre l'item source
+    let srcItem;
+    try {
+      srcItem = await fromUuid(data.uuid);
+    } catch { return; }
+    if (!srcItem) return;
+
+    const itemType = srcItem.type;
+
+    // Types acceptés sur cet actor
+    const accepted = [
+      "attribute", "skill", "talent", "strand",
+      "pilot-archetype", "automata-archetype",
+      "weapon", "armor", "gear", "critical-injury",
+      "resource", "tag",
+    ];
+    if (!accepted.includes(itemType)) {
+      ui.notifications.warn(`YZE | Item type "${itemType}" cannot be dropped here.`);
+      return;
+    }
+
+    // Si c'est un talent sans source définie, demander pilot ou automata
+    if (itemType === "talent") {
+      const src = srcItem.system?.talentSource;
+      if (!src || src === "general") {
+        const src2 = await new Promise(resolve => {
+          new Dialog({
+            title:   `Talent Source — ${srcItem.name}`,
+            content: `<p>Assign <strong>${srcItem.name}</strong> as a Pilot or Automata talent?</p>`,
+            buttons: {
+              pilot:   { icon: "<i class='fas fa-user'></i>",  label: "Pilot",    callback: () => resolve("pilot")   },
+              automata:{ icon: "<i class='fas fa-robot'></i>", label: "Automata", callback: () => resolve("automata") },
+              cancel:  { icon: "<i class='fas fa-times'></i>", label: "Cancel",   callback: () => resolve(null)       },
+            },
+            default: "pilot",
+            close:   () => resolve(null),
+          }).render(true);
+        });
+        if (!src2) return;
+        const itemData2 = srcItem.toObject();
+        itemData2.system.talentSource = src2;
+        await this.actor.createEmbeddedDocuments("Item", [itemData2]);
+        return;
+      }
+    }
+    if (itemType === "pilot-archetype" && this.actor.items.find(i => i.type === "pilot-archetype")) {
+      ui.notifications.warn("YZE | A pilot archetype is already assigned.");
+      return;
+    }
+    if (itemType === "automata-archetype" && this.actor.items.find(i => i.type === "automata-archetype")) {
+      ui.notifications.warn("YZE | An automata archetype is already assigned.");
+      return;
+    }
+
+    // Si l'item vient déjà de cet actor, ne pas le dupliquer
+    if (srcItem.parent?.id === this.actor.id) return;
+
+    const itemData = srcItem.toObject();
+    const created  = await this.actor.createEmbeddedDocuments("Item", [itemData]);
+
+    // Enregistrer l'archetype ID si besoin
+    if (created.length > 0) {
+      const item = created[0];
+      if (itemType === "pilot-archetype")
+        await this.actor.update({ "system.ea.pilotArchetypeId": item.id });
+      else if (itemType === "automata-archetype")
+        await this.actor.update({ "system.ea.automataArchetypeId": item.id });
+    }
   }
 
   static async _onRollSkill(event, target) {
@@ -174,7 +273,7 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
   }
 
   static async _onPipClick(event, target) {
-    const itemId = target.closest("[data-item-id]")?.dataset.itemId;
+    const itemId = target.dataset.itemId ?? target.closest("[data-item-id]")?.dataset.itemId;
     const pipIdx = Number(target.dataset.pipIndex);
     if (!itemId || isNaN(pipIdx)) return;
     const item    = this.actor.items.get(itemId);
@@ -229,5 +328,11 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
     const item   = this.actor.items.get(itemId);
     if (!item) return;
     await item.update({ "system.currentReloads": item.system.maxReloads });
+  }
+
+  static async _onInitResources(event, target) {
+    if (typeof globalThis.YZECreateEaResources === "function") {
+      await globalThis.YZECreateEaResources(this.actor);
+    }
   }
 }

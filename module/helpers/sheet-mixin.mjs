@@ -186,12 +186,15 @@ export function YZESheetMixin(Base) {
       const form = this.element?.querySelector("form");
       if (!form) return;
 
-      form.addEventListener("change", (event) => {
-        const input = event.target;
-        if (!input.name || input.dataset.itemId) return;
-        this._debouncedActorUpdate(input.name, this._readInputValue(input));
+      // Inputs actor (name sans data-item-id)
+      form.querySelectorAll("input[name]:not([data-item-id]), textarea[name]:not([data-item-id])").forEach(el => {
+        el.addEventListener("change", (event) => {
+          const inp = event.currentTarget;
+          this._debouncedActorUpdate(inp.name, this._readInputValue(inp));
+        });
       });
 
+      // Inputs item (data-item-id + data-field)
       form.querySelectorAll("[data-item-id][data-field]").forEach(el => {
         el.addEventListener("change", (event) => {
           const inp = event.currentTarget;

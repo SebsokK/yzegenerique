@@ -1,22 +1,121 @@
-/* ============================================================
-   ea-theme.css — Thème Eldritch Automata
-   Override des custom properties de yzegenerique.css uniquement.
-   Aucune règle structurelle ici.
-   ============================================================ */
+/**
+ * ea-theme.css — Thème Eldritch Automata
+ * Scoped sous body.yze-preset-eldritch-automata
+ * pour ne pas polluer SH et H!
+ */
 
-:root {
-  --yze-color-bg:         #0b0b12;
-  --yze-color-surface:    #13131e;
-  --yze-color-border:     #252540;
-  --yze-color-accent:     #6a3fc8;
-  --yze-color-accent-alt: #c83f6a;
-  --yze-color-text:       #c8c8e0;
-  --yze-color-text-muted: #5a5a90;
-  --yze-color-success:    #3fc87a;
-  --yze-color-danger:     #c83f3f;
-  --yze-color-stress:     #3fc8c8;
-  --yze-color-warning:    #c8a03f;
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap');
 
-  --yze-font-title: "Rajdhani", "Orbitron", "Cinzel", sans-serif;
-  --yze-font-body:  "Share Tech Mono", "Roboto Condensed", monospace;
+body.yze-preset-eldritch-automata {
+  --yze-color-bg:          #0b0b12;
+  --yze-color-surface:     #13131e;
+  --yze-color-border:      rgba(106, 63, 200, 0.3);
+  --yze-color-accent:      #6a3fc8;
+  --yze-color-text:        #c8c8e0;
+  --yze-color-text-muted:  rgba(200, 200, 224, 0.45);
+  --yze-font-title:        "Handjet", "Orbitron", monospace;
+}
+
+/* ── Attributs / pips ────────────────────────────────────────── */
+body.yze-preset-eldritch-automata .yze-pip {
+  border-color: var(--yze-color-accent);
+}
+body.yze-preset-eldritch-automata .yze-pip.yze-pip--filled {
+  background:  var(--yze-color-accent);
+  box-shadow:  0 0 5px rgba(106, 63, 200, 0.6);
+}
+body.yze-preset-eldritch-automata .xp-pip {
+  border-color: var(--yze-color-accent);
+}
+body.yze-preset-eldritch-automata .xp-pip.xp-pip--filled {
+  background: var(--yze-color-accent);
+  box-shadow: 0 0 4px rgba(106, 63, 200, 0.5);
+}
+
+/* ── Tabs ────────────────────────────────────────────────────── */
+body.yze-preset-eldritch-automata .tab-btn.active::after {
+  background: var(--yze-color-accent);
+  box-shadow: 0 0 6px var(--yze-color-accent);
+}
+
+/* ── Attr blocks ─────────────────────────────────────────────── */
+body.yze-preset-eldritch-automata .attr-block,
+body.yze-preset-eldritch-automata .ea-block {
+  border-top: 2px solid var(--yze-color-accent);
+  background: linear-gradient(180deg, rgba(106,63,200,0.06) 0%, transparent 40%);
+}
+
+/* ── Rollcard ────────────────────────────────────────────────── */
+body.yze-preset-eldritch-automata .yze-roll-result {
+  background:  var(--yze-color-bg);
+  border-left: 3px solid var(--yze-color-accent);
+}
+body.yze-preset-eldritch-automata .yze-roll-result .yze-roll-header {
+  background:   linear-gradient(135deg, rgba(106,63,200,0.1), transparent 60%);
+  border-bottom: 1px solid rgba(106, 63, 200, 0.3);
+}
+body.yze-preset-eldritch-automata .yze-roll-success-count {
+  color: var(--yze-color-accent);
+}
+
+/* ── Push / panic buttons ────────────────────────────────────── */
+body.yze-preset-eldritch-automata .yze-push-btn,
+body.yze-preset-eldritch-automata .yze-push-attack-btn,
+body.yze-preset-eldritch-automata .yze-critical-btn,
+body.yze-preset-eldritch-automata .yze-panic-btn,
+body.yze-preset-eldritch-automata .yze-apply-dmg-btn,
+body.yze-preset-eldritch-automata .yze-special-attack-btn,
+body.yze-preset-eldritch-automata .attack-dialog-confirm {
+  background:   var(--yze-color-accent) !important;
+  color:        #0b0b12 !important;
+  border-color: var(--yze-color-accent) !important;
+}
+
+/* ── Stress badge ────────────────────────────────────────────── */
+body.yze-preset-eldritch-automata .hdr-stress-val {
+  background: var(--yze-color-accent);
+  color:      #0b0b12;
+}
+
+/* ── Trackers ────────────────────────────────────────────────── */
+body.yze-preset-eldritch-automata .tracker-fill {
+  background: linear-gradient(to right, #6a3fc8, #4a2fa8);
+}
+
+/* ── EA resources (stability warning, ego warning) ───────────── */
+body.yze-preset-eldritch-automata .ea-resource--warning {
+  border-left: 3px solid #c83f3f;
+}
+body.yze-preset-eldritch-automata .ea-resource--ego-danger {
+  border-left: 3px solid #c83f6a;
+}
+
+/* ── Initialize Resources banner ─────────────────────────────── */
+body.yze-preset-eldritch-automata .ea-init-banner {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             12px;
+  margin:          8px 0;
+  padding:         8px 12px;
+  background:      rgba(255, 200, 50, 0.08);
+  border:          1px dashed rgba(255, 200, 50, 0.4);
+  border-radius:   var(--yze-radius, 4px);
+  font-size:       0.85em;
+  color:           rgba(255, 200, 50, 0.8);
+}
+
+body.yze-preset-eldritch-automata .ea-init-btn {
+  background:    rgba(255, 200, 50, 0.15);
+  border:        1px solid rgba(255, 200, 50, 0.5);
+  border-radius: var(--yze-radius, 4px);
+  color:         rgba(255, 200, 50, 0.9);
+  padding:       4px 10px;
+  cursor:        pointer;
+  font-weight:   bold;
+  white-space:   nowrap;
+}
+
+body.yze-preset-eldritch-automata .ea-init-btn:hover {
+  background: rgba(255, 200, 50, 0.25);
 }

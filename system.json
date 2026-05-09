@@ -16,7 +16,8 @@
     "module/yzegenerique.mjs"
   ],
   "styles": [
-    "styles/yzegenerique.css"
+    "styles/yzegenerique.css",
+    "module/presets/eldritch-automata/ea-theme.css"
   ],
   "languages": [
     {
@@ -169,9 +170,65 @@
       "path": "packs/h-panic.db",
       "type": "RollTable",
       "system": "yzegenerique"
+    },
+    {
+      "name": "ea-attributes",
+      "label": "EA — Attributes",
+      "path": "packs/ea-attributes.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "ea-skills",
+      "label": "EA — Skills",
+      "path": "packs/ea-skills.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "ea-weapons",
+      "label": "EA — Weapons",
+      "path": "packs/ea-weapons.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "ea-talents",
+      "label": "EA — Talents",
+      "path": "packs/ea-talents.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "ea-critical-injuries",
+      "label": "EA — Critical Injuries (Pilot)",
+      "path": "packs/ea-critical-injuries.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "ea-critical-automata",
+      "label": "EA — Critical Injuries (Automata)",
+      "path": "packs/ea-critical-automata.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "ea-critical-tables",
+      "label": "EA — Critical Tables",
+      "path": "packs/ea-critical-tables.db",
+      "type": "RollTable",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "ea-panic",
+      "label": "EA — Panic Table",
+      "path": "packs/ea-panic.db",
+      "type": "RollTable",
+      "system": "yzegenerique"
     }
   ],
-  "url":      "https://github.com/SebsokK/yzegenerique",
+  "url": "https://github.com/SebsokK/yzegenerique",
   "manifest": "https://raw.githubusercontent.com/SebsokK/yzegenerique/main/system.json",
   "download": "https://github.com/SebsokK/yzegenerique/releases/download/v.0.1.0/yzegenerique-v0.1.0.zip"
 }

@@ -129,26 +129,27 @@ Hooks.once("init", () => {
   // ── 6. Feuilles Actor ──────────────────────────────────────────────
   Actors.unregisterSheet("core", ActorSheet);
 
-  // Feuille générique — disponible mais non par défaut si EA actif
+  const isEA = activePreset === "eldritch-automata";
+
+  // Feuille générique — toujours disponible
   Actors.registerSheet("yzegenerique", CharacterSheet, {
     types:       ["character"],
-    makeDefault: activePreset !== "eldritch-automata",
+    makeDefault: !isEA,
     label:       "YZE.SheetCharacter",
   });
+
+  // Feuille EA — toujours enregistrée, default si EA actif
+  Actors.registerSheet("yzegenerique", EaCharacterSheet, {
+    types:       ["character"],
+    makeDefault: isEA,
+    label:       "YZE.EA.SheetCharacter",
+  });
+
   Actors.registerSheet("yzegenerique", NpcSheet, {
     types:       ["npc"],
     makeDefault: true,
     label:       "YZE.SheetNpc",
   });
-
-  // Feuille EA — enregistrée uniquement si EA actif
-  if (activePreset === "eldritch-automata") {
-    Actors.registerSheet("yzegenerique", EaCharacterSheet, {
-      types:       ["character"],
-      makeDefault: true,
-      label:       "YZE.EA.SheetCharacter",
-    });
-  }
 
   // ── 7. Feuilles Item noyau ─────────────────────────────────────────
   Items.unregisterSheet("core", ItemSheet);
@@ -393,9 +394,40 @@ Hooks.once("ready", async () => {
     rollCritical:  (actor) => CriticalHandler.roll(actor),
   };
 
-  // Ajouter la classe preset sur le body pour le CSS global
+  // Nettoyer les anciennes classes preset et ajouter la nouvelle
   const presetId = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
+  document.body.classList.forEach(cls => {
+    if (cls.startsWith("yze-preset-")) document.body.classList.remove(cls);
+  });
   document.body.classList.add(`yze-preset-${presetId}`);
+
+  // Précharger Handjet pour EA (évite le flash de police au premier rendu)
+  if (presetId === "eldritch-automata") {
+    const link = document.createElement("link");
+    link.rel  = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap";
+    link.dataset.yzeEaFont = "1";
+    if (!document.querySelector("link[data-yze-ea-font]"))
+      document.head.appendChild(link);
+
+    // Forcer la sheet EA sur tous les acteurs character existants
+    if (game.user.isGM) {
+      for (const actor of game.actors.filter(a => a.type === "character")) {
+        const current = actor.getFlag("core", "sheetClass");
+        if (current !== "yzegenerique.EaCharacterSheet") {
+          await actor.setFlag("core", "sheetClass", "yzegenerique.EaCharacterSheet");
+        }
+      }
+    }
+  } else if (game.user.isGM) {
+    // Hors EA — remettre la sheet générique si elle était forcée EA
+    for (const actor of game.actors.filter(a => a.type === "character")) {
+      const current = actor.getFlag("core", "sheetClass");
+      if (current === "yzegenerique.EaCharacterSheet") {
+        await actor.setFlag("core", "sheetClass", "yzegenerique.CharacterSheet");
+      }
+    }
+  }
 
   // Appliquer la font titre
   YZEApplyTitleFont();
@@ -520,19 +552,86 @@ Hooks.on("preCreateActor", (actor, data) => {
   }
 });
 
+// ── Auto-création des ressources EA sur un nouvel acteur ─────────────
+Hooks.on("createActor", async (actor, options, userId) => {
+  if (userId !== game.user.id) return;
+  if (actor.type !== "character") return;
+
+  const activePreset = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
+  if (activePreset !== "eldritch-automata") return;
+
+  // Assigner la feuille EA si elle n'est pas déjà forcée
+  const currentSheet = actor.getFlag("core", "sheetClass");
+  if (currentSheet !== "yzegenerique.EaCharacterSheet") {
+    await actor.setFlag("core", "sheetClass", "yzegenerique.EaCharacterSheet");
+  }
+
+  // Ne pas recréer si les ressources existent déjà
+  const hasResources = actor.items.some(i => i.type === "resource");
+  if (hasResources) return;
+
+  await YZECreateEaResources(actor);
+});
+
+/**
+ * Crée les ressources EA de base sur un acteur.
+ * Appelé à la création ou via le bouton "Initialize" sur la fiche EA.
+ */
+async function YZECreateEaResources(actor) {
+  const str = actor.items.find(i => i.type === "attribute" && i.system?.slug === "strength")?.system?.value ?? 2;
+  const agi = actor.items.find(i => i.type === "attribute" && i.system?.slug === "agility")?.system?.value ?? 2;
+  const wit = actor.items.find(i => i.type === "attribute" && i.system?.slug === "wits")?.system?.value ?? 2;
+  const emp = actor.items.find(i => i.type === "attribute" && i.system?.slug === "empathy")?.system?.value ?? 2;
+
+  const resources = [
+    // Pilot
+    { name: "Health",     slug: "health",     category: "pilot",    value: str + agi,     max: str + agi,     min: 0 },
+    { name: "Stability",  slug: "stability",  category: "pilot",    value: wit,           max: wit,           min: 0 },
+    { name: "Ego",        slug: "ego",        category: "pilot",    value: emp,           max: emp,           min: 0 },
+    // Automata
+    { name: "Durability", slug: "durability", category: "automata", value: str + agi + 5, max: str + agi + 5, min: 0 },
+    { name: "Ego Field",  slug: "ego-field",  category: "automata", value: emp,           max: emp,           min: 0 },
+  ];
+
+  const itemData = resources.map(r => ({
+    name: r.name,
+    type: "resource",
+    img:  "icons/svg/d20-black.svg",
+    system: {
+      slug:     r.slug,
+      category: r.category,
+      value:    r.value,
+      max:      r.max,
+      min:      r.min,
+      description: "",
+    },
+  }));
+
+  await actor.createEmbeddedDocuments("Item", itemData);
+  ui.notifications.info(`YZE | EA resources initialized for ${actor.name}.`);
+}
+
+// Exposer pour le bouton "Initialize" de la fiche EA
+globalThis.YZECreateEaResources = YZECreateEaResources;
+
 // ── Dice So Nice — colorsets YZE depuis settings ─────────────────────
 Hooks.once("diceSoNiceReady", (dice3d) => {
   const g = (key, def) => { try { return game.settings.get("yzegenerique", key) || def; } catch { return def; } };
 
-  const normalFg  = g("dsnColorNormalFg",  "#c9a84c");
-  const normalBg  = g("dsnColorNormalBg",  "#1a1208");
-  const stressFg  = g("dsnColorStressFg", "#1a1208");
-  const stressBg  = g("dsnColorStressBg", "#c9a84c");
-  const gearFg    = g("dsnColorGearFg",   "#f0ead6");
-  const gearBg    = g("dsnColorGearBg",   "#5c3d2e");
-  const lBane     = g("dsnLabelBane",      "☠");
-  const lSuccess  = g("dsnLabelSuccess",   "✦");
-  const lStress   = g("dsnLabelStressBane","⚡");
+  const activePreset = (() => { try { return game.settings.get("yzegenerique", "activePresetId"); } catch { return "srd-default"; } })();
+  const isEA = activePreset === "eldritch-automata";
+
+  // Couleurs : EA utilise le violet, les autres utilisent les settings configurables
+  const normalFg  = isEA ? "#c8c8e0" : g("dsnColorNormalFg",  "#c9a84c");
+  const normalBg  = isEA ? "#0b0b12" : g("dsnColorNormalBg",  "#1a1208");
+  const stressFg  = isEA ? "#0b0b12" : g("dsnColorStressFg", "#1a1208");
+  const stressBg  = isEA ? "#6a3fc8" : g("dsnColorStressBg", "#c9a84c");
+  const gearFg    = isEA ? "#c8c8e0" : g("dsnColorGearFg",   "#f0ead6");
+  const gearBg    = isEA ? "#1a0a3a" : g("dsnColorGearBg",   "#5c3d2e");
+
+  const lBane     = isEA ? "⚙" : g("dsnLabelBane",      "☠");
+  const lSuccess  = isEA ? "★" : g("dsnLabelSuccess",   "✦");
+  const lStress   = isEA ? "⚡" : g("dsnLabelStressBane","⚡");
 
   const showMiddle = g("dsnShowMiddleFaces", false);
   const mid = (n) => showMiddle ? String(n) : " ";

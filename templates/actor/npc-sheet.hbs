@@ -253,10 +253,10 @@
 
     <section class="sheet-section">
       <div class="npc-sa-header-row">
-        <h2 class="section-title" style="margin:0">🎲 Special Attacks (D6)</h2>
+        <h2 class="section-title" style="margin:0">🎲 Special Attacks</h2>
         {{#if specialAttackTable}}
         <div class="npc-sa-header-actions">
-          <button type="button" class="yze-special-attack-btn" data-action="rollSpecialAttack">🎲 Roll D6</button>
+          <button type="button" class="yze-special-attack-btn" data-action="rollSpecialAttack">🎲 Roll Dice</button>
           <button type="button" class="ea-icon-btn" data-action="openSpecialAttackTable" title="Edit table">✎</button>
           <button type="button" class="ea-icon-btn ea-delete-btn" data-action="clearSpecialAttackTable" title="Unlink">✕</button>
         </div>
@@ -267,7 +267,7 @@
         {{#if specialAttackResults.length}}
         <div class="npc-sa-table">
           <div class="npc-sa-table-head">
-            <span>D6</span><span>Attack</span>
+            <span>Dice</span><span>Attack</span>
           </div>
           {{#each specialAttackResults as |entry|}}
           <div class="npc-sa-entry hoverable-row">
