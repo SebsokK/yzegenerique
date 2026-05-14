@@ -41,6 +41,9 @@ export class DerivedStatsSystem {
       const formula  = sys.formula?.trim() ?? "";
       const modifier = sys.modifier ?? 0;
 
+      // Respecter le flag autoCalc — si false, l'utilisateur a saisi manuellement
+      if (sys.autoCalc === false) continue;
+
       let newMax = modifier;
       if (formula !== "") {
         // Cas spécial : référence à un autre resource par slug (ex: "ego_max")
@@ -63,6 +66,9 @@ export class DerivedStatsSystem {
     }
 
     // ── 2. Champs fixes du preset (legacy — compatibilité EA) ──────
+    // Skip pour les NPCs qui gèrent leurs stats manuellement
+    if (actor.type === "npc") return;
+
     const preset       = resolvePreset(game.settings.get("yzegenerique", "activePresetId"));
     const derivedStats = preset.derivedStats ?? [];
 

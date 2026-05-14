@@ -21,13 +21,20 @@ export class StrandDataModel extends foundry.abstract.TypeDataModel {
       broken: new fields.BooleanField({ initial: false }),
 
       // [CONFIRMÉ] Mémoire du moment fondateur de la relation
-      memory: new fields.StringField({ required: false, initial: "" }),
+      memory: new fields.HTMLField({ required: false, initial: "" }),
 
       // [CONFIRMÉ] Les Strands persistent après la mort du porteur
       isPostMortem: new fields.BooleanField({ initial: false }),
 
       // Notes libres
-      notes: new fields.StringField({ required: false, initial: "" }),
+      notes: new fields.HTMLField({ required: false, initial: "" }),
+
+      // Niveau du strand (1-3)
+      level: new fields.NumberField({ required: false, initial: 1, min: 1, max: 3, integer: true }),
+
+      // Valeur actuelle / max pour les pips (=level)
+      value: new fields.NumberField({ required: false, initial: 1, min: 0, integer: true }),
+      maxValue: new fields.NumberField({ required: false, initial: 1, min: 1, max: 3, integer: true }),
     };
   }
 }

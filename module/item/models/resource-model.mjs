@@ -43,6 +43,9 @@ export class ResourceDataModel extends foundry.abstract.TypeDataModel {
       // Utilisé par la feuille EA pour grouper les ressources
       category: new fields.StringField({ required: false, initial: "general" }),
 
+      // Si false, DerivedStatsSystem n'écrase pas le max — édition manuelle prioritaire
+      autoCalc: new fields.BooleanField({ required: false, initial: true }),
+
       description: new fields.StringField({ required: false, initial: "" }),
     };
   }

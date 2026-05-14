@@ -53,12 +53,13 @@ export class YZEActor extends Actor {
    * @param {string} slug
    * @returns {YZEItem|undefined}
    */
-  getAttributeBySlug(slug) {
-    if (!slug) return undefined;
-    const normalized = slug.trim().toLowerCase();
+  getAttributeBySlug(slugOrId) {
+    if (!slugOrId) return undefined;
+    const normalized = slugOrId.trim().toLowerCase();
     return this.items.find(i =>
       i.type === "attribute" &&
-      ((i.system.slug?.trim().toLowerCase() === normalized) ||
+      (i.id === slugOrId ||
+       (i.system.slug?.trim().toLowerCase() === normalized) ||
        (i.name.toLowerCase() === normalized))
     );
   }
@@ -126,17 +127,44 @@ export class YZEActor extends Actor {
       return;
     }
     const attribute = this.getAttributeBySlug(skill.system.linkedAttribute);
+
+    // Dialog modifier + strands (skip si options.skipDialog)
+    if (!options.skipDialog) {
+      const { RollDialog } = await import("../ui/roll-dialog.mjs");
+      const result = await RollDialog.prompt(this, skill, attribute);
+      if (!result) return;
+      options = { ...options, modifier: result.modifier,
+        strandCount: result.strandCount, selectedStrandId: result.selectedStrandId };
+      // Exhauster le strand sélectionné
+      if (result.selectedStrandId) {
+        const strandItem = this.items.get(result.selectedStrandId);
+        if (strandItem) {
+          const newVal = Math.max(0, (strandItem.system.value ?? 1) - 1);
+          await strandItem.update({ "system.value": newVal });
+        }
+      }
+    }
     return YZEDiceRoller.rollSkill(this, skill, attribute, options);
   }
 
-  /**
-   * Lance un jet d'attribut pur (sans compétence).
-   * @param {string} attributeItemId
-   * @param {object} [options]
-   */
   async rollAttribute(attributeItemId, options = {}) {
     const attribute = this.items.get(attributeItemId);
     if (!attribute) return;
+
+    if (!options.skipDialog) {
+      const { RollDialog } = await import("../ui/roll-dialog.mjs");
+      const result = await RollDialog.prompt(this, null, attribute);
+      if (!result) return;
+      options = { ...options, modifier: result.modifier,
+        strandCount: result.strandCount, selectedStrandId: result.selectedStrandId };
+      if (result.selectedStrandId) {
+        const strandItem = this.items.get(result.selectedStrandId);
+        if (strandItem) {
+          const newVal = Math.max(0, (strandItem.system.value ?? 1) - 1);
+          await strandItem.update({ "system.value": newVal });
+        }
+      }
+    }
     return YZEDiceRoller.rollSkill(this, null, attribute, options);
   }
 }

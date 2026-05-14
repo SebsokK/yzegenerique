@@ -1,27 +1,23 @@
-/**
- * PilotArchetypeDataModel — Item de type "pilot-archetype".
- * Un seul item de ce type par Actor (référencé via system.ea.pilotArchetypeId).
- * Foundry VTT V14
- */
-
 const { fields } = foundry.data;
+
+function statArrayField() {
+  return new fields.SchemaField({
+    strength: new fields.NumberField({ required: true, initial: 1, min: 1, max: 6, integer: true }),
+    agility:  new fields.NumberField({ required: true, initial: 1, min: 1, max: 6, integer: true }),
+    wits:     new fields.NumberField({ required: true, initial: 1, min: 1, max: 6, integer: true }),
+    empathy:  new fields.NumberField({ required: true, initial: 1, min: 1, max: 6, integer: true }),
+  });
+}
 
 export class PilotArchetypeDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
-      description: new fields.HTMLField({ required: false, initial: "" }),
-
-      // [CONFIRMÉ] Texte de Breakdown — affiché sur la feuille Actor quand inBreakdown = true
-      // "Acting against your Breakdown reduces your rolls to 1"
-      breakdownText: new fields.HTMLField({ required: false, initial: "" }),
-
-      // [CONFIRMÉ] Description du Strand Talent de cet archétype
-      // La mécanique active (formation de Strands) est dans ea-strands.mjs (bloc 3)
+      description:             new fields.HTMLField({ required: false, initial: "" }),
+      breakdownText:           new fields.HTMLField({ required: false, initial: "" }),
       strandTalentDescription: new fields.HTMLField({ required: false, initial: "" }),
-
-      // [CONFIRMÉ] Description du Hope Talent
-      // "One-time use ability, purchased with XP, locks after use until milestone"
-      hopeTalentDescription: new fields.HTMLField({ required: false, initial: "" }),
+      hopeTalentDescription:   new fields.HTMLField({ required: false, initial: "" }),
+      statArrayA:              statArrayField(),
+      statArrayB:              statArrayField(),
     };
   }
 }

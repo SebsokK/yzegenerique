@@ -1,0 +1,55 @@
+{{!-- templates/ui/roll-dialog.hbs --}}
+<div class="roll-dialog-body yze-preset-{{presetId}}">
+
+  <div class="roll-dialog-title">
+    <span class="roll-dialog-attr">{{attrName}}</span>
+    {{#if skillName}}
+    <span class="roll-dialog-sep">+</span>
+    <span class="roll-dialog-skill">{{skillName}}</span>
+    {{/if}}
+  </div>
+
+  {{!-- Modificateur --}}
+  <div class="roll-dialog-mod-row">
+    <button type="button" class="roll-dialog-mod-btn" data-action="modDown">−</button>
+    <div class="roll-dialog-mod-display">
+      <span class="roll-dialog-mod-value {{#if modifier}}{{#if (gt modifier 0)}}mod-positive{{else}}mod-negative{{/if}}{{/if}}">
+        {{#if (gt modifier 0)}}+{{/if}}{{modifier}}
+      </span>
+      <span class="roll-dialog-pool-hint">modifier</span>
+    </div>
+    <button type="button" class="roll-dialog-mod-btn" data-action="modUp">+</button>
+  </div>
+
+  {{!-- Strand dice (EA uniquement) --}}
+  {{#if isEA}}
+  <div class="roll-dialog-strand-section">
+    <div class="roll-dialog-strand-row">
+      <label class="roll-dialog-strand-label">🔗 Exhaust a Strand</label>
+      <span class="roll-dialog-strand-hint">= +2 Strand Dice (★ on 1 & 6)</span>
+    </div>
+    {{#if hasStrands}}
+    <select class="roll-dialog-strand-select">
+      <option value="">— none —</option>
+      {{#each strands as |strand|}}
+      <option value="{{strand.id}}">{{strand.name}}{{#if strand.system.targetName}} → {{strand.system.targetName}}{{/if}}</option>
+      {{/each}}
+    </select>
+    {{else}}
+    <span class="roll-dialog-no-strands">No available strands</span>
+    {{/if}}
+  </div>
+  {{/if}}
+
+  {{!-- Pool final --}}
+  <div class="roll-dialog-pool-row">
+    <span class="roll-dialog-pool-label">Final Pool</span>
+    <span class="roll-dialog-pool-value">{{finalPool}}d</span>
+  </div>
+
+  <div class="roll-dialog-actions">
+    <button type="button" class="roll-dialog-cancel" data-action="cancel">Cancel</button>
+    <button type="button" class="roll-dialog-confirm" data-action="confirm">🎲 Roll</button>
+  </div>
+
+</div>

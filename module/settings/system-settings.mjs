@@ -69,6 +69,15 @@ export function registerSystemSettings() {
     default: false,
   });
 
+  game.settings.register("yzegenerique", "rerollBanesOnPush", {
+    name:    "YZE.SettingRerollBanesOnPush",
+    hint:    "YZE.SettingRerollBanesOnPushHint",
+    scope:   "world",
+    config:  true,
+    type:    Boolean,
+    default: false,
+  });
+
   game.settings.register("yzegenerique", "enableConditions", {
     name: "YZE.SettingEnableConditions",
     scope: "world", config: true, type: Boolean, default: false,
@@ -125,8 +134,8 @@ export function registerSystemSettings() {
   game.settings.register("yzegenerique", "dsnColorStressBg",  { name: "DSN — Stress Dice background", hint: "Background color for stress dice",    scope: "world", config: true, type: String, default: "#c9a84c" });
   game.settings.register("yzegenerique", "dsnColorGearFg",    { name: "DSN — Gear Dice foreground",   hint: "Text color for weapon bonus dice",    scope: "world", config: true, type: String, default: "#f0ead6" });
   game.settings.register("yzegenerique", "dsnColorGearBg",    { name: "DSN — Gear Dice background",   hint: "Background color for weapon bonus dice", scope: "world", config: true, type: String, default: "#5c3d2e" });
-  game.settings.register("yzegenerique", "dsnLabelBane",       { name: "DSN — Bane symbol (face 1)",       hint: "Symbol on die face 1. Empty = number.", scope: "world", config: true, type: String, default: "☠" });
-  game.settings.register("yzegenerique", "dsnLabelSuccess",    { name: "DSN — Success symbol (face 6)",    hint: "Symbol on die face 6. Empty = number.", scope: "world", config: true, type: String, default: "✦" });
+  game.settings.register("yzegenerique", "dsnLabelBane",       { name: "DSN — Bane symbol (face 1)",       hint: "Symbol on die face 1. Empty = number.", scope: "world", config: true, type: String, default: "⊘" });
+  game.settings.register("yzegenerique", "dsnLabelSuccess",    { name: "DSN — Success symbol (face 6)",    hint: "Symbol on die face 6. Empty = number.", scope: "world", config: true, type: String, default: "★" });
   game.settings.register("yzegenerique", "dsnLabelStressBane", { name: "DSN — Stress Bane (stress face 1)", hint: "Symbol on stress die face 1. Empty = number.", scope: "world", config: true, type: String, default: "⚡" });
   game.settings.register("yzegenerique", "dsnShowMiddleFaces", {
     name: "DSN — Show numbers on faces 2-5",

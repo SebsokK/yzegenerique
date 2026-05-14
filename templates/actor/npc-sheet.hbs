@@ -8,6 +8,13 @@
       <input class="header-name" type="text" name="name" value="{{actor.name}}" />
       <input class="header-archetype" type="text" name="system.archetype"
         value="{{system.archetype}}" placeholder="Type / Role" />
+      {{#if system.threatMode}}
+      <select name="system.threatMode" class="npc-threat-mode-select">
+        <option value="standard" {{#if (eq system.threatMode "standard")}}selected{{/if}}>⚡ Standard (Agility)</option>
+        <option value="pilot"    {{#if (eq system.threatMode "pilot")}}selected{{/if}}>🧑 Threat: Pilot</option>
+        <option value="automata" {{#if (eq system.threatMode "automata")}}selected{{/if}}>🤖 Threat: Automata</option>
+      </select>
+      {{/if}}
     </div>
     <div class="header-resources">
       {{#if system.health}}
@@ -48,6 +55,21 @@
               title="{{#if system.resolve.autoCalc}}Auto-calculated{{else}}Manual override{{/if}}">
               {{#if system.resolve.autoCalc}}🔒{{else}}✏️{{/if}}
             </button>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+      {{#if system.egoField}}
+      <div class="hdr-resource" style="min-width:90px">
+        <label>Ego Field</label>
+        <div class="hdr-tracker-wrap">
+          <div class="hdr-tracker" data-value="{{system.egoField.value}}" data-max="{{system.egoField.max}}">
+            <div class="hdr-tracker-bar"></div>
+          </div>
+          <div class="hdr-resource-inputs">
+            <input type="number" name="system.egoField.value" value="{{system.egoField.value}}" min="0" />
+            <span>/</span>
+            <input type="number" name="system.egoField.max" value="{{system.egoField.max}}" min="0" />
           </div>
         </div>
       </div>
@@ -119,6 +141,28 @@
       </div>
     </section>
 
+    {{!-- Talents --}}
+    <section class="sheet-section hoverable-section">
+      <h2 class="section-title">{{localize "YZE.Talents"}}</h2>
+      <div class="talents-list">
+        {{#each talents as |talent|}}
+        <div class="talent-row hoverable-row" data-item-id="{{talent.id}}">
+          <span class="talent-name">{{talent.name}}</span>
+          {{#if talent.system.excerpt}}<span class="talent-excerpt">{{talent.system.excerpt}}</span>{{/if}}
+          <span class="row-actions">
+            <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{talent.id}}">✎</button>
+            <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{talent.id}}">✕</button>
+          </span>
+        </div>
+        {{else}}
+        <p class="empty-hint">{{localize "YZE.EA.NoTalents"}}</p>
+        {{/each}}
+      </div>
+      <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="talent">
+        + {{localize "YZE.AddTalent"}}
+      </button>
+    </section>
+
     {{!-- Description --}}
     <section class="sheet-section biography-section">
       <h2 class="section-title">Description</h2>
@@ -160,6 +204,13 @@
               <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{item.id}}">✕</button>
             </span>
           </div>
+          {{#if item.resolvedTags.length}}
+          <div class="weapon-tags-row">
+            {{#each item.resolvedTags as |tag|}}
+            <span class="yze-weapon-tag" {{#if tag.tooltip}}title="{{tag.tooltip}}"{{/if}}>{{tag.name}}</span>
+            {{/each}}
+          </div>
+          {{/if}}
           {{#if item.system.isRanged}}
           <div class="ea-weapon-reloads {{#if item.system.isOutOfAmmo}}ea-out-of-ammo{{/if}}" data-item-id="{{item.id}}">
             <input type="number" data-item-id="{{item.id}}" data-field="system.currentReloads"

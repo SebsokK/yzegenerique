@@ -3,7 +3,15 @@
 
   {{!-- ═══ EN-TÊTE ═══ --}}
   <header class="sheet-header">
-    <img class="actor-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" />
+    <div class="ea-portrait-col">
+      <img class="actor-portrait" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" />
+      <button type="button"
+        class="ea-automata-toggle {{#if system.ea.inAutomata}}ea-automata-toggle--on{{else}}ea-automata-toggle--off{{/if}}"
+        data-action="toggleInAutomata"
+        title="{{#if system.ea.inAutomata}}In Automata — click to switch to Pilot mode{{else}}Pilot only — click to enter Automata{{/if}}">
+        {{#if system.ea.inAutomata}}🤖 In Automata{{else}}🧑 Pilot only{{/if}}
+      </button>
+    </div>
     <div class="sheet-header-fields">
       <input class="header-name" type="text" name="name" value="{{actor.name}}" />
       <div class="header-meta-row">
@@ -12,43 +20,88 @@
           placeholder="{{localize 'YZE.Archetype'}}" />
       </div>
 
-      {{!-- Ressources : Health / Stability / Ego / Stress --}}
-      <div class="header-stats-row">
+      {{!-- Ressources : Health / Stability / Ego + Stress --}}
+      <div class="header-resources ea-header-resources">
         {{#each pilotResources as |res|}}
-        <div class="hdr-stat">
-          <span class="hdr-stat-label">{{res.name}}</span>
-          <input class="hdr-stat-val" type="number"
-            data-item-id="{{res.id}}" data-field="system.value"
-            value="{{res.system.value}}" min="0" max="{{res.system.max}}" />
-          <span class="hdr-stat-sep">/</span>
-          <span class="hdr-stat-max">{{res.system.max}}</span>
+        <div class="hdr-resource ea-hdr-resource">
+          <label>{{res.name}}</label>
+          <div class="hdr-tracker-wrap">
+            <div class="hdr-tracker" data-value="{{res.system.value}}" data-max="{{res.system.max}}">
+              <div class="hdr-tracker-bar"></div>
+            </div>
+            <div class="hdr-resource-inputs">
+              <input type="number"
+                data-item-id="{{res.id}}" data-field="system.value"
+                value="{{res.system.value}}" min="0" max="{{res.system.max}}" />
+              <span>/</span>
+              {{#if res.system.autoCalc}}
+              <input type="number"
+                data-item-id="{{res.id}}" data-field="system.max"
+                value="{{res.system.max}}" min="0" readonly class="hdr-max-auto" />
+              {{else}}
+              <input type="number"
+                data-item-id="{{res.id}}" data-field="system.max"
+                value="{{res.system.max}}" min="0" class="hdr-manual" />
+              {{/if}}
+              <button type="button" class="hdr-lock-btn"
+                data-action="toggleAutoCalc" data-item-id="{{res.id}}"
+                title="{{#if res.system.autoCalc}}Auto (click to override){{else}}Manual (click to restore auto){{/if}}">
+                {{#if res.system.autoCalc}}🔒{{else}}✏️{{/if}}
+              </button>
+            </div>
+          </div>
         </div>
         {{/each}}
-        <div class="hdr-stat">
-          <span class="hdr-stat-label">{{localize "YZE.EA.Stress"}}</span>
-          <input class="hdr-stat-val hdr-stress-val" type="number"
-            name="system.stress" value="{{system.stress}}" min="0" max="10" />
-          <span class="hdr-stat-sep">/</span>
-          <span class="hdr-stat-max">10</span>
+
+        {{!-- Stress — couleur distincte comme SH/H! --}}
+        <div class="hdr-resource hdr-stress ea-hdr-stress">
+          <label>{{localize "YZE.EA.Stress"}}</label>
+          <div class="hdr-tracker-wrap">
+            <div class="hdr-tracker hdr-tracker--stress" data-value="{{system.stress}}" data-max="10">
+              <div class="hdr-tracker-bar"></div>
+            </div>
+            <div class="hdr-resource-inputs">
+              <input type="number" name="system.stress"
+                value="{{system.stress}}" min="0" max="10" />
+              <span>/</span>
+              <span class="hdr-max-auto">10</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {{!-- Durability & EgoField --}}
-      <div class="header-stats-row header-stats-row--secondary">
-        <div class="hdr-stat">
-          <span class="hdr-stat-label">{{localize "YZE.EA.Durability"}}</span>
-          <input class="hdr-stat-val" type="number"
-            name="system.durability.value" value="{{system.durability.value}}" min="0" max="{{system.durability.max}}" />
-          <span class="hdr-stat-sep">/</span>
-          <span class="hdr-stat-max">{{system.durability.max}}</span>
+      {{!-- Durability & Ego Field --}}
+      <div class="header-resources ea-header-resources ea-header-resources--secondary">
+        {{#each automataResources as |res|}}
+        <div class="hdr-resource ea-hdr-resource">
+          <label>{{res.name}}</label>
+          <div class="hdr-tracker-wrap">
+            <div class="hdr-tracker" data-value="{{res.system.value}}" data-max="{{res.system.max}}">
+              <div class="hdr-tracker-bar"></div>
+            </div>
+            <div class="hdr-resource-inputs">
+              <input type="number"
+                data-item-id="{{res.id}}" data-field="system.value"
+                value="{{res.system.value}}" min="0" max="{{res.system.max}}" />
+              <span>/</span>
+              {{#if res.system.autoCalc}}
+              <input type="number"
+                data-item-id="{{res.id}}" data-field="system.max"
+                value="{{res.system.max}}" min="0" readonly class="hdr-max-auto" />
+              {{else}}
+              <input type="number"
+                data-item-id="{{res.id}}" data-field="system.max"
+                value="{{res.system.max}}" min="0" class="hdr-manual" />
+              {{/if}}
+              <button type="button" class="hdr-lock-btn"
+                data-action="toggleAutoCalc" data-item-id="{{res.id}}"
+                title="{{#if res.system.autoCalc}}Auto (click to override){{else}}Manual (click to restore auto){{/if}}">
+                {{#if res.system.autoCalc}}🔒{{else}}✏️{{/if}}
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="hdr-stat">
-          <span class="hdr-stat-label">{{localize "YZE.EA.EgoField"}}</span>
-          <input class="hdr-stat-val" type="number"
-            name="system.egoField.value" value="{{system.egoField.value}}" min="0" max="{{system.egoField.max}}" />
-          <span class="hdr-stat-sep">/</span>
-          <span class="hdr-stat-max">{{system.egoField.max}}</span>
-        </div>
+        {{/each}}
       </div>
 
       {{!-- XP --}}
@@ -66,9 +119,15 @@
       <div class="sheet-status-banner sheet-status--breakdown">⚠ {{localize "YZE.EA.InBreakdown"}}</div>
       {{/if}}
       {{#if inBerserk}}
-      <div class="sheet-status-banner sheet-status--berserk">⚡ {{localize "YZE.EA.InBerserk"}}</div>
+      <div class="sheet-status-banner sheet-status--berserk">
+        ⚡ {{localize "YZE.EA.InBerserk"}}
+        <button type="button" class="ea-end-berserk-btn" data-action="endBerserk">
+          ✓ End Berserk
+        </button>
+      </div>
       {{/if}}
     </div>
+  </div>
   </header>
 
   {{#unless hasResources}}
@@ -87,6 +146,138 @@
 
   {{!-- ═══ ONGLET CHARACTER ═══ --}}
   <div class="tab-panel active" data-panel="character">
+
+    {{!-- Archétypes --}}
+    <section class="sheet-section hoverable-section">
+      <h2 class="section-title">{{localize "YZE.EA.Archetypes"}}</h2>
+
+      {{!-- Pilot Archetype --}}
+      {{#if pilotArchetype}}
+      <details class="ea-archetype-accordion">
+        <summary class="ea-archetype-summary">
+          <span class="talent-source-badge badge--pilot">{{localize "YZE.EA.Pilot"}}</span>
+          <span class="ea-archetype-name">{{pilotArchetype.name}}</span>
+          <span class="row-actions" style="margin-left:auto">
+            <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{pilotArchetype.id}}">✎</button>
+            <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{pilotArchetype.id}}">✕</button>
+          </span>
+        </summary>
+        <div class="ea-archetype-body">
+          {{#if pilotArchetype.system.description}}
+          <div class="ea-archetype-field">
+            <h4 class="ea-archetype-field-label">{{localize "YZE.Description"}}</h4>
+            <div class="ea-archetype-field-text">{{{pilotArchetype.system.description}}}</div>
+          </div>
+          {{/if}}
+          {{#if pilotArchetype.system.breakdownText}}
+          <div class="ea-archetype-field ea-archetype-field--breakdown">
+            <h4 class="ea-archetype-field-label">⚠ {{localize "YZE.EA.Breakdown"}}</h4>
+            <div class="ea-archetype-field-text">{{{pilotArchetype.system.breakdownText}}}</div>
+          </div>
+          {{/if}}
+          {{#if pilotArchetype.system.strandTalentDescription}}
+          <div class="ea-archetype-field">
+            <h4 class="ea-archetype-field-label">🔗 {{localize "YZE.EA.StrandTalent"}}</h4>
+            <div class="ea-archetype-field-text">{{{pilotArchetype.system.strandTalentDescription}}}</div>
+          </div>
+          {{/if}}
+          {{#if pilotArchetype.system.hopeTalentDescription}}
+          <div class="ea-archetype-field ea-archetype-field--hope">
+            <h4 class="ea-archetype-field-label">★ {{localize "YZE.EA.HopeTalent"}}</h4>
+            <div class="ea-archetype-field-text">{{{pilotArchetype.system.hopeTalentDescription}}}</div>
+          </div>
+          {{/if}}
+          {{#if pilotArchetype.system.statArrayA}}
+          <div class="ea-archetype-field">
+            <h4 class="ea-archetype-field-label">📊 {{localize "YZE.EA.StatArrayA"}}</h4>
+            <div class="ea-archetype-field-text ea-stat-array">
+              STR {{pilotArchetype.system.statArrayA.strength}} |
+              AGI {{pilotArchetype.system.statArrayA.agility}} |
+              WIT {{pilotArchetype.system.statArrayA.wits}} |
+              EMP {{pilotArchetype.system.statArrayA.empathy}}
+            </div>
+          </div>
+          {{/if}}
+          {{#if pilotArchetype.system.statArrayB}}
+          <div class="ea-archetype-field">
+            <h4 class="ea-archetype-field-label">📊 {{localize "YZE.EA.StatArrayB"}}</h4>
+            <div class="ea-archetype-field-text ea-stat-array">
+              STR {{pilotArchetype.system.statArrayB.strength}} |
+              AGI {{pilotArchetype.system.statArrayB.agility}} |
+              WIT {{pilotArchetype.system.statArrayB.wits}} |
+              EMP {{pilotArchetype.system.statArrayB.empathy}}
+            </div>
+          </div>
+          {{/if}}
+        </div>
+      </details>
+      {{else}}
+      <div class="skill-row">
+        <span class="talent-source-badge badge--pilot">{{localize "YZE.EA.Pilot"}}</span>
+        <button class="sheet-add-btn" type="button" data-action="itemCreate" data-type="pilot-archetype">
+          + {{localize "YZE.EA.AddPilotArchetype"}}
+        </button>
+      </div>
+      {{/if}}
+
+      {{!-- Automata Archetype --}}
+      {{#if automataArchetype}}
+      <details class="ea-archetype-accordion">
+        <summary class="ea-archetype-summary">
+          <span class="talent-source-badge badge--automata">{{localize "YZE.EA.Automata"}}</span>
+          <span class="ea-archetype-name">{{automataArchetype.name}}</span>
+          <span class="row-actions" style="margin-left:auto">
+            <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{automataArchetype.id}}">✎</button>
+            <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{automataArchetype.id}}">✕</button>
+          </span>
+        </summary>
+        <div class="ea-archetype-body">
+          {{#if automataArchetype.system.description}}
+          <div class="ea-archetype-field">
+            <h4 class="ea-archetype-field-label">{{localize "YZE.Description"}}</h4>
+            <div class="ea-archetype-field-text">{{{automataArchetype.system.description}}}</div>
+          </div>
+          {{/if}}
+          {{#if automataArchetype.system.berserkText}}
+          <div class="ea-archetype-field ea-archetype-field--berserk">
+            <h4 class="ea-archetype-field-label">⚡ {{localize "YZE.EA.Berserk"}}</h4>
+            <div class="ea-archetype-field-text">{{{automataArchetype.system.berserkText}}}</div>
+          </div>
+          {{/if}}
+          {{#if automataArchetype.system.statArrayA}}
+          <div class="ea-archetype-field">
+            <h4 class="ea-archetype-field-label">📊 {{localize "YZE.EA.StatArrayA"}}</h4>
+            <div class="ea-archetype-field-text ea-stat-array">
+              STR {{automataArchetype.system.statArrayA.strength}} |
+              AGI {{automataArchetype.system.statArrayA.agility}} |
+              WIT {{automataArchetype.system.statArrayA.wits}} |
+              EMP {{automataArchetype.system.statArrayA.empathy}}
+            </div>
+          </div>
+          {{/if}}
+          {{#if automataArchetype.system.statArrayB}}
+          <div class="ea-archetype-field">
+            <h4 class="ea-archetype-field-label">📊 {{localize "YZE.EA.StatArrayB"}}</h4>
+            <div class="ea-archetype-field-text ea-stat-array">
+              STR {{automataArchetype.system.statArrayB.strength}} |
+              AGI {{automataArchetype.system.statArrayB.agility}} |
+              WIT {{automataArchetype.system.statArrayB.wits}} |
+              EMP {{automataArchetype.system.statArrayB.empathy}}
+            </div>
+          </div>
+          {{/if}}
+        </div>
+      </details>
+      {{else}}
+      <div class="skill-row">
+        <span class="talent-source-badge badge--automata">{{localize "YZE.EA.Automata"}}</span>
+        <button class="sheet-add-btn" type="button" data-action="itemCreate" data-type="automata-archetype">
+          + {{localize "YZE.EA.AddAutomataArchetype"}}
+        </button>
+      </div>
+      {{/if}}
+
+    </section>
 
     {{!-- Attributs --}}
     <section class="sheet-section hoverable-section attributes-section">
@@ -211,15 +402,25 @@
     <section class="sheet-section hoverable-section">
       <h2 class="section-title">{{localize "YZE.EA.Strands"}}</h2>
       {{#each strands as |strand|}}
-      <div class="skill-row hoverable-row
+      <div class="skill-row hoverable-row ea-strand-row
         {{#if strand.system.broken}}ea-strand--broken
-        {{else if strand.system.exhausted}}ea-strand--exhausted{{/if}}"
+        {{else if (eq strand.system.value 0)}}ea-strand--exhausted{{/if}}"
         data-item-id="{{strand.id}}">
-        <span class="skill-name">{{strand.name}}</span>
-        {{#if strand.system.targetName}}<span class="skill-attr">→ {{strand.system.targetName}}</span>{{/if}}
         <span class="ea-strand-status">
-          {{#if strand.system.broken}}🔴{{else if strand.system.exhausted}}🟡{{else}}🟢{{/if}}
+          {{#if strand.system.broken}}🔴{{else if (eq strand.system.value 0)}}🟡{{else}}🟢{{/if}}
         </span>
+        <span class="skill-name">{{strand.name}}{{#if strand.system.level}} ({{strand.system.level}}){{/if}}</span>
+        {{#if strand.system.targetName}}<span class="skill-attr">→ {{strand.system.targetName}}</span>{{/if}}
+        <div class="ea-strand-pips">
+          {{#each strand.pips as |pip|}}
+          <button class="ea-strand-pip-dot {{#if pip.active}}ea-strand-pip--green{{else}}ea-strand-pip--yellow{{/if}}"
+            type="button"
+            data-action="strandPipClick"
+            data-item-id="{{strand.id}}"
+            data-pip-index="{{pip.index}}"
+            title="Pip {{pip.index}}"></button>
+          {{/each}}
+        </div>
         <span class="row-actions">
           <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{strand.id}}">✎</button>
           <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{strand.id}}">✕</button>
@@ -231,37 +432,6 @@
       <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="strand">
         + {{localize "YZE.EA.AddStrand"}}
       </button>
-    </section>
-
-    {{!-- Archétypes --}}
-    <section class="sheet-section hoverable-section">
-      <h2 class="section-title">{{localize "YZE.EA.Archetypes"}}</h2>
-      <div class="skill-row hoverable-row">
-        <span class="skill-attr" style="min-width:80px">{{localize "YZE.EA.Pilot"}}</span>
-        {{#if pilotArchetype}}
-        <span class="skill-name">{{pilotArchetype.name}}</span>
-        <span class="row-actions">
-          <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{pilotArchetype.id}}">✎</button>
-        </span>
-        {{else}}
-        <button class="sheet-add-btn" type="button" data-action="itemCreate" data-type="pilot-archetype">
-          + {{localize "YZE.EA.AddPilotArchetype"}}
-        </button>
-        {{/if}}
-      </div>
-      <div class="skill-row hoverable-row">
-        <span class="skill-attr" style="min-width:80px">{{localize "YZE.EA.Automata"}}</span>
-        {{#if automataArchetype}}
-        <span class="skill-name">{{automataArchetype.name}}</span>
-        <span class="row-actions">
-          <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{automataArchetype.id}}">✎</button>
-        </span>
-        {{else}}
-        <button class="sheet-add-btn" type="button" data-action="itemCreate" data-type="automata-archetype">
-          + {{localize "YZE.EA.AddAutomataArchetype"}}
-        </button>
-        {{/if}}
-      </div>
     </section>
 
   </div>{{!-- /tab character --}}
@@ -288,16 +458,26 @@
             <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{item.id}}">✕</button>
           </span>
         </div>
+        {{#if item.resolvedTags.length}}
+        <div class="weapon-tags-row">
+          {{#each item.resolvedTags as |tag|}}
+          <span class="yze-weapon-tag" {{#if tag.tooltip}}title="{{tag.tooltip}}"{{/if}}>{{tag.name}}</span>
+          {{/each}}
+        </div>
+        {{/if}}
         {{#if item.system.isRanged}}
         <div class="weapon-reloads {{#if item.system.isOutOfAmmo}}ea-out-of-ammo{{/if}}">
-          <span>🔄</span>
           <input type="number" data-item-id="{{item.id}}" data-field="system.currentReloads"
             value="{{item.system.currentReloads}}" min="0" max="{{item.system.maxReloads}}" />
-          <span>/</span><span>{{item.system.maxReloads}}</span>
-          <button class="ea-icon-btn" type="button" data-action="useReload" data-item-id="{{item.id}}"
-            {{#if item.system.isOutOfAmmo}}disabled{{/if}}>-1</button>
-          <button class="ea-icon-btn" type="button" data-action="resetReloads" data-item-id="{{item.id}}">↺</button>
-          {{#if item.system.isOutOfAmmo}}<span class="ea-ammo-warning">⚠ Empty</span>{{/if}}
+          <span class="weapon-reloads-sep">/</span>
+          <span class="weapon-reloads-max">{{item.system.maxReloads}}</span>
+          {{#if item.system.isOutOfAmmo}}
+          <span class="ea-ammo-warning">⚠ Empty</span>
+          {{/if}}
+          <button class="yze-roll-weapon-btn" type="button"
+            data-action="resetReloads" data-item-id="{{item.id}}">
+            🔄 Reload
+          </button>
         </div>
         {{/if}}
       </div>
@@ -326,20 +506,53 @@
     </section>
 
     {{!-- Critical Injuries --}}
-    <section class="sheet-section hoverable-section">
+    <section class="sheet-section hoverable-section ci-section">
       <h2 class="section-title">💀 {{localize "YZE.CriticalInjuries"}}</h2>
-      {{#each criticalInjuries as |ci|}}
-      <div class="skill-row hoverable-row" data-item-id="{{ci.id}}">
-        <span class="skill-name">{{ci.name}}</span>
-        {{#if ci.system.healed}}<span class="skill-attr">✓ healed</span>{{/if}}
-        <span class="row-actions">
-          <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{ci.id}}">✎</button>
-          <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{ci.id}}">✕</button>
-        </span>
+      {{#if criticalInjuries.length}}
+      <div class="ci-list">
+        {{#each criticalInjuries as |ci|}}
+        <div class="ci-card {{#if ci.system.healed}}ci-card--healed{{/if}} {{#if ci.system.lethal}}ci-card--lethal{{/if}} hoverable-row"
+             data-item-id="{{ci.id}}">
+          <div class="ci-card-header">
+            <span class="ci-name">{{ci.name}}</span>
+            {{#if ci.system.lethal}}<span class="ci-lethal-tag">⚠ LETHAL</span>{{/if}}
+            {{#if ci.system.instantDeath}}<span class="ci-death-tag">💀 INSTANT DEATH</span>{{/if}}
+            {{#if ci.system.healed}}<span class="ci-healed-tag">✓ Healed</span>{{/if}}
+            <span class="row-actions">
+              <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{ci.id}}">✎</button>
+              <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{ci.id}}">✕</button>
+            </span>
+          </div>
+          {{#if ci.system.effect}}
+          <div class="ci-effect">{{ci.system.effect}}</div>
+          {{/if}}
+          <div class="ci-footer">
+            {{#if ci.system.timeLimit}}<span class="ci-meta">⏱ {{ci.system.timeLimit}}</span>{{/if}}
+            {{#if ci.system.healingTime}}
+            <span class="ci-meta">🩹
+              {{#if ci.isRollableHealingTime}}
+              <button type="button" class="ci-roll-healing-btn"
+                data-action="rollCiHealing"
+                data-item-id="{{ci.id}}"
+                title="Click to roll healing time">{{ci.system.healingTime}} {{#unless ci.system.timeLimit}}Days{{/unless}}</button>
+              {{else}}
+              {{ci.system.healingTime}}
+              {{/if}}
+            </span>
+            {{/if}}
+            <label class="ci-healed-check">
+              <input type="checkbox" data-item-id="{{ci.id}}" data-field="system.healed"
+                {{#if ci.system.healed}}checked{{/if}} />
+              Healed
+            </label>
+          </div>
+        </div>
+        {{/each}}
       </div>
-      {{else}}<p class="empty-hint">{{localize "YZE.NoCriticalInjuries"}}</p>
-      {{/each}}
-      <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="critical-injury">+ {{localize "YZE.AddCriticalInjury"}}</button>
+      {{else}}<p class="empty-hint">{{localize "YZE.NoCriticalInjuries"}}</p>{{/if}}
+      <div class="section-add-row">
+        <button type="button" class="sheet-add-btn" data-action="itemCreate" data-type="critical-injury">+ {{localize "YZE.AddCriticalInjury"}}</button>
+      </div>
     </section>
 
     {{!-- Équipement --}}
@@ -366,14 +579,16 @@
       <h2 class="section-title">{{localize "YZE.Biography"}}</h2>
       {{editor enriched.biography target="system.biography" button=true engine="prosemirror" collaborate=false editable=editable}}
     </section>
-    <section class="sheet-section">
-      <h2 class="section-title">{{localize "YZE.EA.BreakdownText"}}</h2>
-      {{editor enriched.breakdownText target="system.breakdownText" button=true engine="prosemirror" collaborate=false editable=editable}}
-    </section>
-    <section class="sheet-section">
-      <h2 class="section-title">{{localize "YZE.EA.BerserkText"}}</h2>
-      {{editor enriched.berserkText target="system.berserkText" button=true engine="prosemirror" collaborate=false editable=editable}}
-    </section>
+    <div class="ea-bio-two-col">
+      <section class="sheet-section">
+        <h2 class="section-title">{{localize "YZE.EA.Ambition"}}</h2>
+        {{editor enriched.breakdownText target="system.breakdownText" button=true engine="prosemirror" collaborate=false editable=editable}}
+      </section>
+      <section class="sheet-section">
+        <h2 class="section-title">{{localize "YZE.EA.Regret"}}</h2>
+        {{editor enriched.berserkText target="system.berserkText" button=true engine="prosemirror" collaborate=false editable=editable}}
+      </section>
+    </div>
   </div>{{!-- /tab bio --}}
 
 </form>

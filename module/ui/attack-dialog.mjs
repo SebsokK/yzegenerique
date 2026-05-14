@@ -25,14 +25,15 @@ export class AttackDialog extends HandlebarsApplicationMixin(ApplicationV2) {
 
   constructor(actor, weaponItem, options = {}) {
     super(options);
-    this._actor      = actor;
-    this._weapon     = weaponItem ?? null;
-    this._modifier   = 0;
-    this._useAmmo    = weaponItem?.system?.isRanged ?? false;
-    this._freeMode   = false;
-    this._fixedMode  = false;
-    this._fixedDmg   = 0;
-    this._resolve    = null;
+    this._actor            = actor;
+    this._weapon           = weaponItem ?? null;
+    this._modifier         = 0;
+    this._useAmmo          = weaponItem?.system?.isRanged ?? false;
+    this._freeMode         = false;
+    this._fixedMode        = false;
+    this._fixedDmg         = 0;
+    this._selectedStrandId = "";
+    this._resolve          = null;
   }
 
   /** Dialog normale — jet d'arme avec modificateur. */
@@ -106,6 +107,16 @@ export class AttackDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       ctx.basePool   = base;
       ctx.finalPool  = Math.max(1, base + this._modifier);
     }
+    const presetId = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
+    const isEA = presetId === "eldritch-automata";
+    if (isEA && this._actor) {
+      ctx.isEA   = true;
+      ctx.strands = this._actor.items
+        .filter(i => i.type === "strand" && !i.system.broken && (i.system.value ?? 1) > 0)
+        .map(s => ({ id: s.id, name: s.name, targetName: s.system.targetName }));
+      ctx.hasStrands        = ctx.strands.length > 0;
+      ctx.selectedStrandId  = this._selectedStrandId;
+    }
     return ctx;
   }
 
@@ -139,7 +150,12 @@ export class AttackDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     } else if (this._freeMode) {
       this._resolve?.({ pool: Math.max(1, this._modifier), baseDamage: this._baseDamage ?? 0 });
     } else {
-      this._resolve?.({ modifier: this._modifier, useAmmo: this._useAmmo });
+      this._resolve?.({
+        modifier:         this._modifier,
+        useAmmo:          this._useAmmo,
+        strandCount:      this._selectedStrandId ? 1 : 0,
+        selectedStrandId: this._selectedStrandId ?? "",
+      });
     }
     this._resolve = null;
     this.close();
@@ -195,6 +211,16 @@ export class AttackDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       if (e.key === "Enter")  AttackDialog._onConfirm.call(this, e, null);
       if (e.key === "Escape") AttackDialog._onCancel.call(this, e, null);
     });
+
+    // Strand selector
+    const strandSel = this.element.querySelector(".roll-dialog-strand-select");
+    if (strandSel) {
+      strandSel.value = this._selectedStrandId ?? "";
+      strandSel.addEventListener("change", (e) => {
+        this._selectedStrandId = e.target.value;
+        this.render();
+      });
+    }
   }
 
   _onClose(options) {

@@ -4,12 +4,14 @@
  */
 
 import { YZESheetMixin } from "../../../helpers/sheet-mixin.mjs";
+import { EaStatArrayDialog } from "../ea-stat-array-dialog.mjs";
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 
 
 export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2)) {
 
   static DEFAULT_OPTIONS = {
+    form:     { submitOnChange: true },
     classes: ["yzegenerique", "ea-sheet", "actor", "character"],
     position: { width: 740, height: 820 },
     dragDrop: [{ dragSelector: null, dropSelector: ".yze-sheet" }],
@@ -24,7 +26,11 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
       itemEdit:        EaCharacterSheet._onItemEdit,
       itemDelete:      EaCharacterSheet._onItemDelete,
       pipClick:        EaCharacterSheet._onPipClick,
-      initResources:   EaCharacterSheet._onInitResources,
+      toggleAutoCalc:  EaCharacterSheet._onToggleAutoCalc,
+      toggleInAutomata: EaCharacterSheet._onToggleInAutomata,
+      endBerserk:       EaCharacterSheet._onEndBerserk,
+      rollCiHealing:    EaCharacterSheet._onRollCiHealing,
+      strandPipClick:   EaCharacterSheet._onStrandPipClick,
     },
   };
 
@@ -41,12 +47,33 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
     context.system     = this.actor.system;
     context.attributes = this._prepareAttributes();
     context.skills     = this.actor.skills;
-    context.gear             = this.actor.items.filter(i => i.type === "gear");
-    context.criticalInjuries = this.actor.items.filter(i => i.type === "critical-injury");
+    context.gear = await Promise.all(
+      this.actor.items.filter(i => i.type === "gear").map(async g => {
+        const tooltip = (g.system.description ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      const gObj = g.toObject();
+        gObj.id      = g.id;
+        gObj.system  = g.system;
+        gObj.tooltip = tooltip;
+        return gObj;
+      })
+    );
+    context.criticalInjuries = await Promise.all(
+      this.actor.items.filter(i => i.type === "critical-injury").map(async ci => {
+        const ht = ci.system.healingTime ?? "";
+        const htEnriched = ci.system.isRollableHealingTime
+          ? await foundry.applications.ux.TextEditor.implementation.enrichHTML(
+              `[[/r ${ci.system.healingFormula}]]{${ht}}`, { async: true, rolls: true }
+            )
+          : ht;
+        return { ...ci, system: ci.system, id: ci.id, name: ci.name,
+                 healingTimeEnriched: htEnriched,
+                 isRollableHealingTime: ci.system.isRollableHealingTime ?? false };
+      })
+    );
     context.weapons    = await Promise.all(
       this.actor.items.filter(i => i.type === "weapon").map(async w => ({
         id: w.id, name: w.name, system: w.system,
-        tags: await EaCharacterSheet._resolveTags(w.system.tagIds ?? []),
+        resolvedTags: await EaCharacterSheet._resolveTags(w.system.tagIds ?? []),
       }))
     );
     context.armors     = await Promise.all(
@@ -67,7 +94,19 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
 
     context.inBreakdown = this.actor.system.ea?.inBreakdown ?? false;
     context.inBerserk   = this.actor.system.ea?.inBerserk   ?? false;
-    context.strands         = this.actor.items.filter(i => i.type === "strand");
+    context.strands = this.actor.items.filter(i => i.type === "strand").map(strand => {
+      const val = strand.system.value ?? 1;
+      const max = strand.system.maxValue ?? 1;
+      const pips = Array.from({ length: max }, (_, i) => ({
+        index:  i + 1,
+        active: i < val,
+      }));
+      const obj = strand.toObject();
+      obj.id     = strand.id;
+      obj.system = strand.system;
+      obj.pips   = pips;
+      return obj;
+    });
     context.pilotTalents    = this.actor.items.filter(i => i.type === "talent" && i.system.talentSource === "pilot");
     context.automataTalents = this.actor.items.filter(i => i.type === "talent" && i.system.talentSource === "automata");
     context.generalTalents  = this.actor.items.filter(i => i.type === "talent" && (i.system.talentSource === "general" || !i.system.talentSource));
@@ -87,6 +126,7 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
       filled: i < xpTotal,
     }));
 
+    context.editable = this.isEditable;
     context.enriched = {};
     context.enriched.biography = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.actor._source.system.biography || '', { async: true });
     context.enriched.breakdownText = await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.actor._source.system.breakdownText || '', { async: true });
@@ -110,13 +150,15 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
 
   static _buildPips(attrId, max, current) {
     const pips = [];
-    for (let i = 1; i <= Math.max(max, 5); i++) {
-      pips.push({ attrId, index: i, filled: i <= current, over: i > max });
+    for (let i = 1; i <= max; i++) {
+      pips.push({ attrId, index: i, filled: i <= current });
     }
     return pips;
   }
 
   // _onRender + _setupFormListeners viennent du mixin
+
+
 
   _onRender(context, options) {
     super._onRender(context, options);
@@ -136,6 +178,16 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
       });
     });
 
+    // ── Tracker bars ───────────────────────────────────────────────
+    EaCharacterSheet._updateTrackers(this.element);
+
+    // Mise à jour live au changement d'input
+    this.element.querySelectorAll(".hdr-resource input[type='number']").forEach(input => {
+      input.addEventListener("input", () => {
+        EaCharacterSheet._updateTrackers(this.element);
+      });
+    });
+
     // ── XP pips ────────────────────────────────────────────────────
     this.element.addEventListener("click", async (event) => {
       const pip = event.target.closest(".xp-pip[data-xp-index]");
@@ -144,6 +196,37 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
       const current = this.actor.system.xp?.total ?? 0;
       const newVal  = (idx <= current) ? idx - 1 : idx;
       await this.actor.update({ "system.xp.total": Math.max(0, newVal) });
+    });
+  }
+
+  static _updateTrackers(root) {
+    root.querySelectorAll(".hdr-tracker").forEach(tracker => {
+      const isStress = tracker.classList.contains("hdr-tracker--stress");
+      const inputs   = tracker.closest(".hdr-tracker-wrap")
+        ?.querySelectorAll("input[type='number']");
+      const val = Number(inputs?.[0]?.value ?? tracker.dataset.value) || 0;
+      const max = Number(inputs?.[1]?.value ?? tracker.dataset.max)   || 1;
+      const pct = Math.max(0, Math.min(1, val / max));
+      const fill = tracker.querySelector(".hdr-tracker-bar");
+      if (!fill) return;
+      fill.style.width = `${pct * 100}%`;
+
+      if (isStress) {
+        // Stress : noir → violet → rouge vif
+        const r = Math.round(106 + 149 * pct);
+        const g = Math.round(63  * (1 - pct));
+        const b = Math.round(200 * (1 - pct));
+        fill.style.background = `rgb(${r}, ${g}, ${b})`;
+        fill.style.boxShadow  = `0 0 6px rgba(${r}, ${g}, ${b}, 0.7)`;
+      } else {
+        // Resources normales : vert → orange → rouge
+        const r = Math.round(255 * (1 - pct));
+        const g = Math.round(200 * pct);
+        fill.style.background = `rgb(${r}, ${g}, 40)`;
+        fill.style.boxShadow  = pct > 0.5
+          ? `0 0 6px rgba(${r}, ${g}, 40, 0.6)`
+          : `0 0 6px rgba(${r}, 60, 40, 0.8)`;
+      }
     });
   }
 
@@ -213,16 +296,107 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
     // Si l'item vient déjà de cet actor, ne pas le dupliquer
     if (srcItem.parent?.id === this.actor.id) return;
 
+    // Pour les archétypes : ouvrir la dialog de choix de stat array
+    if (itemType === "pilot-archetype" || itemType === "automata-archetype") {
+      const arrA = srcItem.system?.statArrayA;
+      const arrB = srcItem.system?.statArrayB;
+
+      // Vérifier si l'actor a des attributs déjà modifiés
+      const hasModifiedStats = this.actor.attributes.some(a => (a.system.value ?? 2) !== 2);
+
+      const result = await EaStatArrayDialog.prompt({
+        archetypeName: srcItem.name,
+        archetypeType: itemType === "pilot-archetype" ? "pilot" : "automata",
+        arrayA: arrA,
+        arrayB: arrB,
+        hasExistingStats: hasModifiedStats,
+      });
+
+      if (!result) return; // annulé
+
+      // Créer l'item embedded
+      const itemData = srcItem.toObject();
+      const created  = await this.actor.createEmbeddedDocuments("Item", [itemData]);
+      if (!created.length) return;
+
+      const item = created[0];
+      const updateKey = itemType === "pilot-archetype"
+        ? "system.ea.pilotArchetypeId"
+        : "system.ea.automataArchetypeId";
+      await this.actor.update({ [updateKey]: item.id });
+
+      // Appliquer le stat array choisi aux attributs de l'actor
+      await EaCharacterSheet._applyStatArray(this.actor, result.array, itemType);
+      return;
+    }
+
     const itemData = srcItem.toObject();
     const created  = await this.actor.createEmbeddedDocuments("Item", [itemData]);
 
-    // Enregistrer l'archetype ID si besoin
     if (created.length > 0) {
       const item = created[0];
       if (itemType === "pilot-archetype")
         await this.actor.update({ "system.ea.pilotArchetypeId": item.id });
       else if (itemType === "automata-archetype")
         await this.actor.update({ "system.ea.automataArchetypeId": item.id });
+    }
+  }
+
+  /**
+   * Applique un stat array aux attributs embedded de l'actor.
+   * Stocke l'array choisi, puis recalcule toujours pilot + automata.
+   */
+  static async _applyStatArray(actor, chosenArray, archetypeType) {
+    // Stocker l'array choisi sur l'actor
+    const saveKey = archetypeType === "pilot-archetype"
+      ? "system.ea.chosenPilotArray"
+      : "system.ea.chosenAutomataArray";
+    await actor.update({ [saveKey]: chosenArray });
+
+    // Récupérer les deux arrays stockés pour calculer la somme
+    const pilotArr  = archetypeType === "pilot-archetype"
+      ? chosenArray
+      : (actor.system.ea.chosenPilotArray ?? null);
+    const automataArr = archetypeType === "automata-archetype"
+      ? chosenArray
+      : (actor.system.ea.chosenAutomataArray ?? null);
+
+    // Construire la somme — si un array manque, on n'utilise que ce qu'on a
+    const stats = {};
+    for (const stat of ["strength", "agility", "wits", "empathy"]) {
+      const pVal = pilotArr?.[stat]   ?? 0;
+      const aVal = automataArr?.[stat] ?? 0;
+      stats[stat] = Math.min(6, pVal + aVal);
+    }
+
+    // Correspondance slug → attribut
+    const slugMap = {
+      strength: ["strength", "str", "force"],
+      agility:  ["agility",  "agi", "agilité"],
+      wits:     ["wits",     "wit", "intelligence"],
+      empathy:  ["empathy",  "emp", "empathie"],
+    };
+
+    const updates = [];
+    for (const [stat, value] of Object.entries(stats)) {
+      if (value === 0) continue; // array manquant pour ce côté
+      const slugs = slugMap[stat] ?? [stat];
+      const attrItem = actor.items.find(i =>
+        i.type === "attribute" &&
+        slugs.some(s => i.name.toLowerCase().replace(/\s+/g, "") === s ||
+                        i.name.toLowerCase().startsWith(s))
+      );
+      if (attrItem) {
+        updates.push({ _id: attrItem.id, "system.value": value, "system.current": value });
+      }
+    }
+
+    if (updates.length > 0) {
+      await actor.updateEmbeddedDocuments("Item", updates);
+      const summary = Object.entries(stats).filter(([,v]) => v > 0).map(([k,v]) => `${k} ${v}`).join(", ");
+      ui.notifications.info(`YZE | Stats updated: ${summary}`);
+    } else {
+      ui.notifications.warn("YZE | No matching attribute items found. Set up attributes before dropping an archetype.");
     }
   }
 
@@ -288,8 +462,9 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
     for (const id of tagIds) {
       const item = game.items.get(id) ?? (await fromUuid(id).catch(() => null));
       if (item?.type === "tag") tags.push({
-        id: item.id, name: item.name,
-        
+        id:      item.id,
+        name:    item.name,
+        tooltip: (item.system.description ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(),
         description: item.system.description ?? "",
       });
     }
@@ -327,12 +502,84 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
     const itemId = target.closest("[data-item-id]")?.dataset.itemId ?? target.dataset.itemId;
     const item   = this.actor.items.get(itemId);
     if (!item) return;
-    await item.update({ "system.currentReloads": item.system.maxReloads });
+    const prev = item.system.currentReloads ?? 0;
+    const max  = item.system.maxReloads ?? 0;
+    await item.update({ "system.currentReloads": max });
+
+    // Rollcard EA dans le chat
+    const presetId = "eldritch-automata";
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content: `<div class="yze-roll-result yze-preset-${presetId}">
+        <div class="yze-roll-header">
+          <span class="yze-roll-actor">${this.actor.name}</span>
+          <span class="yze-roll-label">🔄 ${item.name} — Reloaded</span>
+        </div>
+        <div class="yze-roll-outcome" style="padding:8px 12px;font-size:0.85em;opacity:0.8;">
+          Reloads restored: ${prev} → ${max}
+        </div>
+      </div>`,
+    });
   }
 
   static async _onInitResources(event, target) {
     if (typeof globalThis.YZECreateEaResources === "function") {
       await globalThis.YZECreateEaResources(this.actor);
     }
+  }
+
+  static async _onStrandPipClick(event, target) {
+    event.stopPropagation();
+    const btn    = target.closest("[data-action='strandPipClick']") ?? target;
+    const itemId = btn.dataset.itemId;
+    const pipIdx = Number(btn.dataset.pipIndex); // 1-based
+    if (!itemId || isNaN(pipIdx)) return;
+
+    const item = this.actor.items.get(itemId);
+    if (!item) return;
+    const currentVal = item.system.value ?? 0;
+    const maxVal     = item.system.level ?? item.system.maxValue ?? 1;
+
+    // Clic sur pip vert (pipIdx <= currentVal) → exhauste à partir de ce pip : value = pipIdx - 1
+    // Clic sur pip jaune (pipIdx > currentVal) → restaure jusqu'à ce pip : value = pipIdx
+    const newVal = pipIdx <= currentVal ? pipIdx - 1 : pipIdx;
+
+    await item.update({ "system.value": Math.max(0, Math.min(newVal, maxVal)) });
+  }
+
+  static async _onRollCiHealing(event, target) {
+    const itemId = target.dataset.itemId;
+    const item   = this.actor.items.get(itemId);
+    if (!item) return;
+    const formula = item.system.healingFormula;
+    if (!formula) return;
+    const roll = new Roll(formula);
+    await roll.evaluate();
+    const unit       = item.system.timeLimit?.trim() || "days";
+    const resultText = `${roll.total} ${unit}`;
+    await item.update({ "system.healingTime": resultText });
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content: `<div class="yze-roll-result"><div class="yze-roll-header"><span class="yze-roll-label">🩹 ${item.name} — Healing Time</span></div><div class="yze-roll-outcome success"><span class="yze-roll-success-count">${roll.total}</span><span class="yze-roll-success-label">${unit}</span></div></div>`,
+      rolls: [roll],
+    });
+  }
+
+  static async _onEndBerserk(event, target) {
+    await this.actor.update({ "system.ea.inBerserk": false });
+  }
+
+  static async _onToggleInAutomata(event, target) {
+    const current = this.actor.system.ea?.inAutomata ?? true;
+    await this.actor.update({ "system.ea.inAutomata": !current });
+  }
+
+  static async _onToggleAutoCalc(event, target) {
+    const itemId = target.dataset.itemId;
+    if (!itemId) return;
+    const item = this.actor.items.get(itemId);
+    if (!item) return;
+    const current = item.system.autoCalc ?? true;
+    await item.update({ "system.autoCalc": !current });
   }
 }

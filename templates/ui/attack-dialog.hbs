@@ -62,7 +62,27 @@
   {{/unless}}
   {{/if}}
 
-  <div class="attack-dialog-actions">
+  {{#if isEA}}
+<div class="roll-dialog-strand-section">
+  <div class="roll-dialog-strand-row">
+    <label class="roll-dialog-strand-label">🔗 Exhaust a Strand (+2d)</label>
+  </div>
+  {{#if hasStrands}}
+  <select class="roll-dialog-strand-select">
+    <option value="">— none —</option>
+    {{#each strands as |strand|}}
+    <option value="{{strand.id}}" {{#if (eq ../selectedStrandId strand.id)}}selected{{/if}}>
+      {{strand.name}}{{#if strand.targetName}} → {{strand.targetName}}{{/if}}
+    </option>
+    {{/each}}
+  </select>
+  {{else}}
+  <span class="roll-dialog-no-strands">No available strands</span>
+  {{/if}}
+</div>
+{{/if}}
+
+<div class="attack-dialog-actions">
     <button type="button" class="attack-dialog-cancel" data-action="cancel">Cancel</button>
     <button type="button" class="attack-dialog-confirm" data-action="confirm">
       {{#if fixedMode}}💥 Apply{{else}}🎲 Roll{{/if}}

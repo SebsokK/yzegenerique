@@ -9,8 +9,9 @@ const { fields } = foundry.data;
 /** Champ réutilisable value / max. */
 function resourceField() {
   return new fields.SchemaField({
-    value: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-    max:   new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+    value:    new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+    max:      new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+    autoCalc: new fields.BooleanField({ required: false, initial: true }),
   });
 }
 
@@ -19,7 +20,9 @@ export class EaCharacterModel extends foundry.abstract.TypeDataModel {
     return {
       // ── Identité ─────────────────────────────────────────────────
       archetype: new fields.StringField({ required: false, initial: "" }),
-      biography: new fields.HTMLField({ required: false, initial: "" }),
+      biography:     new fields.HTMLField({ required: false, initial: "" }),
+      breakdownText: new fields.HTMLField({ required: false, initial: "" }),
+      berserkText:   new fields.HTMLField({ required: false, initial: "" }),
       notes:     new fields.StringField({ required: false, initial: "" }),
       xp: new fields.SchemaField({
         total: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
@@ -48,10 +51,12 @@ export class EaCharacterModel extends foundry.abstract.TypeDataModel {
       ea: new fields.SchemaField({
         inBreakdown:         new fields.BooleanField({ initial: false }),
         inBerserk:           new fields.BooleanField({ initial: false }),
+        inAutomata:          new fields.BooleanField({ initial: true }),
         panicCascadeActive:  new fields.BooleanField({ initial: false }),
-        // IDs des Items archétype embarqués sur cet Actor
         pilotArchetypeId:    new fields.StringField({ initial: "" }),
         automataArchetypeId: new fields.StringField({ initial: "" }),
+        chosenPilotArray:    new fields.ObjectField({ required: false, nullable: true, initial: null }),
+        chosenAutomataArray: new fields.ObjectField({ required: false, nullable: true, initial: null }),
       }),
 
       // ── Champ générique DerivedStatsSystem ───────────────────────
@@ -78,6 +83,9 @@ export class EaCharacterModel extends foundry.abstract.TypeDataModel {
 export class EaNpcModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
+      archetype:   new fields.StringField({ required: false, initial: "" }),
+      // "standard" = Agility roll, "pilot" = Threat Level Pilot, "automata" = Threat Level Automata
+      threatMode:  new fields.StringField({ required: false, initial: "standard" }),
       description: new fields.HTMLField({ required: false, initial: "" }),
       health:      resourceField(),
       egoField:    resourceField(),

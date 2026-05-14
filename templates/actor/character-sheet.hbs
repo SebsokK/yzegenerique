@@ -209,7 +209,7 @@
       <div class="ea-gear-list">
         {{#each weapons as |item|}}
         <div class="ea-weapon-card" data-item-id="{{item.id}}">
-          <div class="ea-gear-row hoverable-row ea-weapon-main">
+          <div class="ea-gear-row hoverable-row ea-weapon-main" data-item-id="{{item.id}}">
             <button type="button" class="ea-gear-name rollable" data-action="rollWeapon" data-item-id="{{item.id}}" title="Roll {{item.name}}">{{item.name}}</button>
             <span class="ea-gear-stat">{{item.system.grip}}</span>
             <span class="ea-gear-stat">DMG {{item.system.damage}}</span>
@@ -220,6 +220,13 @@
               <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{item.id}}">✕</button>
             </span>
           </div>
+          {{#if item.resolvedTags.length}}
+          <div class="weapon-tags-row">
+            {{#each item.resolvedTags as |tag|}}
+            <span class="yze-weapon-tag" {{#if tag.tooltip}}title="{{tag.tooltip}}"{{/if}}>{{tag.name}}</span>
+            {{/each}}
+          </div>
+          {{/if}}
           {{#if item.system.isRanged}}
           <div class="ea-weapon-reloads {{#if item.system.isOutOfAmmo}}ea-out-of-ammo{{/if}}" data-item-id="{{item.id}}">
             <input type="number" data-item-id="{{item.id}}" data-field="system.currentReloads"
@@ -284,7 +291,16 @@
           <div class="ci-footer">
             {{#if ci.system.timeLimit}}<span class="ci-meta">⏱ {{ci.system.timeLimit}}</span>{{/if}}
             {{#if ci.system.healingTime}}
-            <span class="ci-meta">🩹 {{{ci.healingTimeEnriched}}}</span>
+            <span class="ci-meta">🩹
+              {{#if ci.isRollableHealingTime}}
+              <button type="button" class="ci-roll-healing-btn"
+                data-action="rollCiHealing"
+                data-item-id="{{ci.id}}"
+                title="Click to roll healing time">{{ci.system.healingTime}} {{#unless ci.system.timeLimit}}Days{{/unless}}</button>
+              {{else}}
+              {{ci.system.healingTime}}
+              {{/if}}
+            </span>
             {{/if}}
             <label class="ci-healed-check">
               <input type="checkbox" data-item-id="{{ci.id}}" data-field="system.healed"
@@ -307,7 +323,7 @@
       <div class="ea-gear-list">
         {{#each gear as |item|}}
         <div class="ea-gear-row hoverable-row" data-item-id="{{item.id}}">
-          <span class="ea-gear-name">{{item.name}}</span>
+          <span class="ea-gear-name" {{#if item.tooltip}}title="{{item.tooltip}}"{{/if}}>{{item.name}}</span>
           <span class="row-actions">
             <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{item.id}}">✎</button>
             <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{item.id}}">✕</button>

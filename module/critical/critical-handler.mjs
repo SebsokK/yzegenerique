@@ -5,9 +5,9 @@
 
 export class CriticalHandler {
 
-  static async roll(actor) {
+  static async roll(actor, { injuryType = "standard" } = {}) {
     const presetId  = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
-    const tableName = CriticalHandler._tableNameForPreset(presetId);
+    const tableName = CriticalHandler._tableNameForPreset(presetId, injuryType);
 
     // D66 : deux D6 séparés pour Dice So Nice
     const d1 = new Roll("1d6");
@@ -18,24 +18,25 @@ export class CriticalHandler {
     const units = d2.dice[0].results[0].result;
     const d66   = tens * 10 + units;
 
-    const ciItem = await CriticalHandler._findInjuryItem(d66, presetId);
+    const ciItem = await CriticalHandler._findInjuryItem(d66, presetId, injuryType);
 
     const actorName  = actor?.name ?? "Unknown";
     const injName    = ciItem?.name ?? `Result ${d66}`;
     const lethal     = ciItem?.system?.lethal ?? false;
-    const effect     = ciItem?.system?.effect ?? "";
+    const effect     = ciItem?.system?.effect ?? ciItem?.system?.effects ?? "";
     const timeLimit  = ciItem?.system?.timeLimit ?? "";
     const healingTime = ciItem?.system?.healingTime ?? "";
 
-    // UUID drag-droppable — Foundry enrichit automatiquement @UUID[...]{label}
+    // UUID drag-droppable — lien Foundry natif
     const uuidLink = ciItem
-      ? `@UUID[${ciItem.uuid}]{${injName}}`
-      : `**${injName}**`;
+      ? `<a class="content-link" draggable="true" data-link data-uuid="${ciItem.uuid}" data-id="${ciItem.id}" data-type="Item" data-tooltip="Item"><i class="fas fa-suitcase"></i>${injName}</a>`
+      : `<strong>${injName}</strong>`;
 
     // Healing time — inline roll Foundry natif [[/r Xd6]]
     let healingDisplay = healingTime;
     if (healingTime && /^\d*d\d+$/i.test(healingTime.trim())) {
-      healingDisplay = `[[/r ${healingTime.toLowerCase()}]] days`;
+      const unit = timeLimit || "days";
+      healingDisplay = `[[/r ${healingTime.toLowerCase()}]] ${unit}`;
     }
 
     // Le contenu passe par enrichHTML pour résoudre @UUID et [[/r ...]]
@@ -54,13 +55,13 @@ export class CriticalHandler {
         </div>
         ${timeLimit || healingTime ? `
         <div class="yze-roll-pool">
-          ${timeLimit ? `<span class="yze-segment">⏱ ${timeLimit}</span>` : ""}
+          ${timeLimit && !healingTime ? `<span class="yze-segment">⏱ ${timeLimit}</span>` : ""}
           ${healingTime ? `<span class="yze-segment">🩹 ${healingDisplay}</span>` : ""}
         </div>` : ""}
       </div>`;
 
     const enriched = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
-      rawContent, { async: true, rolls: true }
+      rawContent, { async: true, rolls: true, relativeTo: actor ?? undefined }
     );
 
     const msgData = {
@@ -75,18 +76,32 @@ export class CriticalHandler {
     return { d66, ciItem };
   }
 
-  static _tableNameForPreset(presetId) {
+  static _tableNameForPreset(presetId, injuryType = "standard") {
+    if (presetId === "eldritch-automata") {
+      return injuryType === "automata"
+        ? "EA — Critical Injuries (Automata)"
+        : "EA — Critical Injuries (Pilot)";
+    }
     return {
-      "sleepy-hollow":     "Sleepy Hollow — Critical Injuries",
-      "eldritch-automata": "Eldritch Automata — Critical Injuries",
+      "sleepy-hollow": "Sleepy Hollow — Critical Injuries",
     }[presetId] ?? "Critical Injuries";
   }
 
-  static async _findInjuryItem(d66, presetId) {
+  static async _findInjuryItem(d66, presetId, injuryType = "standard") {
+    // Chercher d'abord dans le monde (items importés) — UUID monde = drag-drop fiable
+    const worldItem = game.items.find(i => i.type === "critical-injury" && i.system.d66 === d66);
+    if (worldItem) return worldItem;
+
+    // Fallback : chercher dans le compendium
     const packMap = {
-      "sleepy-hollow": "yzegenerique.sh-critical-injuries",
+      "sleepy-hollow":              "yzegenerique.sh-critical-injuries",
+      "eldritch-automata:pilot":    "yzegenerique.ea-critical-injuries",
+      "eldritch-automata:automata": "yzegenerique.ea-critical-automata",
     };
-    const packName = packMap[presetId];
+    const key = presetId === "eldritch-automata"
+      ? `eldritch-automata:${injuryType}`
+      : presetId;
+    const packName = packMap[key];
     if (packName) {
       const pack = game.packs.get(packName);
       if (pack) {
@@ -95,6 +110,6 @@ export class CriticalHandler {
         if (entry) return await pack.getDocument(entry._id);
       }
     }
-    return game.items.find(i => i.type === "critical-injury" && i.system.d66 === d66) ?? null;
+    return null;
   }
 }

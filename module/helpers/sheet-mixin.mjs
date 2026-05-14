@@ -30,6 +30,23 @@ function _findByFocusKey(root, key) {
 export function YZESheetMixin(Base) {
   return class extends Base {
 
+    // Avec submitOnChange:true, Foundry appelle _onSubmit à chaque changement.
+    // On surcharge pour ne mettre à jour QUE le champ modifié.
+    async _onSubmit(event, { updateData } = {}) {
+      const el = event?.target ?? event?.submitter;
+      if (el?.name && event?.type !== "submit") {
+        // Changement d'un champ unique — update partiel
+        const value = el.type === "checkbox" ? el.checked
+          : el.type === "number" ? (isNaN(Number(el.value)) ? 0 : Number(el.value))
+          : el.value;
+        // Skip les champs data-item-id (gérés par les listeners item)
+        if (el.dataset.itemId) return;
+        return this.document.update({ [el.name]: value });
+      }
+      // Submit complet (fermeture fenêtre etc.) — comportement natif
+      return super._onSubmit(event, { updateData });
+    }
+
     static DEBOUNCE_MS = 400;
 
     _debounceTimers = {};
@@ -139,22 +156,33 @@ export function YZESheetMixin(Base) {
 
     _bindItemHooks() {
       if (!this.document?.id) return;
-      this._unbindItemHooks(); // toujours unbind avant de rebind
+      this._unbindItemHooks();
       const actorId = this.document.id;
       this._itemHookFn = (item) => {
-        if (item?.parent?.id === actorId) this.render();
+        if (item?.parent?.id === actorId) this.render({ force: true });
       };
       Hooks.on("updateItem", this._itemHookFn);
       Hooks.on("createItem", this._itemHookFn);
       Hooks.on("deleteItem", this._itemHookFn);
+
+      // Re-render quand l'acteur lui-même est mis à jour (health, stress, etc.)
+      this._actorHookFn = (actor) => {
+        if (actor?.id === actorId) this.render({ force: true });
+      };
+      Hooks.on("updateActor", this._actorHookFn);
     }
 
     _unbindItemHooks() {
-      if (!this._itemHookFn) return;
-      Hooks.off("updateItem", this._itemHookFn);
-      Hooks.off("createItem", this._itemHookFn);
-      Hooks.off("deleteItem", this._itemHookFn);
-      this._itemHookFn = null;
+      if (this._itemHookFn) {
+        Hooks.off("updateItem", this._itemHookFn);
+        Hooks.off("createItem", this._itemHookFn);
+        Hooks.off("deleteItem", this._itemHookFn);
+        this._itemHookFn = null;
+      }
+      if (this._actorHookFn) {
+        Hooks.off("updateActor", this._actorHookFn);
+        this._actorHookFn = null;
+      }
     }
 
     // ── Image picker ──────────────────────────────────────────────
@@ -187,7 +215,13 @@ export function YZESheetMixin(Base) {
       if (!form) return;
 
       // Inputs actor (name sans data-item-id)
-      form.querySelectorAll("input[name]:not([data-item-id]), textarea[name]:not([data-item-id])").forEach(el => {
+      form.querySelectorAll("input[name]:not([data-item-id]), textarea[name]:not([data-item-id]), select[name]:not([data-item-id])").forEach(el => {
+        // blur : sauvegarde quand le champ perd le focus (toujours fiable)
+        el.addEventListener("blur", (event) => {
+          const inp = event.currentTarget;
+          this._debouncedActorUpdate(inp.name, this._readInputValue(inp));
+        });
+        // change : pour les select et checkbox (déclenche immédiatement)
         el.addEventListener("change", (event) => {
           const inp = event.currentTarget;
           this._debouncedActorUpdate(inp.name, this._readInputValue(inp));

@@ -3,7 +3,7 @@
  *
  * Weapon :
  *   Pool = attr.current + skill.value + bonusDice [+ stressDice si enableStress]
- *   Dommages = DR fixe + 1 par succès
+ *   Dommages = DR fixe + (succès - 1). 1 succès = touche avec DR, chaque succès supplémentaire = +1.
  *   Stress dice : un bane sur stress die → bouton "Roll Panic"
  *   Push : banes sur attr/skill → handler de push (stress +1, dommages, etc.)
  *
@@ -25,12 +25,13 @@ export class GearRoller {
     const prevRoll = options.previousRoll ?? null;
 
     // Capturer la cible sélectionnée
-    const targetToken = game.user.targets.first();
+    const targetToken = game.user.targets.first() ?? null;
     const targetActor = targetToken?.actor ?? null;
 
     // ── Dialog de confirmation (uniquement sur le jet initial) ────
     let modifier = options.modifier ?? 0;
     let useAmmo  = false;
+    let strandCountFromDialog = options?.strandCount ?? 0;
 
     if (!isPush) {
       // Vérifier les munitions AVANT d'ouvrir la dialog
@@ -70,22 +71,63 @@ export class GearRoller {
       const { AttackDialog } = await import("../ui/attack-dialog.mjs");
       const result = await AttackDialog.prompt(actor, weaponItem);
       if (!result) return;
-      modifier = result.modifier;
-      useAmmo  = result.useAmmo;
+      // Exhauster le strand sélectionné
+      if (result.selectedStrandId) {
+        const strandItem = actor.items.get(result.selectedStrandId);
+        if (strandItem) {
+          const newVal = Math.max(0, (strandItem.system.value ?? 1) - 1);
+          await strandItem.update({ "system.value": newVal });
+        }
+      }
+      modifier    = result.modifier;
+      useAmmo     = result.useAmmo;
+      strandCountFromDialog = result.strandCount ?? 0;
     }
 
     // Résolution attribut et skill
-    const attrItem  = sys.linkedAttribute
+    // Pour les NPCs EA en threatMode pilot/automata, utiliser le Threat Level comme attribut
+    let attrItem  = sys.linkedAttribute
       ? actor.getAttributeBySlug(sys.linkedAttribute) : null;
     const skillItem = sys.linkedSkill
       ? actor.skills.find(s =>
+          s.id === sys.linkedSkill ||
           (s.system.slug || s.name.toLowerCase()) === sys.linkedSkill.toLowerCase()
         ) : null;
+
+    if (!attrItem && actor.type === "npc" && actor.system?.threatMode) {
+      const threatMode = actor.system.threatMode;
+      if (threatMode === "pilot") {
+        attrItem = actor.items.find(i =>
+          i.type === "attribute" && i.name.toLowerCase().includes("pilot")
+        );
+      } else if (threatMode === "automata") {
+        attrItem = actor.items.find(i =>
+          i.type === "attribute" && i.name.toLowerCase().includes("automata")
+        );
+      } else if (threatMode === "standard") {
+        // Utiliser agility comme attribut par défaut
+        attrItem = actor.items.find(i =>
+          i.type === "attribute" &&
+          (i.name.toLowerCase().includes("agil") || i.system?.slug === "agility")
+        );
+      }
+    }
 
     if (!attrItem && !skillItem && (sys.bonusDice ?? 0) === 0) {
       ui.notifications.warn(`YZE | ${weaponItem.name} has no linked attribute, skill, or bonus dice.`);
       return;
     }
+
+    // Résolution tags pour affichage dans la rollcard
+    const tagItems = (sys.tagIds ?? [])
+      .map(id => game.items.get(id))
+      .filter(Boolean);
+    const tagsHtml = tagItems.length
+      ? `<div class="yze-weapon-tags">${tagItems.map(t => {
+          const desc = (t.system?.description ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+          return `<span class="yze-weapon-tag"${desc ? ` title="${desc}"` : ""}>${t.name}</span>`;
+        }).join("")}</div>`
+      : "";
 
     const { getRuleConfig } = await import("../rules/rule-config.mjs");
     const cfg = getRuleConfig();
@@ -98,11 +140,16 @@ export class GearRoller {
     const segments = [];
 
     if (isPush && prevRoll) {
-      // Push : conserver banes (1) + succès (6) si keepSuccesses, re-roller le reste
+      // Push : appliquer rerollBanes selon le setting
+      const rerollBanes = (() => { try { return game.settings.get("yzegenerique", "rerollBanesOnPush") ?? false; } catch { return false; } })();
       for (const seg of (prevRoll.segments ?? [])) {
+        // Le segment stress est géré séparément ci-dessous
+        if (seg.origin === "stress") continue;
+
         const allResults = [...(seg.results ?? []), ...(seg.keptResults ?? [])];
-        const kept       = allResults.filter(r => r === 1 || (keepSuccesses && r === 6));
-        const rerollable = allResults.filter(r => r !== 1 && !(keepSuccesses && r === 6));
+        // Succès toujours gardés, banes gardés seulement si !rerollBanes
+        const kept       = allResults.filter(r => r === 6 || (!rerollBanes && r === 1));
+        const rerollable = allResults.filter(r => r !== 6 && (rerollBanes || r !== 1));
 
         if (rerollable.length > 0 || kept.length > 0) {
           segments.push({
@@ -117,13 +164,20 @@ export class GearRoller {
           });
         }
       }
-      // Stress dice au push
-      if (enableStress && stressLevel > 0) {
-        const prevStress  = prevRoll.segments?.find(s => s.origin === "stress");
-        const keptStress  = (prevStress?.results ?? []).filter(r => r === 1);
-        const newCount    = Math.max(0, stressLevel + 1 - keptStress.length);
+      // Stress dice au push : même logique que dice-roller
+      if (enableStress) {
+        const prevStress = prevRoll.segments?.find(s => s.origin === "stress");
+        const allStressResults = [
+          ...(prevStress?.results ?? []),
+          ...(prevStress?.keptResults ?? []),
+        ];
+        const rerollBanes = (() => { try { return game.settings.get("yzegenerique", "rerollBanesOnPush") ?? false; } catch { return false; } })();
+        // Garder succès (6) et banes (1) sauf si rerollBanes
+        const keptStress  = allStressResults.filter(r => r === 6 || (!rerollBanes && r === 1));
+        // Re-roller les non-gardés + ajouter 1 nouveau dé de stress
+        const rerollCount = allStressResults.length - keptStress.length + 1;
         segments.push({
-          origin: "stress", count: newCount,
+          origin: "stress", count: Math.max(1, rerollCount),
           keptResults: keptStress, results: [], successes: 0, banes: 0,
         });
       }
@@ -148,6 +202,15 @@ export class GearRoller {
       if (totalBase <= 0) segments.push({ origin: "attribute", count: 1, results: [], successes: 0, banes: 0, keptResults: [] });
       if (enableStress && stressLevel > 0)
         segments.push({ origin: "stress", count: stressLevel, results: [], successes: 0, banes: 0, keptResults: [] });
+
+      // Strand dice (EA — 2 dés par strand exhaust, succès sur 1 ET 6)
+      const strandDice = strandCountFromDialog * 2;
+      if (strandDice > 0)
+        segments.push({
+          origin: "strand", count: strandDice, results: [], successes: 0, banes: 0, keptResults: [],
+          successFn: (v) => v === 1 || v === 6,
+          baneFn:    () => false,
+        });
     }
 
     const totalDice = segments.reduce((s, seg) => s + seg.count, 0);
@@ -183,9 +246,10 @@ export class GearRoller {
     const stressSeg   = segments.find(s => s.origin === "stress");
     const stressBanes = stressSeg ? stressSeg.results.filter(r => r === 1).length : 0;
 
-    // Dommages : DR fixe + 1 par succès
+    // Dommages : DR fixe + (succès supplémentaires au-delà du premier)
+    // 1 succès = touche avec DR. Chaque succès au-delà = +1 dommage.
     const dr          = sys.damage ?? 0;
-    const damageDealt = totalSuccesses > 0 ? dr + totalSuccesses : 0;
+    const damageDealt = totalSuccesses > 0 ? dr + (totalSuccesses - 1) : 0;
 
     // ── Effets du push ─────────────────────────────────────────────
     if (isPush) {
@@ -240,6 +304,8 @@ export class GearRoller {
       skillName:   skillItem?.name ?? sys.linkedSkill     ?? "—",
       pushed:      isPush,
       targetActor,
+      targetToken,
+      tagsHtml,
     });
   }
 
@@ -261,10 +327,19 @@ export class GearRoller {
     const absorbed = results.filter(r => r === 6).length;
     const banes    = results.filter(r => r === 1).length;
 
-    const incomingDamage = options.incomingDamage ?? 0;
-    const remainingDmg   = Math.max(0, incomingDamage - absorbed);
-    const arDegradation  = remainingDmg > 0 ? banes : 0;
-    const targetActor    = options.targetActor ?? null;
+    const incomingDamage = options.incomingDamage ?? null;
+    const remainingDmg   = incomingDamage !== null
+      ? Math.max(0, incomingDamage - absorbed)
+      : null;
+
+    // Dégradation :
+    // - Dans un processus d'attaque (incomingDamage fourni) : seulement si dommages percent l'armure
+    // - Standalone : toujours sur les banes (1)
+    const arDegradation = incomingDamage !== null
+      ? (remainingDmg > 0 ? banes : 0)
+      : banes;
+
+    const targetActor = options.targetActor ?? null;
 
     if (arDegradation > 0) {
       await armorItem.update({ "system.armorRating": Math.max(0, ar - arDegradation) });
@@ -282,25 +357,42 @@ export class GearRoller {
 
   static async _sendWeaponToChat(actor, weaponItem, data) {
     const { roll, segments, totalSuccesses, totalBanes, stressBanes,
-            damageDealt, dr, attrName, skillName, pushed, targetActor } = data;
+            damageDealt, dr, attrName, skillName, pushed, targetActor, targetToken,
+            tagsHtml = "" } = data;
 
-    const rollId   = foundry.utils.randomID();
-    const presetId = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
+    const rollId          = foundry.utils.randomID();
+    const presetId        = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
+    const rerollBanesActive = (() => { try { return game.settings.get("yzegenerique", "rerollBanesOnPush") ?? false; } catch { return false; } })();
 
     const diceDetailsHtml = segments.filter(s => s.count > 0 || (s.keptResults?.length > 0)).map(s => {
-      const icons = { attribute: "⬡", skill: "◆", gear: "⚙", stress: "⚡" };
+      const icons = { attribute: "⬡", skill: "◆", gear: "⚙", stress: "⚡", strand: "∞" };
+      const label = s.sourceName ?? s.origin;
+
+      const renderFaceGear = (r) => {
+        if (r === 6) return "★";
+        if (r === 1) {
+          if (s.origin === "strand") return "★";
+          if (s.origin === "stress") return "⚡";
+          if (rerollBanesActive) return String(r);
+          return "⊘";
+        }
+        return String(r);
+      };
+
       const keptDice = (s.keptResults ?? []).map(r => {
-        const cls = r === 6 ? "yze-die--success yze-die--kept"
-                  : r === 1 ? "yze-die--bane yze-die--kept"
-                  :           "yze-die--neutral yze-die--kept";
-        return `<span class="yze-die ${cls}" title="Kept">${r}</span>`;
+        const isBane = r === 1 && (s.origin === "stress" || !rerollBanesActive);
+        const cls = r === 6 || (r === 1 && s.origin === "strand") ? "yze-die--success yze-die--kept"
+                  : isBane ? "yze-die--bane yze-die--kept"
+                  : "yze-die--neutral yze-die--kept";
+        return `<span class="yze-die ${cls}" title="${r}">${renderFaceGear(r)}</span>`;
       }).join("");
       const newDice = (s.results ?? []).map(r => {
-        const cls = r === 6 ? "yze-die--success" : r === 1 ? "yze-die--bane" : "yze-die--neutral";
-        return `<span class="yze-die ${cls}">${r}</span>`;
+        const isBane = r === 1 && (s.origin === "stress" || !rerollBanesActive);
+        const cls = r === 6 || (r === 1 && s.origin === "strand") ? "yze-die--success"
+                  : isBane ? "yze-die--bane" : "yze-die--neutral";
+        return `<span class="yze-die ${cls}" title="${r}">${renderFaceGear(r)}</span>`;
       }).join("");
-      const sep = keptDice && newDice ? '<span class="yze-dice-sep">|</span>' : "";
-      return `<div class="yze-dice-segment" data-origin="${s.origin}"><span class="yze-dice-label">${icons[s.origin] ?? "●"} ${s.origin}</span><span class="yze-dice-row">${keptDice}${sep}${newDice}</span></div>`;
+      return `<div class="yze-dice-segment" data-origin="${s.origin}"><span class="yze-dice-label">${icons[s.origin] ?? "●"} ${label}</span><span class="yze-dice-row">${keptDice}${newDice}</span></div>`;
     }).join("");
 
     const segmentSummary = segments.filter(s => s.count > 0).map(s => {
@@ -332,6 +424,7 @@ export class GearRoller {
             <button class="yze-armor-roll-btn" type="button"
               data-action="rollTargetArmor"
               data-target-actor-id="${targetActor.id}"
+                  data-target-token-id="${targetToken?.id ?? ""}"
               data-armor-id="${targetArmorId}"
               data-damage="${damageDealt}">
               🛡 Roll Armor (${targetArmors[0].name} AR ${targetArmors[0].system.armorRating})
@@ -339,6 +432,7 @@ export class GearRoller {
             <button class="yze-apply-dmg-btn" type="button"
               data-action="applyDamage"
               data-target-actor-id="${targetActor.id}"
+                  data-target-token-id="${targetToken?.id ?? ""}"
               data-damage="${damageDealt}">
               💥 Apply ${damageDealt} Damage
             </button>
@@ -360,6 +454,7 @@ export class GearRoller {
           <span class="yze-roll-label-sub">${attrName} / ${skillName}</span>
           ${pushed ? `<span class="yze-roll-pushed-badge">↻ Pushed</span>` : ""}
         </div>
+        ${tagsHtml}
         <div class="yze-roll-outcome ${totalSuccesses > 0 ? "success" : "failure"}">
           ${totalSuccesses > 0
             ? `<span class="yze-roll-success-icon">✓</span>
@@ -367,10 +462,10 @@ export class GearRoller {
                <span class="yze-roll-success-label">hit${totalSuccesses > 1 ? "s" : ""}</span>
                <span class="yze-weapon-dmg">— <strong>${damageDealt}</strong> dmg</span>`
             : `<span class="yze-roll-fail-icon">✗</span><span class="yze-roll-fail-label">Miss</span>`}
-          ${totalBanes > 0 ? `<span class="yze-roll-banes">⚑ ${totalBanes} bane${totalBanes > 1 ? "s" : ""}</span>` : ""}
+          ${totalBanes > 0 && !rerollBanesActive ? `<span class="yze-roll-banes">⊘ ${totalBanes} bane${totalBanes > 1 ? "s" : ""}</span>` : ""}
         </div>
-        <div class="yze-roll-pool">${segmentSummary}</div>
-        <details class="yze-roll-details"><summary>Show dice</summary>
+        <details class="yze-roll-details">
+          <summary class="yze-roll-details-summary">Show dice</summary>
           <div class="yze-roll-dice-detail">${diceDetailsHtml}</div>
         </details>
         ${targetBlock}
@@ -426,20 +521,26 @@ export class GearRoller {
     const { roll, results, absorbed, banes, arDegradation,
             incomingDamage, remainingDmg, arBefore, arAfter, targetActor } = data;
 
-    const presetId  = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
+    const presetId = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
 
     const diceHtml = results.map(r => {
-      const cls = r === 6 ? "yze-die--success" : r === 1 ? "yze-die--bane" : "yze-die--neutral";
-      return `<span class="yze-die ${cls}">${r}</span>`;
+      const cls  = r === 6 ? "yze-die--success" : r === 1 ? "yze-die--bane" : "yze-die--neutral";
+      const icon = r === 6 ? "★" : r === 1 ? "⊘" : String(r);
+      return `<span class="yze-die ${cls}" title="${r}">${icon}</span>`;
     }).join("");
 
     const degradeNote = arDegradation > 0
-      ? `<span class="yze-roll-banes">⚑ AR degraded: ${arBefore} → ${arAfter}</span>`
+      ? `<span class="yze-roll-banes">⊘ AR degraded: ${arBefore} → ${arAfter}</span>`
+      : "";
+
+    // Résultat selon contexte standalone vs attaque
+    const remainingLabel = incomingDamage !== null && remainingDmg !== null && remainingDmg > 0
+      ? ` — ${remainingDmg} remaining`
       : "";
 
     // Bouton Apply Damage sur les dégâts restants après armure
     let applyBlock = "";
-    if (targetActor) {
+    if (targetActor && remainingDmg !== null) {
       const dmg = remainingDmg;
       applyBlock = `
         <div class="yze-roll-target-block">
@@ -452,6 +553,7 @@ export class GearRoller {
               ? `<button class="yze-apply-dmg-btn" type="button"
                   data-action="applyDamage"
                   data-target-actor-id="${targetActor.id}"
+                  data-target-token-id="${targetToken?.id ?? ""}"
                   data-damage="${dmg}">
                   💥 Apply ${dmg} Damage
                 </button>`
@@ -472,15 +574,16 @@ export class GearRoller {
           ${absorbed > 0
             ? `<span class="yze-roll-success-icon">✓</span>
                <span class="yze-roll-success-count">${absorbed}</span>
-               <span class="yze-roll-success-label">absorbed${remainingDmg > 0 ? ` — ${remainingDmg} remaining` : ""}</span>`
+               <span class="yze-roll-success-label">absorbed${remainingLabel}</span>`
             : `<span class="yze-roll-fail-icon">✗</span>
                <span class="yze-roll-fail-label">No absorption</span>`}
           ${degradeNote}
         </div>
-        <details class="yze-roll-details"><summary>Show dice</summary>
+        <details class="yze-roll-details">
+          <summary class="yze-roll-details-summary">Show dice</summary>
           <div class="yze-roll-dice-detail">
             <div class="yze-dice-segment">
-              <span class="yze-dice-label">🛡 armor</span>
+              <span class="yze-dice-label">🛡 Armor</span>
               <span class="yze-dice-row">${diceHtml}</span>
             </div>
           </div>

@@ -9,6 +9,7 @@ export class NpcSheet extends YZESheetMixin(HandlebarsApplicationMixin(
   foundry.applications.sheets.ActorSheetV2
 )) {
   static DEFAULT_OPTIONS = {
+    form:     { submitOnChange: true },
     classes:  ["yzegenerique", "actor", "npc"],
     position: { width: 640, height: 700 },
     window:   { resizable: true },
@@ -54,8 +55,24 @@ export class NpcSheet extends YZESheetMixin(HandlebarsApplicationMixin(
     }) ?? [];
 
     context.skills        = this.actor.skills ?? [];
-    context.weapons       = this.actor.items.filter(i => i.type === "weapon");
+    context.weapons       = this.actor.items.filter(i => i.type === "weapon").map(w => {
+      const resolvedTags = (w.system.tagIds ?? [])
+        .map(id => game.items.get(id))
+        .filter(i => i?.type === "tag")
+        .map(t => ({
+          name:    t.name,
+          tooltip: (t.system.description ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(),
+        }));
+      // Important : ne pas spreader l'item (perd les propriétés non-énumérables comme id)
+      // Utiliser toObject() pour la sérialisation + garder la référence originale
+      const obj = w.toObject();
+      obj.id          = w.id;
+      obj.system      = w.system;
+      obj.resolvedTags = resolvedTags;
+      return obj;
+    });
     context.armors        = this.actor.items.filter(i => i.type === "armor");
+    context.talents       = this.actor.items.filter(i => i.type === "talent");
     context.specialTraits = this.actor.items.filter(i => i.type === "special-trait");
     context.weaknesses    = this.actor.items.filter(i => i.type === "weakness");
 
@@ -81,6 +98,8 @@ export class NpcSheet extends YZESheetMixin(HandlebarsApplicationMixin(
 
     return context;
   }
+
+
 
   _onRender(context, options) {
     super._onRender(context, options);
@@ -132,6 +151,13 @@ export class NpcSheet extends YZESheetMixin(HandlebarsApplicationMixin(
       setBar(bar, Number(bar.dataset.value) || 0, Number(bar.dataset.max) || 1);
     });
     this.element.querySelectorAll(".hdr-resource input[type='number']").forEach(input => {
+      // blur : sauvegarde fiable quand le champ perd le focus
+      input.addEventListener("blur", () => {
+        if (input.name) {
+          const val = Number(input.value) || 0;
+          this.document.update({ [input.name]: val });
+        }
+      });
       input.addEventListener("input", () => {
         const wrap    = input.closest(".hdr-tracker-wrap");
         const tracker = wrap?.querySelector(".hdr-tracker");
@@ -246,7 +272,7 @@ export class NpcSheet extends YZESheetMixin(HandlebarsApplicationMixin(
     const successes  = results.filter(r => r === 6).length;
     const banes      = results.filter(r => r === 1).length;
     const baseDamage = result.baseDamage ?? 0;
-    const totalDmg   = successes > 0 ? baseDamage + successes : 0;
+    const totalDmg   = successes > 0 ? baseDamage + (successes - 1) : 0;
 
     const diceHtml = results.map(r => {
       const cls = r === 6 ? "yze-die--success" : r === 1 ? "yze-die--bane" : "yze-die--neutral";

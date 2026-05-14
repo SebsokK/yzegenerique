@@ -10,6 +10,7 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
 export class CharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(foundry.applications.sheets.ActorSheetV2)) {
 
   static DEFAULT_OPTIONS = {
+    form:     { submitOnChange: true },
     classes: ["yzegenerique", "actor", "character"],
     position: { width: 680, height: 700 },
     window:   { resizable: true },
@@ -43,22 +44,53 @@ export class CharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(fou
     context.system     = this.actor.system;
     context.attributes = this._prepareAttributes();
     context.skills     = this.actor.skills;
-    context.gear       = this.actor.items.filter(i => i.type === "gear");
-    context.weapons    = this.actor.items.filter(i => i.type === "weapon");
+    context.gear       = await Promise.all(
+      this.actor.items.filter(i => i.type === "gear").map(async g => {
+        const tooltip = (g.system.description ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+      const gObj = g.toObject();
+        gObj.id      = g.id;
+        gObj.system  = g.system;
+        gObj.tooltip = tooltip;
+        return gObj;
+      })
+    );
+    context.weapons    = await Promise.all(
+      this.actor.items.filter(i => i.type === "weapon").map(async w => {
+        const tags = (w.system.tagIds ?? [])
+          .map(id => game.items.get(id))
+          .filter(Boolean)
+          .map(t => ({
+            name: t.name,
+            tooltip: (t.system.description ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim(),
+          }));
+      const obj = w.toObject();
+      obj.id           = w.id;
+      obj.system       = w.system;
+      obj.resolvedTags = tags;
+      return obj;
+      })
+    );
     context.armors     = this.actor.items.filter(i => i.type === "armor");
     context.resources  = this.actor.items.filter(i => i.type === "resource");
     context.talents    = this.actor.items.filter(i => i.type === "talent");
     context.criticalInjuries = await Promise.all(
       this.actor.items.filter(i => i.type === "critical-injury").map(async ci => {
         const ht = ci.system.healingTime ?? "";
-        const htEnriched = ci.system.isRollableHealingTime
+        // Calculer directement — ne pas dépendre du getter DataModel
+        const isRollable = /^\d*d\d+$/i.test(ht.trim());
+        const htEnriched = isRollable
           ? await foundry.applications.ux.TextEditor.implementation.enrichHTML(
-              `[[/r ${ci.system.healingFormula}]]{${ht}}`,
+              `[[/r ${ht}]]{${ht}}`,
               { async: true, rolls: true }
             )
           : ht;
-        return { ...ci, system: ci.system, id: ci.id, name: ci.name,
-                 healingTimeEnriched: htEnriched };
+        return {
+          id:                   ci.id,
+          name:                 ci.name,
+          system:               ci.system,
+          isRollableHealingTime: isRollable,
+          healingTimeEnriched:  htEnriched,
+        };
       })
     );
 
@@ -186,6 +218,8 @@ export class CharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(fou
     });
   }
 
+
+
   _onRender(context, options) {
     super._onRender(context, options);
     const tabs   = this.element.querySelectorAll(".tab-btn");
@@ -270,10 +304,19 @@ export class CharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(fou
     const itemId = target.dataset.itemId ?? target.closest("[data-item-id]")?.dataset.itemId;
     const item   = this.actor.items.get(itemId);
     if (!item) return;
-    const formula = item.system.healingFormula;
+    const ht = item.system.healingTime ?? "";
+    const formula = item.system.healingFormula ?? ht;
     if (!formula) return;
     const roll = new Roll(formula);
     await roll.evaluate();
+
+    // Utiliser timeLimit comme unité si défini, sinon "days"
+    const unit = item.system.timeLimit?.trim() || "days";
+    const resultText = `${roll.total} ${unit}`;
+
+    // Mettre à jour healingTime avec la valeur rollée
+    await item.update({ "system.healingTime": resultText });
+
     const msgData = {
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
       content: `<div class="yze-roll-result">
@@ -283,7 +326,7 @@ export class CharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(fou
         </div>
         <div class="yze-roll-outcome success">
           <span class="yze-roll-success-count">${roll.total}</span>
-          <span class="yze-roll-success-label">days to heal</span>
+          <span class="yze-roll-success-label">${unit}</span>
         </div>
       </div>`,
       rolls: [roll],

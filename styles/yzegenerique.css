@@ -1859,17 +1859,19 @@
 
 /* Les .row-actions sont cachés par défaut */
 .yze-sheet .row-actions {
-  display:     flex;
-  gap:         2px;
-  align-items: center;
-  opacity:     0;
-  transition:  opacity 0.12s;
-  flex-shrink: 0;
+  display:        flex;
+  gap:            2px;
+  align-items:    center;
+  opacity:        0;
+  transition:     opacity 0.12s;
+  flex-shrink:    0;
+  pointer-events: none;
 }
 
 /* Visible au hover de la ligne parente */
 .yze-sheet .hoverable-row:hover .row-actions {
-  opacity: 1;
+  opacity:        1;
+  pointer-events: all;
 }
 
 /* Les boutons Add sont cachés par défaut */
@@ -2136,7 +2138,12 @@
   color:       var(--yze-color-text-muted);
   font-size:   0.85em;
   user-select: none;
+  list-style:  none;
 }
+
+/* Masquer le triangle natif du browser */
+.yze-roll-details summary::-webkit-details-marker { display: none; }
+.yze-roll-details summary::marker { display: none; }
 
 .yze-roll-details summary:hover {
   color: var(--yze-color-accent);
@@ -4159,4 +4166,1070 @@ body.yze-preset-eldritch-automata .sheet-header {
 .yze-roll-result.yze-preset-eldritch-automata .yze-roll-label-sub,
 .yze-roll-result.yze-preset-eldritch-automata .yze-roll-pushed-badge {
   font-family: "Handjet", "Orbitron", monospace !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   EA — Archetype Accordion
+   ══════════════════════════════════════════════════════════════════ */
+
+.ea-sheet .ea-archetype-accordion {
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  margin-bottom: 4px;
+  overflow:      hidden;
+}
+
+.ea-sheet .ea-archetype-summary {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  padding:     6px 10px;
+  cursor:      pointer;
+  background:  var(--yze-color-surface);
+  user-select: none;
+  list-style:  none;
+}
+
+/* Flèche custom à droite du nom */
+.ea-sheet .ea-archetype-summary::after {
+  content:     "▶";
+  font-size:   0.65em;
+  color:       var(--yze-color-text-muted);
+  margin-left: 6px;
+  transition:  transform 0.2s;
+}
+
+.ea-sheet .ea-archetype-accordion[open] > .ea-archetype-summary::after {
+  transform: rotate(90deg);
+}
+
+/* Masquer le triangle natif sur tous les navigateurs */
+.ea-sheet .ea-archetype-summary::-webkit-details-marker { display: none; }
+
+.ea-sheet .ea-archetype-summary:hover {
+  background: var(--yze-color-bg-alt, rgba(255,255,255,0.04));
+}
+
+.ea-sheet .ea-archetype-name {
+  flex:        1;
+  font-size:   0.95em;
+  font-family: var(--yze-font-title);
+  color:       var(--yze-color-text);
+}
+
+.ea-sheet .ea-archetype-body {
+  padding:    8px 12px;
+  background: var(--yze-color-bg);
+  display:    flex;
+  flex-direction: column;
+  gap:        8px;
+}
+
+.ea-sheet .ea-archetype-field {
+  border-left: 2px solid var(--yze-color-border);
+  padding-left: 8px;
+}
+
+.ea-sheet .ea-archetype-field--breakdown {
+  border-left-color: var(--yze-color-warning, #c8843f);
+}
+
+.ea-sheet .ea-archetype-field--berserk {
+  border-left-color: var(--yze-color-danger, #c83f3f);
+}
+
+.ea-sheet .ea-archetype-field--hope {
+  border-left-color: var(--yze-color-accent);
+}
+
+.ea-sheet .ea-archetype-field-label {
+  font-family:    var(--yze-font-title);
+  font-size:      0.7em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color:          var(--yze-color-text-muted);
+  margin:         0 0 3px 0;
+}
+
+.ea-sheet .ea-archetype-field-text {
+  font-size:   0.85em;
+  line-height: 1.5;
+  color:       var(--yze-color-text);
+}
+
+.ea-sheet .ea-stat-array {
+  font-family: var(--yze-font-title);
+  font-size:   0.9em;
+  letter-spacing: 0.5px;
+  color:       var(--yze-color-accent);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   EA — Stat Array Dialog
+   ══════════════════════════════════════════════════════════════════ */
+
+.ea-dialog.dialog {
+  background:  #0b0b12;
+  border:      1px solid rgba(106, 63, 200, 0.5);
+  box-shadow:  0 0 20px rgba(106, 63, 200, 0.25);
+  color:       #c8c8e0;
+  font-family: "Handjet", "Orbitron", monospace;
+}
+
+.ea-dialog .window-header {
+  background:    linear-gradient(135deg, rgba(106,63,200,0.2), transparent);
+  border-bottom: 1px solid rgba(106, 63, 200, 0.3);
+}
+
+.ea-dialog .window-title {
+  font-family:    "Handjet", "Orbitron", monospace;
+  letter-spacing: 2px;
+  color:          #c8c8e0;
+}
+
+.ea-dialog-body {
+  padding: 12px;
+}
+
+.ea-dialog-intro {
+  margin-bottom: 12px;
+  font-size:     0.9em;
+  line-height:   1.5;
+}
+
+.ea-dialog-warning {
+  background:    rgba(200, 100, 50, 0.15);
+  border:        1px solid rgba(200, 100, 50, 0.4);
+  border-radius: 4px;
+  color:         #e0a060;
+  font-size:     0.8em;
+  margin-bottom: 12px;
+  padding:       8px 10px;
+}
+
+.ea-array-choices {
+  display: flex;
+  gap:     10px;
+}
+
+.ea-array-btn {
+  flex:           1;
+  background:     rgba(106, 63, 200, 0.1);
+  border:         1px solid rgba(106, 63, 200, 0.4);
+  border-radius:  6px;
+  cursor:         pointer;
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            6px;
+  padding:        14px 10px;
+  transition:     background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.ea-array-btn:hover {
+  background:  rgba(106, 63, 200, 0.25);
+  border-color: rgba(106, 63, 200, 0.8);
+  transform:   translateY(-2px);
+}
+
+.ea-array-label {
+  font-family:    "Handjet", monospace;
+  font-size:      1em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color:          rgba(200, 200, 224, 0.6);
+}
+
+.ea-array-stats {
+  font-family:    "Handjet", monospace;
+  font-size:      1.1em;
+  letter-spacing: 1px;
+  color:          #6a3fc8;
+  font-weight:    bold;
+}
+
+.ea-dialog .dialog-buttons {
+  border-top: 1px solid rgba(106, 63, 200, 0.2);
+  padding:    8px 12px;
+}
+
+.ea-dialog .dialog-button {
+  background:  rgba(106, 63, 200, 0.15);
+  border:      1px solid rgba(106, 63, 200, 0.3);
+  color:       #c8c8e0;
+  font-family: "Handjet", monospace;
+}
+
+.ea-dialog .dialog-button:hover {
+  background: rgba(106, 63, 200, 0.3);
+}
+
+
+
+
+/* ── EA attr-block — boutons edit/delete au hover ───────────────── */
+/* position:relative sur le bloc pour anchor l'absolute */
+body.yze-preset-eldritch-automata .ea-sheet .attr-block.hoverable-row {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* Boutons en absolute, cachés par défaut */
+body.yze-preset-eldritch-automata .ea-sheet .attr-block.hoverable-row > .row-actions {
+  position:       absolute !important;
+  bottom:         -20px;
+  left:           50%;
+  transform:      translateX(-50%);
+  z-index:        20;
+  opacity:        0 !important;
+  pointer-events: none !important;
+  background:     rgba(11, 11, 18, 0.95);
+  border:         1px solid rgba(106, 63, 200, 0.4);
+  border-radius:  var(--yze-radius);
+  padding:        2px 4px;
+  white-space:    nowrap;
+}
+
+/* Visibles au hover */
+body.yze-preset-eldritch-automata .ea-sheet .attr-block.hoverable-row:hover > .row-actions {
+  opacity:        1 !important;
+  pointer-events: all !important;
+}
+
+/* ── EA archetype summary — bouton edit toujours visible ────────── */
+body.yze-preset-eldritch-automata .ea-archetype-summary .row-actions {
+  opacity:        1 !important;
+  pointer-events: all !important;
+  position:       static;
+}
+
+/* ── EA dialog — fond sombre sur window-content ─────────────────── */
+.ea-dialog .window-content {
+  background:  #0b0b12 !important;
+  color:       #c8c8e0;
+}
+
+/* ── EA header — bouton autoCalc et max manuel ───────────────────── */
+.ea-sheet .hdr-autocalc-btn {
+  background:    none;
+  border:        none;
+  cursor:        pointer;
+  font-size:     0.7em;
+  padding:       0 2px;
+  opacity:       0.4;
+  transition:    opacity 0.15s;
+  line-height:   1;
+  color:         var(--yze-color-text-muted);
+}
+
+.ea-sheet .hdr-stat:hover .hdr-autocalc-btn {
+  opacity: 1;
+}
+
+.ea-sheet .hdr-autocalc-btn--off {
+  color:   var(--yze-color-accent);
+  opacity: 0.8;
+}
+
+.ea-sheet .hdr-stat-max--manual {
+  width:      32px;
+  background: transparent;
+  border:     none;
+  border-bottom: 1px dashed var(--yze-color-accent);
+  color:      var(--yze-color-accent);
+  text-align: center;
+  font-size:  inherit;
+  padding:    0;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   EA SHEET — Header trackers (style SH/H!)
+   ══════════════════════════════════════════════════════════════════ */
+
+.ea-sheet .ea-header-resources {
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       8px;
+  margin-top: 4px;
+}
+
+.ea-sheet .ea-header-resources--secondary {
+  margin-top: 2px;
+  opacity:    0.9;
+}
+
+.ea-sheet .ea-hdr-resource {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  min-width:      80px;
+  flex:           1;
+}
+
+.ea-sheet .ea-hdr-resource > label,
+.ea-sheet .ea-hdr-stress > label {
+  font-family:    var(--yze-font-title);
+  font-size:      0.65em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color:          var(--yze-color-text-muted);
+}
+
+/* Jauge */
+.ea-sheet .hdr-tracker {
+  height:        5px;
+  background:    rgba(255,255,255,0.06);
+  border-radius: 3px;
+  overflow:      hidden;
+  width:         100%;
+}
+
+.ea-sheet .hdr-tracker-bar {
+  height:     100%;
+  border-radius: 3px;
+  transition: width 0.25s ease, background 0.25s ease;
+}
+
+/* Inputs valeur/max */
+.ea-sheet .hdr-resource-inputs {
+  display:     flex;
+  align-items: center;
+  gap:         2px;
+  font-size:   0.85em;
+}
+
+.ea-sheet .hdr-resource-inputs input[type="number"] {
+  width:      34px;
+  text-align: center;
+  background: transparent;
+  border:     none;
+  color:      var(--yze-color-text);
+  font-family: var(--yze-font-title);
+  font-size:  1em;
+  padding:    0;
+}
+
+.ea-sheet .hdr-resource-inputs input[type="number"].hdr-manual {
+  border-bottom: 1px dashed var(--yze-color-accent);
+  color:         var(--yze-color-accent);
+}
+
+.ea-sheet .hdr-resource-inputs input[type="number"].hdr-max-auto {
+  color:   var(--yze-color-text-muted);
+  opacity: 0.7;
+}
+
+.ea-sheet .hdr-resource-inputs span {
+  color:   var(--yze-color-text-muted);
+  opacity: 0.5;
+}
+
+/* Bouton lock */
+.ea-sheet .hdr-lock-btn {
+  background: none;
+  border:     none;
+  cursor:     pointer;
+  font-size:  0.65em;
+  opacity:    0;
+  transition: opacity 0.15s;
+  padding:    0 1px;
+  line-height: 1;
+}
+
+.ea-sheet .ea-hdr-resource:hover .hdr-lock-btn,
+.ea-sheet .ea-hdr-stress:hover .hdr-lock-btn {
+  opacity: 0.8;
+}
+
+/* Stress — couleur distinctive */
+.ea-sheet .ea-hdr-stress {
+  display:        flex;
+  flex-direction: column;
+  gap:            2px;
+  min-width:      70px;
+  flex:           1;
+}
+
+.ea-sheet .ea-hdr-stress .hdr-resource-inputs input[type="number"] {
+  color:       #c87050;
+  font-weight: bold;
+}
+
+/* ── EA weapon reloads — layout propre avec bouton bleu ── */
+.ea-sheet .weapon-reloads {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  padding:     3px 8px 3px 12px;
+  font-size:   0.82em;
+  color:       var(--yze-color-text-muted);
+}
+
+.ea-sheet .weapon-reloads input[type="number"] {
+  width:         36px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  padding:       1px 2px;
+  font-size:     0.9em;
+}
+
+.ea-sheet .weapon-reloads-sep,
+.ea-sheet .weapon-reloads-max {
+  opacity: 0.6;
+}
+
+.ea-sheet .weapon-reloads .yze-roll-weapon-btn {
+  margin-left: auto;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   EA — Portrait col + switch Pilote/Automata
+   ══════════════════════════════════════════════════════════════════ */
+
+.ea-sheet .ea-portrait-col {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  gap:            6px;
+}
+
+.ea-sheet .ea-automata-toggle {
+  width:         100%;
+  border:        none;
+  border-radius: var(--yze-radius);
+  cursor:        pointer;
+  font-family:   var(--yze-font-title);
+  font-size:     0.7em;
+  letter-spacing: 1px;
+  padding:       4px 6px;
+  text-align:    center;
+  transition:    background 0.2s, color 0.2s, box-shadow 0.2s;
+  white-space:   nowrap;
+}
+
+.ea-sheet .ea-automata-toggle--on {
+  background:  rgba(106, 63, 200, 0.25);
+  border:      1px solid rgba(106, 63, 200, 0.7);
+  color:       #a07ede;
+  box-shadow:  0 0 8px rgba(106, 63, 200, 0.3);
+}
+
+.ea-sheet .ea-automata-toggle--off {
+  background:  rgba(200, 200, 224, 0.08);
+  border:      1px solid rgba(200, 200, 224, 0.25);
+  color:       var(--yze-color-text-muted);
+}
+
+.ea-sheet .ea-automata-toggle:hover {
+  filter: brightness(1.2);
+}
+
+/* Header grid: portrait-col + fields */
+body.yze-preset-eldritch-automata .ea-sheet .sheet-header {
+  grid-template-columns: 140px 1fr;
+}
+
+/* ── Tags dans la rollcard ──────────────────────────────────────── */
+.yze-weapon-tags,
+.weapon-tags-row {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         4px;
+  padding:     3px 10px 4px;
+  border-bottom: 1px solid var(--yze-color-border);
+}
+
+.yze-weapon-tag {
+  background:    rgba(255,255,255,0.06);
+  border:        1px solid var(--yze-color-border);
+  border-radius: 3px;
+  font-size:     0.72em;
+  letter-spacing: 0.5px;
+  padding:       1px 6px;
+  color:         var(--yze-color-text-muted);
+  cursor:        default;
+}
+
+/* Tooltip natif du browser — suffisant pour les tags */
+.yze-weapon-tag[title] {
+  cursor: help;
+}
+
+.yze-weapon-tag[title]:hover {
+  color:         var(--yze-color-text);
+  border-color:  var(--yze-color-accent);
+  background:    rgba(255,255,255,0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Roll Dialog — modifier + strands
+   ══════════════════════════════════════════════════════════════════ */
+
+.roll-dialog .window-content {
+  padding: 0;
+}
+
+.roll-dialog-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roll-dialog-title {
+  display:     flex;
+  align-items: center;
+  gap:         6px;
+  font-family: var(--yze-font-title, monospace);
+  font-size:   1em;
+  letter-spacing: 1px;
+}
+
+.roll-dialog-attr  { color: var(--yze-color-accent); }
+.roll-dialog-skill { color: var(--yze-color-text-muted); }
+.roll-dialog-sep   { opacity: 0.4; }
+
+.roll-dialog-mod-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  justify-content: center;
+}
+
+.roll-dialog-mod-btn {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  cursor:        pointer;
+  font-size:     1.2em;
+  width:         32px;
+  height:        32px;
+  line-height:   1;
+}
+
+.roll-dialog-mod-btn:hover {
+  border-color: var(--yze-color-accent);
+  color:        var(--yze-color-accent);
+}
+
+.roll-dialog-mod-display {
+  display:        flex;
+  flex-direction: column;
+  align-items:    center;
+  min-width:      60px;
+}
+
+.roll-dialog-mod-value {
+  font-family: var(--yze-font-title, monospace);
+  font-size:   1.4em;
+}
+
+.roll-dialog-pool-hint {
+  font-size:  0.65em;
+  opacity:    0.5;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.roll-dialog-strand-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  padding:     6px 8px;
+  background:  rgba(106, 63, 200, 0.08);
+  border:      1px solid rgba(106, 63, 200, 0.25);
+  border-radius: var(--yze-radius);
+}
+
+.roll-dialog-strand-label {
+  font-size:   0.8em;
+  color:       #a07ede;
+  white-space: nowrap;
+}
+
+.roll-dialog-strand-count {
+  width:         44px;
+  text-align:    center;
+  background:    var(--yze-color-surface);
+  border:        1px solid rgba(106, 63, 200, 0.4);
+  border-radius: var(--yze-radius);
+  color:         #a07ede;
+  font-family:   var(--yze-font-title, monospace);
+  padding:       2px 4px;
+}
+
+.roll-dialog-exhaust-label {
+  font-size:   0.75em;
+  color:       var(--yze-color-text-muted);
+  display:     flex;
+  align-items: center;
+  gap:         4px;
+  margin-left: auto;
+  cursor:      pointer;
+}
+
+.roll-dialog-pool-row {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         6px 8px;
+  background:      var(--yze-color-surface);
+  border-radius:   var(--yze-radius);
+}
+
+.roll-dialog-pool-label {
+  font-size:      0.75em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity:        0.6;
+}
+
+.roll-dialog-pool-value {
+  font-family: var(--yze-font-title, monospace);
+  font-size:   1.3em;
+  color:       var(--yze-color-accent);
+}
+
+.roll-dialog-actions {
+  display: flex;
+  gap:     8px;
+}
+
+.roll-dialog-cancel,
+.roll-dialog-confirm {
+  flex:          1;
+  border:        none;
+  border-radius: var(--yze-radius);
+  cursor:        pointer;
+  font-family:   var(--yze-font-title, monospace);
+  font-size:     0.85em;
+  letter-spacing: 1px;
+  padding:       6px 12px;
+}
+
+.roll-dialog-cancel  { background: var(--yze-color-surface); color: var(--yze-color-text-muted); }
+.roll-dialog-confirm { background: var(--yze-color-accent);  color: var(--yze-color-bg); font-weight: bold; }
+.roll-dialog-confirm:hover { filter: brightness(1.15); }
+
+/* EA skin pour roll dialog */
+.roll-dialog-body.yze-preset-eldritch-automata {
+  background: #0b0b12;
+}
+
+/* ── Panic button alignment — same row as Push ───────────────────── */
+.yze-roll-panic {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  padding:     4px 10px;
+}
+
+.yze-panic-btn {
+  margin-left: 0 !important;
+}
+
+/* Align panic row width with push row */
+.yze-roll-panic,
+.yze-roll-push-row {
+  padding-left:  10px;
+  padding-right: 10px;
+}
+
+/* ── EA strand pips ─────────────────────────────────────────────── */
+.ea-strand-row { gap: 6px; }
+
+.ea-strand-pips {
+  display:     flex;
+  gap:         3px;
+  margin-left: auto;
+  align-items: center;
+}
+
+.ea-strand-pip {
+  width:         10px;
+  height:        10px;
+  border-radius: 50%;
+  border:        1px solid #4a9a4a;
+  background:    #2a6a2a;
+  cursor:        pointer;
+  transition:    background 0.15s, border-color 0.15s;
+  padding:       0;
+}
+
+.ea-strand-pip--active {
+  background:    #c8a820;
+  border-color:  #a08010;
+}
+
+.ea-strand-pip:hover { filter: brightness(1.3); }
+
+/* ── End Berserk button in header ───────────────────────────────── */
+.ea-end-berserk-btn {
+  background:    rgba(200, 63, 106, 0.2);
+  border:        1px solid rgba(200, 63, 106, 0.6);
+  border-radius: var(--yze-radius);
+  color:         #e07090;
+  cursor:        pointer;
+  font-size:     0.75em;
+  margin-left:   8px;
+  padding:       2px 8px;
+  transition:    background 0.15s;
+}
+.ea-end-berserk-btn:hover { background: rgba(200, 63, 106, 0.4); }
+
+/* ── Bio two-column layout ──────────────────────────────────────── */
+.ea-sheet .ea-bio-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* ── Roll dialog strand section ─────────────────────────────────── */
+.roll-dialog-strand-section {
+  background:    rgba(106, 63, 200, 0.08);
+  border:        1px solid rgba(106, 63, 200, 0.25);
+  border-radius: var(--yze-radius);
+  padding:       8px;
+  display:       flex;
+  flex-direction: column;
+  gap:           6px;
+}
+
+.roll-dialog-strand-row {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+}
+
+.roll-dialog-strand-hint {
+  font-size: 0.72em;
+  opacity:   0.6;
+  margin-left: auto;
+}
+
+.roll-dialog-strand-select {
+  width:         100%;
+  background:    var(--yze-color-surface);
+  border:        1px solid rgba(106, 63, 200, 0.4);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text);
+  padding:       3px 6px;
+  font-size:     0.85em;
+}
+
+.roll-dialog-no-strands {
+  font-size: 0.78em;
+  opacity:   0.5;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   COMBAT TRACKER — Fast/Slow Actions + Drag & Drop
+   ══════════════════════════════════════════════════════════════════ */
+
+.yze-combatant-actions {
+  display:     flex;
+  gap:         2px;
+  align-items: center;
+  margin-right: 4px;
+}
+
+.yze-action-btn {
+  background:    transparent;
+  border:        1px solid transparent;
+  border-radius: 3px;
+  cursor:        pointer;
+  font-size:     0.65em;
+  font-family:   monospace;
+  letter-spacing: -1px;
+  line-height:   1;
+  padding:       2px 3px;
+  transition:    opacity 0.15s, color 0.15s, border-color 0.15s;
+  min-width:     18px;
+  text-align:    center;
+}
+
+.yze-action--active {
+  opacity:      1;
+  border-color: rgba(255,255,255,0.15);
+  color:        rgba(255,255,255,0.85);
+}
+
+.yze-action--spent {
+  opacity:      0.25;
+  filter:       grayscale(1);
+  color:        rgba(255,255,255,0.4);
+}
+
+.yze-action-btn:hover {
+  border-color: rgba(255,255,255,0.5) !important;
+  opacity:      1 !important;
+  filter:       none !important;
+  color:        white !important;
+}
+
+/* Preset colors for active actions */
+.yze-combat-ea .yze-action--active     { color: #adf182; border-color: rgba(173,241,130,0.35); }
+.yze-combat-sh .yze-action--active     { color: #c8a050; border-color: rgba(200,160,80,0.4); }
+.yze-combat-horror .yze-action--active { color: #e05555; border-color: rgba(224,85,85,0.4); }
+.yze-combat-default .yze-action--active { color: #aaaaaa; border-color: rgba(170,170,170,0.3); }
+
+/* Drag & drop */
+.combatant[draggable="true"] {
+  cursor: grab;
+}
+
+.combatant.yze-dragging {
+  opacity: 0.5;
+}
+
+.combatant.yze-drag-over {
+  outline: 2px dashed rgba(255,255,255,0.5);
+  outline-offset: -2px;
+}
+
+.yze-combat-ea .combatant.yze-drag-over {
+  outline-color: rgba(106,63,200,0.8);
+}
+
+/* NPC Threat Mode selector */
+.npc-threat-mode-select {
+  background:    var(--yze-color-surface);
+  border:        1px solid var(--yze-color-border);
+  border-radius: var(--yze-radius);
+  color:         var(--yze-color-text-muted);
+  font-size:     0.75em;
+  padding:       2px 4px;
+  margin-top:    2px;
+  width:         100%;
+}
+
+/* ── EA strand pips — ronds colorés ─────────────────────────────── */
+.ea-strand-pips {
+  display:     flex;
+  gap:         4px;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 4px;
+}
+
+.ea-strand-pip-dot {
+  width:         12px !important;
+  height:        12px !important;
+  min-width:     12px !important;
+  min-height:    12px !important;
+  border-radius: 50% !important;
+  border:        none !important;
+  outline:       none !important;
+  box-shadow:    none;
+  cursor:        pointer;
+  padding:       0 !important;
+  margin:        0 !important;
+  transition:    background 0.15s, transform 0.1s;
+  flex-shrink:   0;
+  display:       inline-block;
+}
+
+.ea-strand-pip-dot:hover {
+  transform: scale(1.3);
+}
+
+.ea-strand-pip--green {
+  background: #4a9a4a !important;
+  box-shadow: 0 0 5px rgba(74,154,74,0.6) !important;
+}
+
+.ea-strand-pip--yellow {
+  background: #c8a820 !important;
+  box-shadow: 0 0 4px rgba(200,168,32,0.4) !important;
+}
+
+/* ── Accordéon Show Dice — flèche rotative ───────────────────────── */
+.yze-roll-details-summary {
+  list-style: none;
+}
+
+.yze-roll-details-summary::before {
+  content:     "▶";
+  display:     inline-block;
+  margin-right: 4px;
+  font-size:   0.7em;
+  transition:  transform 0.15s;
+  transform:   rotate(0deg);
+}
+
+.yze-roll-details[open] .yze-roll-details-summary::before {
+  transform: rotate(90deg);
+}
+
+/* Supprimer le texte ▸ qu'on avait mis dans le summary */
+.yze-roll-details-summary {
+  font-size: 0.82em;
+}
+
+/* ── Initiative chat card ────────────────────────────────────── */
+.yze-initiative-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0;
+}
+
+.yze-initiative-row {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+  padding:         3px 6px;
+  border-radius:   var(--yze-radius);
+  color:           var(--yze-color-text, #d4c9a8);
+}
+
+.yze-initiative-row:nth-child(odd) {
+  background: rgba(255,255,255,0.04);
+}
+
+.yze-initiative-name {
+  font-size: 0.88em;
+  color:     var(--yze-color-text, #d4c9a8);
+}
+
+.yze-initiative-value {
+  font-family:  var(--yze-font-title, monospace);
+  font-size:    1em;
+  font-weight:  bold;
+  color:        var(--yze-color-accent, #c8a050);
+  min-width:    28px;
+  text-align:   right;
+  padding-left: 8px;
+}
+
+/* Skinning par preset dans le chat */
+.yze-preset-sleepy-hollow .yze-initiative-value { color: #c8a050; }
+.yze-preset-horror .yze-initiative-value        { color: #e05555; }
+.yze-preset-eldritch-automata .yze-initiative-value { color: #adf182; }
+
+/* ── CI Healing Time roll button ──────────────────────────────── */
+.ci-roll-healing-btn {
+  background:    rgba(74, 154, 74, 0.15);
+  border:        1px solid rgba(74, 154, 74, 0.4);
+  border-radius: 3px;
+  color:         #7bc87b;
+  cursor:        pointer;
+  font-size:     0.85em;
+  padding:       1px 6px;
+  transition:    background 0.15s;
+}
+.ci-roll-healing-btn:hover {
+  background: rgba(74, 154, 74, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FINITIONS VISUELLES — portrait cadre + relief attributs + pips
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Portrait cadré avec accent couleur preset ─────────────────── */
+.yze-sheet .actor-portrait {
+  border-width:  3px;
+  border-style:  solid;
+  border-color:  var(--yze-color-accent);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 4px 12px rgba(0,0,0,0.4);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.yze-sheet .actor-portrait:hover {
+  border-color: color-mix(in srgb, var(--yze-color-accent) 70%, white 30%);
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 4px 16px rgba(0,0,0,0.5),
+    0 0 20px color-mix(in srgb, var(--yze-color-accent) 30%, transparent 70%);
+}
+
+/* ── Cartes attributs — micro-bordure supérieure colorée ────────── */
+.yze-sheet .attr-block,
+.ea-sheet .ea-attr-block {
+  border-top: 2px solid var(--yze-color-accent) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.yze-sheet .attr-block:hover,
+.ea-sheet .ea-attr-block:hover {
+  box-shadow: 0 3px 14px rgba(0,0,0,0.35);
+}
+
+/* ── Pips XP — lueur sur les remplis ───────────────────────────── */
+.yze-sheet .yze-pip--filled,
+.ea-sheet .yze-pip--filled {
+  box-shadow: 0 0 5px color-mix(in srgb, var(--yze-color-accent) 60%, transparent 40%);
+}
+
+/* ── Barres de ressources — transition couleur selon niveau ──────── */
+/* La couleur est déjà calculée via JS (r,g,b), on améliore juste la barre */
+.yze-sheet .hdr-tracker-bar,
+.ea-sheet .hdr-tracker-bar {
+  transition: width 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 6px rgba(0,0,0,0.4);
+  border-radius: 2px;
+}
+
+/* ── Relief sur les sections headers ───────────────────────────── */
+.yze-sheet .section-title,
+.ea-sheet .section-title {
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* ── Preset-specific portrait accents ───────────────────────────── */
+/* EA : vert strand */
+body.yze-preset-eldritch-automata .actor-portrait {
+  border-color: #adf182;
+}
+body.yze-preset-eldritch-automata .actor-portrait:hover {
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 4px 16px rgba(0,0,0,0.5),
+    0 0 20px rgba(173,241,130,0.25);
+}
+
+/* SH : or */
+body.yze-preset-sleepy-hollow .actor-portrait {
+  border-color: #c8a050;
+}
+body.yze-preset-sleepy-hollow .actor-portrait:hover {
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 4px 16px rgba(0,0,0,0.5),
+    0 0 20px rgba(200,160,80,0.25);
+}
+
+/* H! : rouge-orange */
+body.yze-preset-horror .actor-portrait {
+  border-color: #e05555;
+}
+body.yze-preset-horror .actor-portrait:hover {
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 4px 16px rgba(0,0,0,0.5),
+    0 0 20px rgba(224,85,85,0.25);
+}
+
+/* ── EA portrait dans la fiche EA (ea-portrait-col) ─────────────── */
+body.yze-preset-eldritch-automata .ea-sheet .actor-portrait {
+  border-color: #adf182;
+  box-shadow:
+    inset 0 0 16px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(0,0,0,0.5),
+    0 4px 16px rgba(0,0,0,0.5),
+    0 0 30px rgba(173,241,130,0.1);
 }

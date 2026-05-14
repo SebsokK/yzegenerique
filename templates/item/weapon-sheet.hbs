@@ -85,7 +85,7 @@
       <select name="system.linkedAttribute">
         <option value="">— choose —</option>
         {{#each actorAttributes as |attr|}}
-        <option value="{{attr.slug}}" {{#if (eq ../system.linkedAttribute attr.slug)}}selected{{/if}}>{{attr.label}}</option>
+        <option value="{{attr.id}}" {{#if (eq ../system.linkedAttribute attr.id)}}selected{{/if}}>{{attr.label}}</option>
         {{/each}}
       </select>
       {{else}}
@@ -98,7 +98,7 @@
       <select name="system.linkedSkill">
         <option value="">— choose —</option>
         {{#each actorSkills as |skill|}}
-        <option value="{{skill.slug}}" {{#if (eq ../system.linkedSkill skill.slug)}}selected{{/if}}>{{skill.label}}</option>
+        <option value="{{skill.id}}" {{#if (eq ../system.linkedSkill skill.id)}}selected{{/if}}>{{skill.label}}</option>
         {{/each}}
       </select>
       {{else}}

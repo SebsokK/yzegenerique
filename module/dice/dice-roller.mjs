@@ -38,7 +38,7 @@ export class YZEDiceRoller {
 
     // 1. Construction des segments
     const segments = YZEDiceRoller._buildSegments({
-      actor, skillItem, attributeItem, gearItems, modifier, isPush, prevRoll, cfg,
+      actor, skillItem, attributeItem, gearItems, modifier, isPush, prevRoll, cfg, options,
     });
 
     if (segments.length === 0 || segments.every(s => s.count === 0)) {
@@ -47,7 +47,19 @@ export class YZEDiceRoller {
     }
 
     // 2. Formule et roll Foundry
-    const formula = segments.map(s => s.formula).join(" + ");
+    // Construire la formule uniquement depuis les segments avec count > 0
+    const rollableSegments = segments.filter(s => (s.count ?? 0) > 0);
+
+    if (rollableSegments.length === 0) {
+      // Tous les dés sont gardés — pas besoin de roller, construire le résultat depuis keptResults
+      const rollData = YZEDiceRoller._buildRollData(
+        segments, null, isPush, actor, skillItem, attributeItem
+      );
+      await YZEDiceRoller._sendToChat(actor, skillItem, attributeItem, rollData, isPush);
+      return rollData;
+    }
+
+    const formula = rollableSegments.map(s => s.formula ?? `${s.count}d6`).join(" + ");
     const roll    = new Roll(formula);
     await roll.evaluate();
 
@@ -80,7 +92,7 @@ export class YZEDiceRoller {
 
   // ── Construction des segments ──────────────────────────────────────
 
-  static _buildSegments({ actor, skillItem, attributeItem, gearItems, modifier, isPush, prevRoll, cfg }) {
+  static _buildSegments({ actor, skillItem, attributeItem, gearItems, modifier, isPush, prevRoll, cfg, options = {} }) {
     const segments = [];
     const keepSuccesses = isPush
       ? (game.settings.get("yzegenerique", "keepSuccessesOnPush") ?? false)
@@ -96,10 +108,20 @@ export class YZEDiceRoller {
 
       // Tous les résultats du segment précédent (nouveaux + déjà gardés)
       const allResults = [...(prev.results ?? []), ...(prev.keptResults ?? [])];
-      // Dés gardés : banes (1) toujours gardés, succès (6) gardés si keepSuccesses
-      const kept       = allResults.filter(r => r === 1 || (keepSuccesses && r === 6));
-      // Dés à re-roller
-      const rerollable = allResults.filter(r => r !== 1 && !(keepSuccesses && r === 6));
+      const rerollBanes = game.settings.get("yzegenerique", "rerollBanesOnPush") ?? false;
+
+      // Strand dice : succès sur 1 ET 6 → les deux sont gardés au push
+      if (origin === "strand") {
+        const kept       = allResults.filter(r => r === 1 || r === 6);
+        const rerollable = allResults.filter(r => r !== 1 && r !== 6);
+        return { origin, sourceId, sourceName, kept, rerollable, rerollCount: rerollable.length,
+          successFn: (v) => v === 1 || v === 6, baneFn: () => false };
+      }
+
+      // Règle YZE : les succès (6) sont TOUJOURS gardés au push, tous types de dés
+      // Les banes (1) sont gardés sauf si rerollBanes est activé (EA)
+      const kept       = allResults.filter(r => r === 6 || (!rerollBanes && r === 1));
+      const rerollable = allResults.filter(r => r !== 6 && (rerollBanes || r !== 1));
 
       return { origin, sourceId, sourceName, kept, rerollable, rerollCount: rerollable.length };
     };
@@ -204,6 +226,41 @@ export class YZEDiceRoller {
       }
     }
 
+    // Strand dice (EA — succès sur 1 ET 6, pas de stress)
+    // Règle : 1 strand exhaust = +2 dés de strand
+    const strandExhausts = options?.strandCount ?? 0;
+    const strandCount = strandExhausts * 2;
+    if (strandCount > 0 && !isPush) {
+      segments.push({
+        origin:      "strand",
+        count:       strandCount,
+        dieType:     "d6",
+        formula:     `${strandCount}d6`,
+        sourceId:    null,
+        sourceName:  "Strand",
+        keptResults: [],
+        results:     [],
+        successes:   0,
+        banes:       0,
+        // Strand dice : succès sur 1 ET 6
+        successFn:   (v) => v === 1 || v === 6,
+        baneFn:      () => false,
+      });
+    }
+
+    // Au push : re-roller les dés de strand non-gardés (1 ET 6 sont tous deux gardés)
+    if (isPush) {
+      const ps = pushSegment("strand", null, "Strand");
+      if (ps && (ps.rerollCount > 0 || ps.kept.length > 0)) {
+        segments.push({
+          origin: "strand", count: ps.rerollCount,
+          keptResults: ps.kept, results: [], successes: 0, banes: 0,
+          successFn: (v) => v === 1 || v === 6,
+          baneFn:    () => false,
+        });
+      }
+    }
+
     Hooks.callAll("yze.preBuildSegments", segments, actor, {
       skillItem, attributeItem, gearItems, isPush, prevRoll,
     });
@@ -231,9 +288,12 @@ export class YZEDiceRoller {
    * Roll.dice sont dans le même ordre que les termes de la formule.
    */
   static _assignResults(segments, roll) {
-    for (let i = 0; i < segments.length; i++) {
+    if (!roll) return; // pas de nouveaux dés — tout gardé depuis keptResults
+    // Uniquement les segments avec count > 0 correspondent à des DiceTerms dans roll.dice
+    const rollableSegs = segments.filter(s => (s.count ?? 0) > 0);
+    for (let i = 0; i < rollableSegs.length; i++) {
       const term = roll.dice[i];
-      segments[i].results = term?.results.map(r => r.result) ?? [];
+      rollableSegs[i].results = term?.results.map(r => r.result) ?? [];
     }
   }
 
@@ -258,11 +318,18 @@ export class YZEDiceRoller {
       success:        false,
     };
 
+    // EA avec rerollBanes actif = pas de bane sur les dés normaux (seulement stress)
+    const rerollBanes = (() => { try { return game.settings.get("yzegenerique", "rerollBanesOnPush") ?? false; } catch { return false; } })();
+
     for (const seg of segments) {
       seg.successes = 0;
       seg.banes     = 0;
       const successFn = seg.successFn ?? ((v) => v === 6);
-      const baneFn    = seg.baneFn    ?? ((v) => v === 1);
+      // En EA (rerollBanes), les 1 ne sont des banes que sur les dés stress
+      const defaultBaneFn = rerollBanes && seg.origin !== "stress"
+        ? () => false
+        : (v) => v === 1;
+      const baneFn    = seg.baneFn ?? defaultBaneFn;
 
       // Dés nouveaux (re-rollés)
       for (const val of (seg.results ?? [])) {
@@ -318,6 +385,20 @@ export class YZEDiceRoller {
     const label   = [rollData.attributeName, rollData.skillName].filter(Boolean).join(" / ");
     const rollId  = foundry.utils.randomID();
     const presetId = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
+    const isEA = presetId === "eldritch-automata";
+
+    // Fonction de rendu d'une face — icônes pour tous les presets
+    const rerollBanesActive = (() => { try { return game.settings.get("yzegenerique", "rerollBanesOnPush") ?? false; } catch { return false; } })();
+    const renderFace = (r, isStress = false, isStrand = false) => {
+      if (r === 6) return "★";
+      if (r === 1) {
+        if (isStrand) return "★";           // strand : 1 = succès
+        if (isStress) return "⚡";           // stress : 1 = bane stress
+        if (rerollBanesActive) return String(r); // EA normal : 1 = neutre, afficher le chiffre
+        return "⊘";                          // SH/H! normal : 1 = bane
+      }
+      return String(r); // faces neutres : afficher le chiffre
+    };
 
     // ── Dés individuels par segment ────────────────────────────
     const diceDetailsHtml = rollData.segments
@@ -329,31 +410,38 @@ export class YZEDiceRoller {
 
         // Dés gardés (préfixe "kept")
         const keptDice = (s.keptResults ?? []).map(r => {
-          const cls = r === 6 ? "yze-die--success yze-die--kept"
-                    : r === 1 ? "yze-die--bane yze-die--kept"
-                    :           "yze-die--neutral yze-die--kept";
-          return `<span class="yze-die ${cls}" title="Kept">${r}</span>`;
+          const isBaneKept = r === 1 && (s.origin === "stress" || !rerollBanesActive);
+          const clsKept = r === 6 || (r === 1 && s.origin === "strand") ? "yze-die--success yze-die--kept"
+                        : isBaneKept ? "yze-die--bane yze-die--kept"
+                        : "yze-die--neutral yze-die--kept";
+          return `<span class="yze-die ${clsKept}" title="${r}">${renderFace(r, s.origin === "stress", s.origin === "strand")}</span>`;
         }).join("");
 
         // Nouveaux dés re-rollés
         const newDice = (s.results ?? []).map(r => {
-          const cls = r === 6 ? "yze-die--success" : r === 1 ? "yze-die--bane" : "yze-die--neutral";
-          return `<span class="yze-die ${cls}">${r}</span>`;
+          const isBaneNew = r === 1 && (s.origin === "stress" || !rerollBanesActive);
+          const clsNew = r === 6 || (r === 1 && s.origin === "strand") ? "yze-die--success"
+                       : isBaneNew ? "yze-die--bane" : "yze-die--neutral";
+          return `<span class="yze-die ${clsNew}" title="${r}">${renderFace(r, s.origin === "stress", s.origin === "strand")}</span>`;
         }).join("");
 
         return `<div class="yze-dice-segment" data-origin="${s.origin}">
           <span class="yze-dice-label">${icon} ${label}</span>
-          <span class="yze-dice-row">${keptDice}${keptDice && newDice ? '<span class="yze-dice-sep">|</span>' : ""}${newDice}</span>
+          <span class="yze-dice-row">${keptDice}${newDice}</span>
         </div>`;
       }).join("");
 
-    // ── Résumé compact des segments ────────────────────────────
+    // ── Résumé compact des segments — icônes pour tous les presets ─
     const segmentSummary = rollData.segments
       .filter(s => s.count > 0)
       .map(s => {
-        const icons = { attribute: "⬡", skill: "◆", gear: "⚙", stress: "⚡", strand: "∞" };
-        const baneStr = s.banes > 0 ? `<span class="yze-bane"> ${s.banes}✕</span>` : "";
-        return `<span class="yze-segment" data-origin="${s.origin}">${icons[s.origin] ?? "●"} ${s.count}d${baneStr}</span>`;
+        const allResults = [...(s.keptResults ?? []), ...(s.results ?? [])];
+        const dice = allResults.map(r => {
+          const isBaneInline = r === 1 && (s.origin === "stress" || !rerollBanesActive);
+          const cls = r === 6 || (r === 1 && s.origin === "strand") ? "yze-die--success" : isBaneInline ? "yze-die--bane" : "yze-die--neutral";
+          return `<span class="yze-die ${cls}" data-origin="${s.origin}" title="${r}">${renderFace(r, s.origin === "stress", s.origin === "strand")}</span>`;
+        }).join("");
+        return `<span class="yze-segment" data-origin="${s.origin}">${dice}</span>`;
       }).join(" ");
 
     const pushHint = (game.settings.get("yzegenerique", "keepSuccessesOnPush") ?? false)
@@ -378,13 +466,12 @@ export class YZEDiceRoller {
             : `<span class="yze-roll-fail-icon">✗</span>
                <span class="yze-roll-fail-label">Failure</span>`
           }
-          ${rollData.totalBanes > 0
-            ? `<span class="yze-roll-banes">⚑ ${rollData.totalBanes} bane${rollData.totalBanes > 1 ? "s" : ""}</span>`
+          ${rollData.totalBanes > 0 && !rerollBanesActive
+            ? `<span class="yze-roll-banes">⊘ ${rollData.totalBanes} bane${rollData.totalBanes > 1 ? "s" : ""}</span>`
             : ""}
         </div>
-        <div class="yze-roll-pool">${segmentSummary}</div>
         <details class="yze-roll-details">
-          <summary>Show dice</summary>
+          <summary class="yze-roll-details-summary">Show dice</summary>
           <div class="yze-roll-dice-detail">${diceDetailsHtml}</div>
         </details>
         ${rollData.stressBanes > 0 ? `

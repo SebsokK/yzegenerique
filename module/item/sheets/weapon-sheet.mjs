@@ -17,6 +17,7 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
 export class WeaponSheet extends YZESheetMixin(HandlebarsApplicationMixin(foundry.applications.sheets.ItemSheetV2)) {
 
   static DEFAULT_OPTIONS = {
+    form:     { submitOnChange: true },
     classes: ["yzegenerique", "item", "weapon"],
     position: { width: 480, height: 600 },
     actions: {
@@ -34,6 +35,31 @@ export class WeaponSheet extends YZESheetMixin(HandlebarsApplicationMixin(foundr
     main: { template: "systems/yzegenerique/templates/item/weapon-sheet.hbs", scrollable: [".window-content"]  },
   };
 
+
+
+  _onRender(context, options) {
+    super._onRender(context, options);
+    if (this._tagHookFn) {
+      Hooks.off("updateItem", this._tagHookFn);
+      Hooks.off("deleteItem", this._tagHookFn);
+    }
+    const tagIds = new Set(this.item.system.tagIds ?? []);
+    this._tagHookFn = (item) => {
+      if (tagIds.has(item.id)) this.render();
+    };
+    Hooks.on("updateItem", this._tagHookFn);
+    Hooks.on("deleteItem", this._tagHookFn);
+  }
+
+  _onClose(options) {
+    if (super._onClose) super._onClose(options);
+    if (this._tagHookFn) {
+      Hooks.off("updateItem", this._tagHookFn);
+      Hooks.off("deleteItem", this._tagHookFn);
+      this._tagHookFn = null;
+    }
+  }
+
   async _prepareContext(options) {
     const context  = await super._prepareContext(options);
     context.item   = this.item;
@@ -44,10 +70,10 @@ export class WeaponSheet extends YZESheetMixin(HandlebarsApplicationMixin(foundr
     const actor = this.item.actor;
     if (actor) {
       context.actorAttributes = actor.attributes.map(a => ({
-        slug: a.system.slug || a.name.toLowerCase(), label: a.name,
+        id: a.id, slug: a.system.slug || a.name.toLowerCase(), label: a.name,
       }));
       context.actorSkills = actor.skills.map(s => ({
-        slug: s.system.slug || s.name.toLowerCase(), label: s.name,
+        id: s.id, slug: s.system.slug || s.name.toLowerCase(), label: s.name,
       }));
     } else {
       context.actorAttributes = [];

@@ -226,6 +226,20 @@
       "path": "packs/ea-panic.db",
       "type": "RollTable",
       "system": "yzegenerique"
+    },
+    {
+      "name": "ea-pilot-archetypes",
+      "label": "EA — Pilot Archetypes",
+      "path": "packs/ea-pilot-archetypes.db",
+      "type": "Item",
+      "system": "yzegenerique"
+    },
+    {
+      "name": "ea-automata-archetypes",
+      "label": "EA — Automata Archetypes",
+      "path": "packs/ea-automata-archetypes.db",
+      "type": "Item",
+      "system": "yzegenerique"
     }
   ],
   "url": "https://github.com/SebsokK/yzegenerique",

@@ -10,6 +10,7 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
 export class EaStrandSheet extends YZESheetMixin(HandlebarsApplicationMixin(foundry.applications.sheets.ItemSheetV2)) {
 
   static DEFAULT_OPTIONS = {
+    form:    { submitOnChange: true },
     classes: ["yzegenerique", "ea-sheet", "item", "strand"],
     position: { width: 440, height: 360 },
   };
@@ -25,21 +26,18 @@ export class EaStrandSheet extends YZESheetMixin(HandlebarsApplicationMixin(foun
     const context  = await super._prepareContext(options);
     context.item   = this.item;
     context.system = this.item.system;
-    context.descriptionRaw = this.item._source.system.description ?? "";
+    context.editable = this.isEditable;
+    context.enriched = {};
+    context.enriched.memory = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
+      this.item._source.system.memory ?? "", { async: true }
+    );
+    context.enriched.notes = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
+      this.item._source.system.notes ?? "", { async: true }
+    );
     return context;
   }
 
   _onRender(context, options) {
     super._onRender(context, options);
-    const form = this.element.querySelector("form");
-    if (!form) return;
-    form.addEventListener("change", (event) => {
-      const input = event.target;
-      if (!input.name) return;
-      const value = input.type === "checkbox" ? input.checked
-        : input.type === "number"             ? Number(input.value)
-        : input.value;
-      this.item.update({ [input.name]: value });
-    });
   }
 }

@@ -8,6 +8,7 @@ export class CriticalInjurySheet extends HandlebarsApplicationMixin(
   foundry.applications.sheets.ItemSheetV2
 ) {
   static DEFAULT_OPTIONS = {
+    form:     { submitOnChange: true },
     classes:  ["yzegenerique", "item", "critical-injury"],
     position: { width: 480, height: 420 },
     actions:  {
@@ -45,9 +46,33 @@ export class CriticalInjurySheet extends HandlebarsApplicationMixin(
     this._initModifierDrop();
   }
 
+  async _onSubmit(event, { updateData } = {}) {
+    const el = event?.target ?? event?.submitter;
+    if (el?.name && event?.type !== "submit") {
+      const value = el.type === "checkbox" ? el.checked
+        : el.type === "number" ? (isNaN(Number(el.value)) ? 0 : Number(el.value))
+        : el.value;
+      return this.document.update({ [el.name]: value });
+    }
+    return super._onSubmit(event, { updateData });
+  }
+
   _onRender(context, options) {
     super._onRender(context, options);
-    // Rebrancher les inputs à chaque render (ils sont recréés par Handlebars)
+
+    // Sauvegarde directe sur chaque champ — plus fiable que submitOnChange en V14
+    this.element.querySelectorAll("input, select, textarea").forEach(el => {
+      if (!el.name) return;
+      const evType = (el.type === "checkbox") ? "change" : "change";
+      el.addEventListener(evType, async () => {
+        const value = el.type === "checkbox" ? el.checked
+          : el.type === "number" ? (isNaN(Number(el.value)) ? 0 : Number(el.value))
+          : el.value;
+        await this.document.update({ [el.name]: value });
+      });
+    });
+
+    // Rebrancher les inputs de modificateurs
     this._initModifierInputs();
   }
 
@@ -125,6 +150,11 @@ export class CriticalInjurySheet extends HandlebarsApplicationMixin(
     if (!formula) return;
     const roll = new Roll(formula);
     await roll.evaluate();
+
+    // Mettre à jour healingTime sur l'item avec la valeur rollée
+    const resultText = `${roll.total} day${roll.total > 1 ? "s" : ""}`;
+    await this.item.update({ "system.healingTime": resultText });
+
     const msgData = {
       speaker: ChatMessage.getSpeaker({ actor: this.item.parent }),
       content: `<div class="yze-roll-result">
