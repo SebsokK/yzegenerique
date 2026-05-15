@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://i.imgur.com/ARvdNwb.jpeg" alt="Year Zero Engine Generique" width="100%">
+</p>
+
 # ⚙️ YZE Generic System — V0.1.0
 
 > **The foundation toolkit for modern Year Zero Engine games on Foundry VTT.**
