@@ -1,6 +1,6 @@
 {
   "id": "yzegenerique",
-  "title": "YZE Générique",
+  "title": "YZE G\u00e9n\u00e9rique",
   "description": "Generic system based on the Year Zero Engine (SRD v1.0). Modular, preset-driven.",
   "version": "0.1.0",
   "compatibility": {
@@ -54,189 +54,189 @@
   "packs": [
     {
       "name": "yze-panic",
-      "label": "YZE — Panic Table",
+      "label": "YZE \u2014 Panic Table",
       "path": "packs/yze-panic.db",
       "type": "RollTable",
       "system": "yzegenerique"
     },
     {
       "name": "yze-critical-tables",
-      "label": "YZE — Critical Tables",
+      "label": "YZE \u2014 Critical Tables",
       "path": "packs/yze-critical-tables.db",
       "type": "RollTable",
       "system": "yzegenerique"
     },
     {
       "name": "sh-attributes",
-      "label": "SH — Attributes",
+      "label": "SH \u2014 Attributes",
       "path": "packs/sh-attributes.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "sh-skills",
-      "label": "SH — Skills",
+      "label": "SH \u2014 Skills",
       "path": "packs/sh-skills.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "sh-talents",
-      "label": "SH — Talents",
+      "label": "SH \u2014 Talents",
       "path": "packs/sh-talents.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "sh-weapons",
-      "label": "SH — Weapons",
+      "label": "SH \u2014 Weapons",
       "path": "packs/sh-weapons.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "sh-armors",
-      "label": "SH — Armors",
+      "label": "SH \u2014 Armors",
       "path": "packs/sh-armors.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "sh-critical-injuries",
-      "label": "SH — Critical Injuries",
+      "label": "SH \u2014 Critical Injuries",
       "path": "packs/sh-critical-injuries.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "sh-panic",
-      "label": "SH — Panic Table",
+      "label": "SH \u2014 Panic Table",
       "path": "packs/sh-panic.db",
       "type": "RollTable",
       "system": "yzegenerique"
     },
     {
       "name": "sh-bestiary",
-      "label": "SH — Bestiary",
+      "label": "SH \u2014 Bestiary",
       "path": "packs/sh-bestiary.db",
       "type": "Actor",
       "system": "yzegenerique"
     },
     {
       "name": "sh-scenario-bestiary",
-      "label": "SH — Scenario Bestiary",
+      "label": "SH \u2014 Scenario Bestiary",
       "path": "packs/sh-scenario-bestiary.db",
       "type": "Actor",
       "system": "yzegenerique"
     },
     {
       "name": "h-attributes",
-      "label": "H! — Attributes",
+      "label": "H! \u2014 Attributes",
       "path": "packs/h-attributes.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "h-skills",
-      "label": "H! — Skills",
+      "label": "H! \u2014 Skills",
       "path": "packs/h-skills.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "h-talents",
-      "label": "H! — Specialties",
+      "label": "H! \u2014 Specialties",
       "path": "packs/h-talents.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "h-weapons",
-      "label": "H! — Weapons",
+      "label": "H! \u2014 Weapons",
       "path": "packs/h-weapons.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "h-critical-injuries",
-      "label": "H! — Critical Injuries",
+      "label": "H! \u2014 Critical Injuries",
       "path": "packs/h-critical-injuries.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "h-panic",
-      "label": "H! — Panic Table",
+      "label": "H! \u2014 Panic Table",
       "path": "packs/h-panic.db",
       "type": "RollTable",
       "system": "yzegenerique"
     },
     {
       "name": "ea-attributes",
-      "label": "EA — Attributes",
+      "label": "EA \u2014 Attributes",
       "path": "packs/ea-attributes.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "ea-skills",
-      "label": "EA — Skills",
+      "label": "EA \u2014 Skills",
       "path": "packs/ea-skills.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "ea-weapons",
-      "label": "EA — Weapons",
+      "label": "EA \u2014 Weapons",
       "path": "packs/ea-weapons.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "ea-talents",
-      "label": "EA — Talents",
+      "label": "EA \u2014 Talents",
       "path": "packs/ea-talents.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "ea-critical-injuries",
-      "label": "EA — Critical Injuries (Pilot)",
+      "label": "EA \u2014 Critical Injuries (Pilot)",
       "path": "packs/ea-critical-injuries.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "ea-critical-automata",
-      "label": "EA — Critical Injuries (Automata)",
+      "label": "EA \u2014 Critical Injuries (Automata)",
       "path": "packs/ea-critical-automata.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "ea-critical-tables",
-      "label": "EA — Critical Tables",
+      "label": "EA \u2014 Critical Tables",
       "path": "packs/ea-critical-tables.db",
       "type": "RollTable",
       "system": "yzegenerique"
     },
     {
       "name": "ea-panic",
-      "label": "EA — Panic Table",
+      "label": "EA \u2014 Panic Table",
       "path": "packs/ea-panic.db",
       "type": "RollTable",
       "system": "yzegenerique"
     },
     {
       "name": "ea-pilot-archetypes",
-      "label": "EA — Pilot Archetypes",
+      "label": "EA \u2014 Pilot Archetypes",
       "path": "packs/ea-pilot-archetypes.db",
       "type": "Item",
       "system": "yzegenerique"
     },
     {
       "name": "ea-automata-archetypes",
-      "label": "EA — Automata Archetypes",
+      "label": "EA \u2014 Automata Archetypes",
       "path": "packs/ea-automata-archetypes.db",
       "type": "Item",
       "system": "yzegenerique"
@@ -244,5 +244,16 @@
   ],
   "url": "https://github.com/SebsokK/yzegenerique",
   "manifest": "https://raw.githubusercontent.com/SebsokK/yzegenerique/main/system.json",
-  "download": "https://github.com/SebsokK/yzegenerique/releases/download/v.0.1.0/yzegenerique-v0.1.0.zip"
+  "download": "https://github.com/SebsokK/yzegenerique/releases/download/v.0.1.0/yzegenerique-v0.1.0.zip",
+  "media": [
+    {
+      "type": "cover",
+      "url": "systems/yzegenerique/assets/YZEgeneriqueHeader.png"
+    },
+    {
+      "type": "setup",
+      "url": "systems/yzegenerique/assets/YZEgeneriqueHeader.png",
+      "thumbnail": "systems/yzegenerique/assets/YZEgeneriqueHeader.png"
+    }
+  ]
 }

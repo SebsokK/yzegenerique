@@ -5233,3 +5233,31 @@ body.yze-preset-eldritch-automata .ea-sheet .actor-portrait {
     0 4px 16px rgba(0,0,0,0.5),
     0 0 30px rgba(173,241,130,0.1);
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   GAME PAUSED — override complet
+   ══════════════════════════════════════════════════════════════════ */
+
+#pause {
+  background:      transparent !important;
+  backdrop-filter: none !important;
+}
+
+/* Cacher le texte "Game Paused" — l'image le contient déjà */
+#pause figcaption {
+  display: none;
+}
+
+#pause img {
+  content:       url("../assets/gamepaused.png");
+  width:         400px;
+  height:        auto;
+  border-radius: 0;
+  box-shadow:    none;
+  animation:     yze-pause-pulse 2.5s ease-in-out infinite !important;
+}
+
+@keyframes yze-pause-pulse {
+  0%, 100% { opacity: 0.75; transform: scale(1);      }
+  50%       { opacity: 1;    transform: scale(1.04);   }
+}
