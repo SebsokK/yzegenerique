@@ -40,7 +40,7 @@
         <span class="attack-dialog-mod-value {{#if modifier}}{{#if (gt modifier 0)}}mod-positive{{else}}mod-negative{{/if}}{{/if}}">
           {{#if (gt modifier 0)}}+{{/if}}{{modifier}}
         </span>
-        <span class="attack-dialog-pool-hint">→ {{finalPool}}d</span>
+        <span class="attack-dialog-pool-hint">→ {{#if finalPoolLabel}}{{finalPoolLabel}}{{else}}{{finalPool}}d{{/if}}</span>
       {{/if}}
     </div>
     <button type="button" class="attack-dialog-mod-btn" data-action="modUp">+</button>

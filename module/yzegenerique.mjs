@@ -298,7 +298,11 @@ Hooks.once("ready", async () => {
       const attributeItem = savedRoll.attributeItemId ? actor.items.get(savedRoll.attributeItemId) : null;
       const { YZEDiceRoller } = await import("./dice/dice-roller.mjs");
       await YZEDiceRoller.rollSkill(actor, skillItem, attributeItem, {
-        pushed: true, previousRoll: savedRoll,
+        pushed:           true,
+        previousRoll:     savedRoll,
+        modifier:         savedRoll.modifier         ?? 0,
+        strandCount:      savedRoll.strandCount      ?? 0,
+        selectedStrandId: savedRoll.selectedStrandId ?? "",
       });
       return;
     }

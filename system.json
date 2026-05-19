@@ -2,7 +2,7 @@
   "id": "yzegenerique",
   "title": "YZE G\u00e9n\u00e9rique",
   "description": "Generic system based on the Year Zero Engine (SRD v1.0). Modular, preset-driven.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "compatibility": {
     "minimum": "14",
     "verified": "14"
@@ -244,7 +244,7 @@
   ],
   "url": "https://github.com/SebsokK/yzegenerique",
   "manifest": "https://raw.githubusercontent.com/SebsokK/yzegenerique/main/system.json",
-  "download": "https://github.com/SebsokK/yzegenerique/releases/download/v.0.1.0/yzegenerique-v0.1.0.zip",
+  "download": "https://github.com/SebsokK/yzegenerique/releases/download/v.0.1.1/yzegenerique-v0.1.1.zip",
   "media": [
     {
       "type": "cover",

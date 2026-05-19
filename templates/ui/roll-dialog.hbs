@@ -44,7 +44,7 @@
   {{!-- Pool final --}}
   <div class="roll-dialog-pool-row">
     <span class="roll-dialog-pool-label">Final Pool</span>
-    <span class="roll-dialog-pool-value">{{finalPool}}d</span>
+    <span class="roll-dialog-pool-value">{{#if finalPoolLabel}}{{finalPoolLabel}}{{else}}{{finalPool}}d{{/if}}</span>
   </div>
 
   <div class="roll-dialog-actions">

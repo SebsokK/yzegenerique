@@ -96,7 +96,8 @@
             data-action="rollAttribute" data-attr-id="{{attr.id}}">{{attr.name}}</button>
           <input class="attr-val" type="number"
             data-item-id="{{attr.id}}" data-field="system.value"
-            value="{{attr.system.value}}" min="0" max="10" />
+            value="{{attr.system.value}}" min="0" max="20" />
+          {{#if attr.showPips}}
           <div class="yze-attr-pips">
             {{#each attr.pips as |pip|}}
             <button class="yze-pip {{#if pip.filled}}yze-pip--filled{{/if}}"
@@ -105,6 +106,7 @@
               data-pip-index="{{pip.index}}"></button>
             {{/each}}
           </div>
+          {{/if}}
           <span class="row-actions">
             <button class="ea-icon-btn" type="button" data-action="itemEdit" data-item-id="{{attr.id}}">✎</button>
             <button class="ea-icon-btn ea-delete-btn" type="button" data-action="itemDelete" data-item-id="{{attr.id}}">✕</button>

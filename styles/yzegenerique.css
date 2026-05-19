@@ -914,22 +914,28 @@
 .ea-sheet .yze-attr-pips,
 .yze-sheet .yze-attr-pips {
   display:         flex;
+  flex-wrap:       wrap;
   gap:             3px;
   justify-content: center;
   margin:          3px 0 2px;
+  max-width:       100%;
 }
 
 .ea-sheet .yze-pip,
 .yze-sheet .yze-pip {
-  width:         10px;
-  height:        10px;
-  border-radius: 50%;
-  border:        1px solid var(--yze-color-border);
-  background:    transparent;
+  width:         12px !important;
+  height:        12px !important;
+  min-width:     12px !important;
+  min-height:    12px !important;
+  border-radius: 50% !important;
+  border:        1px solid var(--yze-color-border) !important;
+  background:    transparent !important;
   cursor:        pointer;
-  padding:       0;
+  padding:       0 !important;
+  margin:        0 !important;
   transition:    background 0.1s, border-color 0.1s;
   flex-shrink:   0;
+  display:       inline-block;
 }
 
 .ea-sheet .yze-pip--filled,
@@ -1979,24 +1985,29 @@
 
 /* ── Pips compacts dans les attributs ────────────────────────────── */
 .yze-sheet.character-sheet .attr-block .yze-attr-pips {
-  display:  flex;
-  gap:      3px;
-  padding:  2px 0;
+  display:   flex;
+  flex-wrap: wrap;
+  gap:       3px;
+  padding:   2px 0;
 }
 
 .yze-sheet.character-sheet .attr-block .yze-pip {
-  width:         10px;
-  height:        10px;
-  border-radius: 50%;
-  border:        1px solid var(--yze-color-accent);
-  background:    transparent;
-  padding:       0;
+  width:         12px !important;
+  height:        12px !important;
+  min-width:     12px !important;
+  min-height:    12px !important;
+  border-radius: 50% !important;
+  border:        1px solid var(--yze-color-accent) !important;
+  background:    transparent !important;
+  padding:       0 !important;
+  margin:        0 !important;
   cursor:        pointer;
   transition:    background 0.1s;
+  display:       inline-block;
 }
 
 .yze-sheet.character-sheet .attr-block .yze-pip.yze-pip--filled {
-  background: var(--yze-color-accent);
+  background: var(--yze-color-accent) !important;
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -2297,29 +2308,6 @@
   display:  flex;
   gap:      4px;
   flex-wrap: wrap;
-}
-
-.yze-sheet.character-sheet .xp-pip {
-  width:         12px;
-  height:        12px;
-  border-radius: 50%;
-  border:        1px solid var(--yze-color-accent);
-  background:    transparent;
-  padding:       0;
-  cursor:        pointer;
-  transition:    background 0.12s, transform 0.1s;
-  flex-shrink:   0;
-}
-
-.yze-sheet.character-sheet .xp-pip:hover {
-  transform:  scale(1.25);
-  border-color: var(--yze-color-accent);
-  background:   rgba(212, 196, 154, 0.3);
-}
-
-.yze-sheet.character-sheet .xp-pip.xp-pip--filled {
-  background:  var(--yze-color-accent);
-  box-shadow:  0 0 4px rgba(212, 196, 154, 0.5);
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -3146,10 +3134,6 @@
   filter: brightness(1.15);
 }
 
-
-
-
-
 /* ── Succès en vert dans le pool summary ────────────────────────── */
 .yze-roll-success-count {
   color: #4caf50 !important;
@@ -3263,8 +3247,6 @@ body.yze-preset-sleepy-hollow, .yze-preset-sleepy-hollow {
   color:          var(--yze-color-text-muted);
 }
 
-
-
 /* ── Skill rows — séparateurs plus fins et élégants ─────────────── */
 .yze-sheet .skill-row {
   border-bottom: 1px solid rgba(201, 168, 76, 0.08);
@@ -3365,33 +3347,7 @@ body.yze-preset-sleepy-hollow, .yze-preset-sleepy-hollow {
 }
 
 /* ── XP pips — identiques aux attr pips ─────────────────────────── */
-.yze-sheet .xp-pip {
-  width:         11px;
-  height:        11px;
-  border-radius: 50%;
-  border:        1.5px solid var(--yze-color-accent);
-  background:    transparent;
-  padding:       0;
-  cursor:        pointer;
-  flex-shrink:   0;
-  transition:    background 0.12s, box-shadow 0.12s, transform 0.12s;
-}
 
-.yze-sheet .xp-pip:hover {
-  transform:  scale(1.35);
-  background: rgba(201, 168, 76, 0.25);
-  box-shadow: 0 0 5px rgba(201, 168, 76, 0.4);
-}
-
-.yze-sheet .xp-pip.xp-pip--filled {
-  background:  var(--yze-color-accent);
-  box-shadow:  0 0 4px rgba(201, 168, 76, 0.5);
-}
-
-.yze-sheet .xp-pip.xp-pip--filled:hover {
-  transform:  scale(1.35);
-  box-shadow: 0 0 7px rgba(201, 168, 76, 0.7);
-}
 
 /* ── CI Modifier badges ─────────────────────────────────────────── */
 .ci-mod-badge {
@@ -3774,13 +3730,7 @@ body.yze-preset-eldritch-automata .yze-pip.yze-pip--filled {
   background:  var(--yze-color-accent);
   box-shadow:  0 0 5px rgba(106, 63, 200, 0.6);
 }
-body.yze-preset-eldritch-automata .xp-pip {
-  border-color: var(--yze-color-accent);
-}
-body.yze-preset-eldritch-automata .xp-pip.xp-pip--filled {
-  background: var(--yze-color-accent);
-  box-shadow: 0 0 4px rgba(106, 63, 200, 0.5);
-}
+
 
 body.yze-preset-eldritch-automata .tab-btn.active::after {
   background: var(--yze-color-accent);
@@ -4363,9 +4313,6 @@ body.yze-preset-eldritch-automata .sheet-header {
 .ea-dialog .dialog-button:hover {
   background: rgba(106, 63, 200, 0.3);
 }
-
-
-
 
 /* ── EA attr-block — boutons edit/delete au hover ───────────────── */
 /* position:relative sur le bloc pour anchor l'absolute */
@@ -5202,26 +5149,36 @@ body.yze-preset-eldritch-automata .actor-portrait:hover {
 
 /* SH : or */
 body.yze-preset-sleepy-hollow .actor-portrait {
-  border-color: #c8a050;
+  border: 3px solid #7a9e7e !important;
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 4px 12px rgba(0,0,0,0.4);
 }
 body.yze-preset-sleepy-hollow .actor-portrait:hover {
+  border-color: #a0c4a4 !important;
   box-shadow:
     inset 0 0 12px rgba(0,0,0,0.3),
     0 0 0 1px rgba(0,0,0,0.4),
     0 4px 16px rgba(0,0,0,0.5),
-    0 0 20px rgba(200,160,80,0.25);
+    0 0 20px rgba(122,158,126,0.3);
 }
 
-/* H! : rouge-orange */
+/* H! : cyan cadavérique */
 body.yze-preset-horror .actor-portrait {
-  border-color: #e05555;
+  border: 3px solid #4ac4b8 !important;
+  box-shadow:
+    inset 0 0 12px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(0,0,0,0.4),
+    0 4px 12px rgba(0,0,0,0.4);
 }
 body.yze-preset-horror .actor-portrait:hover {
+  border-color: #6ed8cf !important;
   box-shadow:
     inset 0 0 12px rgba(0,0,0,0.3),
     0 0 0 1px rgba(0,0,0,0.4),
     0 4px 16px rgba(0,0,0,0.5),
-    0 0 20px rgba(224,85,85,0.25);
+    0 0 20px rgba(74,196,184,0.3);
 }
 
 /* ── EA portrait dans la fiche EA (ea-portrait-col) ─────────────── */
@@ -5260,4 +5217,200 @@ body.yze-preset-eldritch-automata .ea-sheet .actor-portrait {
 @keyframes yze-pause-pulse {
   0%, 100% { opacity: 0.75; transform: scale(1);      }
   50%       { opacity: 1;    transform: scale(1.04);   }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   COULEURS SECONDAIRES + PIPS XP GROUPÉS (max 30)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Variables secondaires par preset ──────────────────────────── */
+body.yze-preset-eldritch-automata {
+  --yze-color-secondary: #adf182;
+  --yze-color-secondary-dim: rgba(173, 241, 130, 0.12);
+}
+body.yze-preset-sleepy-hollow {
+  --yze-color-secondary: #7a9e7e;
+  --yze-color-secondary-dim: rgba(122, 158, 126, 0.12);
+}
+body.yze-preset-horror {
+  --yze-color-secondary: #4ac4b8;
+  --yze-color-secondary-dim: rgba(74, 196, 184, 0.12);
+}
+
+/* ── Pips XP groupés — remplis=accent, vides=teinte sombre ─────── */
+
+/* EA */
+
+
+/* SH */
+
+/* H! */
+
+/* ── Stats maxées — couleur secondaire sur la valeur ────────────── */
+.yze-sheet .attr-block .attr-value.is-maxed,
+.ea-sheet .ea-attr-block .attr-value.is-maxed {
+  color:      var(--yze-color-secondary);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--yze-color-secondary) 40%, transparent);
+}
+
+/* ── Hover bordures section — couleur secondaire ────────────────── */
+.yze-sheet .sheet-section:hover > .section-title,
+.ea-sheet .sheet-section:hover > .section-title {
+  color:      var(--yze-color-secondary);
+  transition: color 0.2s;
+}
+
+.yze-sheet .section-title::before {
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.yze-sheet .sheet-section:hover .section-title::before {
+  color:        var(--yze-color-secondary) !important;
+  border-color: var(--yze-color-secondary) !important;
+}
+
+/* ── Attribute pips — même logique secondaire ───────────────────── */
+body.yze-preset-eldritch-automata .attr-block .yze-pip.yze-pip--filled {
+  background:  #adf182 !important;
+  border-color: #adf182 !important;
+  box-shadow:  0 0 5px rgba(173,241,130,0.5) !important;
+}
+body.yze-preset-eldritch-automata .attr-block .yze-pip {
+  border-color: rgba(173,241,130,0.2) !important;
+  background:   rgba(173,241,130,0.05) !important;
+}
+
+body.yze-preset-sleepy-hollow .attr-block .yze-pip.yze-pip--filled {
+  background:   #7a9e7e !important;
+  border-color: #7a9e7e !important;
+  box-shadow:   0 0 4px rgba(122,158,126,0.5) !important;
+}
+body.yze-preset-sleepy-hollow .attr-block .yze-pip {
+  border-color: rgba(122,158,126,0.2) !important;
+  background:   rgba(122,158,126,0.05) !important;
+}
+
+body.yze-preset-horror .attr-block .yze-pip.yze-pip--filled {
+  background:   #4ac4b8 !important;
+  border-color: #4ac4b8 !important;
+  box-shadow:   0 0 4px rgba(74,196,184,0.5) !important;
+}
+body.yze-preset-horror .attr-block .yze-pip {
+  border-color: rgba(74,196,184,0.2) !important;
+  background:   rgba(74,196,184,0.05) !important;
+}
+
+/* ── Strand pips EA — vert secondaire ───────────────────────────── */
+body.yze-preset-eldritch-automata .ea-strand-pip--green {
+  background: #adf182 !important;
+  box-shadow: 0 0 5px rgba(173,241,130,0.6) !important;
+}
+
+/* ── Portrait hover — secondaire au lieu de primaire ───────────── */
+body.yze-preset-eldritch-automata .actor-portrait:hover {
+  border-color: #adf182;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.5), 0 0 20px rgba(173,241,130,0.3);
+}
+body.yze-preset-sleepy-hollow .actor-portrait:hover {
+  border-color: #7a9e7e;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.5), 0 0 20px rgba(122,158,126,0.3);
+}
+body.yze-preset-horror .actor-portrait:hover {
+  border-color: #4ac4b8;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.5), 0 0 20px rgba(74,196,184,0.3);
+}
+
+/* ── XP pip gap entre groupes de 5 ─────────────────────────────── */
+
+
+.header-xp-pips {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         3px;
+  align-items: center;
+}
+
+/* ── Stats maxées — couleur secondaire ─────────────────────────── */
+.attr-val.is-maxed {
+  color:      var(--yze-color-secondary, var(--yze-color-accent));
+  text-shadow: 0 0 8px color-mix(in srgb, var(--yze-color-secondary, var(--yze-color-accent)) 40%, transparent);
+  font-weight: 600;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   XP PIPS — règle unique consolidée
+   ══════════════════════════════════════════════════════════════════ */
+
+.xp-pip {
+  width:         10px !important;
+  height:        10px !important;
+  min-width:     10px !important;
+  min-height:    10px !important;
+  border-radius: 50% !important;
+  border:        1.5px solid rgba(255,255,255,0.2) !important;
+  background:    rgba(255,255,255,0.06) !important;
+  box-shadow:    none !important;
+  cursor:        pointer;
+  padding:       0 !important;
+  margin:        0 !important;
+  flex-shrink:   0;
+  display:       inline-block;
+  transition:    background 0.12s, border-color 0.12s;
+}
+
+.xp-pip:hover {
+  border-color: rgba(255,255,255,0.5) !important;
+}
+
+.xp-pip.xp-pip--filled {
+  border-color: var(--yze-color-accent) !important;
+  background:   var(--yze-color-accent) !important;
+  box-shadow:   0 0 4px color-mix(in srgb, var(--yze-color-accent) 50%, transparent) !important;
+}
+
+/* SH — or */
+body.yze-preset-sleepy-hollow .xp-pip {
+  border-color: rgba(200,160,80,0.25) !important;
+  background:   rgba(200,160,80,0.06) !important;
+}
+body.yze-preset-sleepy-hollow .xp-pip.xp-pip--filled {
+  border-color: #c8a050 !important;
+  background:   #c8a050 !important;
+  box-shadow:   0 0 4px rgba(200,160,80,0.5) !important;
+}
+
+/* H! — rouge */
+body.yze-preset-horror .xp-pip {
+  border-color: rgba(224,85,85,0.25) !important;
+  background:   rgba(224,85,85,0.06) !important;
+}
+body.yze-preset-horror .xp-pip.xp-pip--filled {
+  border-color: #e05555 !important;
+  background:   #e05555 !important;
+  box-shadow:   0 0 4px rgba(224,85,85,0.5) !important;
+}
+
+/* EA — vert strand */
+body.yze-preset-eldritch-automata .xp-pip {
+  border-color: rgba(173,241,130,0.2) !important;
+  background:   rgba(173,241,130,0.05) !important;
+}
+body.yze-preset-eldritch-automata .xp-pip.xp-pip--filled {
+  border-color: #adf182 !important;
+  background:   #adf182 !important;
+  box-shadow:   0 0 5px rgba(173,241,130,0.5) !important;
+}
+
+.xp-pip-gap {
+  display:     inline-block;
+  width:       5px;
+  flex-shrink: 0;
+}
+
+.header-xp-pips {
+  display:     flex;
+  flex-wrap:   wrap;
+  gap:         3px;
+  align-items: center;
 }

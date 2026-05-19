@@ -106,6 +106,8 @@ export class AttackDialog extends HandlebarsApplicationMixin(ApplicationV2) {
                      + (this._weapon?.system?.bonusDice ?? 0);
       ctx.basePool   = base;
       ctx.finalPool  = Math.max(1, base + this._modifier);
+      const modLabel = this._modifier !== 0 ? ` (${this._modifier > 0 ? "+" : ""}${this._modifier})` : "";
+      ctx.finalPoolLabel = `${ctx.finalPool}d${modLabel}`;
     }
     const presetId = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
     const isEA = presetId === "eldritch-automata";

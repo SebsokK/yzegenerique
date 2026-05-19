@@ -46,12 +46,14 @@ export class NpcSheet extends YZESheetMixin(HandlebarsApplicationMixin(
     context.attributes = this.actor.attributes?.map(attr => {
       const val     = attr.system.value   ?? 2;
       const current = attr.system.current ?? val;
-      const pips    = Array.from({ length: val }, (_, i) => ({
+      const pipMax  = Math.min(val, 20);
+      const pips    = Array.from({ length: pipMax }, (_, i) => ({
         index:  i + 1,
         filled: i < current,
         attrId: attr.id,
       }));
-      return { id: attr.id, name: attr.name, system: attr.system, pips };
+      return { id: attr.id, name: attr.name, system: attr.system, pips,
+               showPips: true };
     }) ?? [];
 
     context.skills        = this.actor.skills ?? [];

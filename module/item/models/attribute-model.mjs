@@ -11,9 +11,8 @@ export class AttributeDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       // Valeur dice pool (1–5), aussi utilisée comme valeur de base pour les formules dérivées
-      value: new fields.NumberField({ required: true, initial: 2, min: 0, max: 10, integer: true }),
-      // current peut aller jusqu'à value — le cap est géré dans prepareData
-      current: new fields.NumberField({ required: true, initial: 2, min: 0, max: 10, integer: true }),
+      value:   new fields.NumberField({ required: true, initial: 2, min: 0, max: 20, integer: true }),
+      current: new fields.NumberField({ required: true, initial: 2, min: 0, max: 20, integer: true }),
       // Rating step dice (A/B/C/D)
       stepRating: new fields.StringField({
         required: false,

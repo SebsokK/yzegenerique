@@ -11,9 +11,8 @@
       <div class="header-xp">
         <label class="header-xp-label">{{localize "YZE.XP"}}</label>
         <div class="header-xp-pips">
-          {{#each xpPips as |pip|}}
-          <button type="button" class="xp-pip {{#if pip.filled}}xp-pip--filled{{/if}}"
-            data-xp-index="{{pip.index}}"></button>
+          {{#each xpPips as |pip|}}{{#if pip.groupStart}}<span class="xp-pip-gap"></span>{{/if}}<button type="button" class="xp-pip {{#if pip.filled}}xp-pip--filled{{/if}}"
+            data-xp-index="{{pip.index}}" title="XP {{pip.index}}"></button>
           {{/each}}
         </div>
       </div>
@@ -119,7 +118,7 @@
         <div class="attr-block hoverable-row {{#if attr.ciMod}}ci-penalized{{/if}}" data-item-id="{{attr.id}}">
           <button type="button" class="attr-name rollable" data-action="rollAttribute" data-attr-id="{{attr.id}}" title="Roll {{attr.name}}">{{attr.name}}</button>
           <div class="attr-val-wrapper">
-            <input class="attr-val" type="number"
+            <input class="attr-val {{#if attr.isMaxed}}is-maxed{{/if}}" type="number"
               data-item-id="{{attr.id}}" data-field="system.value"
               value="{{attr.system.value}}" min="1" max="5" />
             {{#if attr.ciMod}}<span class="ci-mod-badge">{{attr.ciMod}}</span>{{/if}}

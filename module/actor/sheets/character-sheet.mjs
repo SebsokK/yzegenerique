@@ -144,12 +144,17 @@ export class CharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(fou
 
     context.enableStress = cfg.enableStress ?? false;
 
-    // XP pips — 15 cases, remplies jusqu'à xp.total
+    // XP pips — 30 cases max, groupes de 5
     const xpTotal = this.actor.system.xp?.total ?? 0;
-    context.xpPips = Array.from({ length: 15 }, (_, i) => ({
-      index:  i + 1,
-      filled: i < xpTotal,
+    const xpMax   = this.actor.system.xp?.max   ?? 30;
+    const xpCap   = Math.min(xpMax, 30);
+    context.xpPips = Array.from({ length: xpCap }, (_, i) => ({
+      index:      i + 1,
+      filled:     i < xpTotal,
+      groupStart: i % 5 === 0 && i > 0,
     }));
+    context.xpTotal = xpTotal;
+    context.xpMax   = xpCap;
     context.biography  = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
       this.actor._source.system.biography ?? "", { relativeTo: this.actor }
     );
@@ -172,6 +177,7 @@ export class CharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(fou
         system:      { ...attr.system, current: modCurrent },
         ciMod:       mod !== 0 ? mod : null,
         baseCurrent: current,
+        isMaxed:     modCurrent >= val && val > 0,
         pips:        CharacterSheet._buildPips(attr.id, val, modCurrent),
       };
     });

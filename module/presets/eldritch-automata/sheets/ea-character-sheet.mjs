@@ -121,10 +121,15 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
     if (context.automataArchetype && context.inBerserk) {
     }
     const xpTotal = this.actor.system.xp?.total ?? 0;
-    context.xpPips = Array.from({ length: 15 }, (_, i) => ({
-      index:  i + 1,
-      filled: i < xpTotal,
+    const xpMax   = this.actor.system.xp?.max   ?? 30;
+    const xpCap   = Math.min(xpMax, 30);
+    context.xpPips = Array.from({ length: xpCap }, (_, i) => ({
+      index:      i + 1,
+      filled:     i < xpTotal,
+      groupStart: i % 5 === 0 && i > 0,
     }));
+    context.xpTotal = xpTotal;
+    context.xpMax   = xpCap;
 
     context.editable = this.isEditable;
     context.enriched = {};
@@ -139,11 +144,12 @@ export class EaCharacterSheet extends YZESheetMixin(HandlebarsApplicationMixin(f
       const val     = attr.system.value   ?? 2;
       const current = attr.system.current ?? val;
       return {
-        id:     attr.id,
-        name:   attr.name,
-        img:    attr.img,
-        system: attr.system,
-        pips:   EaCharacterSheet._buildPips(attr.id, val, current),
+        id:      attr.id,
+        name:    attr.name,
+        img:     attr.img,
+        system:  attr.system,
+        isMaxed: current >= val && val > 0,
+        pips:    EaCharacterSheet._buildPips(attr.id, val, current),
       };
     });
   }

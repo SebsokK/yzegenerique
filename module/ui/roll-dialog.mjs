@@ -53,11 +53,17 @@ export class RollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     const presetId = game.settings.get("yzegenerique", "activePresetId") ?? "srd-default";
     const isEA = presetId === "eldritch-automata";
 
-    // Pool de base
-    const attrDice  = this._attributeItem?.system?.value ?? 0;
+    // Pool de base — utiliser current (pips remplis) pas value (max)
+    const attrVal   = this._attributeItem?.system?.current
+                   ?? this._attributeItem?.system?.value ?? 0;
     const skillDice = this._skillItem ? (this._actor.getSkillPool?.(this._skillItem) ?? 0) : 0;
-    const base      = Math.max(attrDice, skillDice > 0 ? attrDice + skillDice : attrDice);
+    const base      = skillDice > 0 ? attrVal + skillDice : attrVal;
     const finalPool = Math.max(1, base + this._modifier);
+
+    // Label du pool avec modificateur si non nul
+    const modLabel  = this._modifier !== 0
+      ? ` (${this._modifier > 0 ? "+" : ""}${this._modifier})`
+      : "";
 
     // Strands disponibles (EA seulement)
     const strands = isEA
@@ -71,7 +77,9 @@ export class RollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     ctx.modifier      = this._modifier;
     const strandSelected = strands.find(s => s.id === this._selectedStrandId);
     ctx.selectedStrandId = this._selectedStrandId;
-    ctx.finalPool     = finalPool + (strandSelected ? 2 : 0); // +2 dés par strand exhaust
+    const strandBonus = strandSelected ? 2 : 0;
+    ctx.finalPool     = finalPool + strandBonus;
+    ctx.finalPoolLabel = `${finalPool + strandBonus}d${modLabel}`;
     ctx.strands       = strands;
     ctx.hasStrands    = strands.length > 0;
     return ctx;

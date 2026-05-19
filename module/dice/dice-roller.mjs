@@ -53,7 +53,7 @@ export class YZEDiceRoller {
     if (rollableSegments.length === 0) {
       // Tous les dés sont gardés — pas besoin de roller, construire le résultat depuis keptResults
       const rollData = YZEDiceRoller._buildRollData(
-        segments, null, isPush, actor, skillItem, attributeItem
+        segments, null, isPush, actor, skillItem, attributeItem, options
       );
       await YZEDiceRoller._sendToChat(actor, skillItem, attributeItem, rollData, isPush);
       return rollData;
@@ -68,7 +68,7 @@ export class YZEDiceRoller {
 
     // 4. Analyse
     const rollData = YZEDiceRoller._buildRollData(
-      segments, roll, isPush, actor, skillItem, attributeItem
+      segments, roll, isPush, actor, skillItem, attributeItem, options
     );
 
     // 5. Hooks pre-processing
@@ -305,7 +305,7 @@ export class YZEDiceRoller {
    * Ces fonctions peuvent être surchargées sur un segment individuel
    * (ex: Strand dice → successFn = val === 1 || val === 6).
    */
-  static _buildRollData(segments, roll, pushed, actor, skillItem, attributeItem) {
+  static _buildRollData(segments, roll, pushed, actor, skillItem, attributeItem, options = {}) {
     const rollData = {
       segments, roll, pushed,
       actorId:         actor.id,
@@ -313,8 +313,11 @@ export class YZEDiceRoller {
       attributeName:   attributeItem?.name ?? null,
       skillItemId:     skillItem?.id       ?? null,
       attributeItemId: attributeItem?.id   ?? null,
+      modifier:        options.modifier    ?? 0,
+      strandCount:     options.strandCount ?? 0,
+      selectedStrandId: options.selectedStrandId ?? "",
       totalSuccesses: 0, totalBanes: 0, gearBanes: 0,
-      stressBanes:    0,  // nouveaux banes stress uniquement (pas les gardés)
+      stressBanes:    0,
       success:        false,
     };
 
